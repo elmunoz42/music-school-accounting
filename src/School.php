@@ -357,9 +357,61 @@
         static function csvToArray()
         {
 
-            $array = array_map('str_getcsv', file('jimi_attendance_march.csv'));
+            $array_of_rows = array_map('str_getcsv', file('jimi_attendance_march.csv'));
 
-            return $array;
+            return $array_of_rows;
+        }
+
+        function uploadAccounts()
+        {
+            $array_of_rows = array_map('str_getcsv', file('.csv'));
+
+            //remove header
+            $array_to_upload = array_splice($array_of_rows, 0, 10);
+
+            // teacher ids
+            // 1 | Jimi Marks
+            // 2 | Emmanuel Mora
+            // 3 | Roger Kim
+            // 4 | Carlos Munoz Kampff
+
+            //save to server
+            foreach ($array_of_rows as $row) {
+
+                $family_name = $row[0];
+                $parent_one_name = $row[1];
+                $parent_two_name = $row[2];
+                $street_address = $row[3];
+                $phone_number = $row[4];
+                $email_address = $row[5];
+                $student_one_name = $row[6];
+                $teacher_one_id = $row[7];
+                if ($row[8]!=0) {
+                    $student_two_name = $row[8];
+                }
+                if ($row[9]!=0) {
+                    $teacher_tow_id = $row[9];
+                }
+                $family = new Account($family_name, $parent_one_name, $parent_two_name, $street_address, $phone_number, $email_address);
+                $family->save();
+                $student_one = new Student($student_one_name);
+                $family->addStudent($student_one);
+                $school->addStudent($student_one);
+                if ($row[7]!=0) {
+                    $student_one->addTeacher($teacher_one_id);
+                    $family->addTeacher($teacher_one_id);
+                }
+                if ($row[8]!=0) {
+                $student_two = new Student($student_two_name);
+                $family->addStudent($student_two);
+                $school->addStudent($student_two);
+                if ($row[9]!=0) {
+                    $student_two->addTeacher($teacher_tow_id);
+                    $family->addTeacher($teacher_tow_id);
+                }
+                $school->addAccount($family->getId());
+                }
+            }
         }
 
     }

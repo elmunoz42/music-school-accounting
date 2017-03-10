@@ -1,19 +1,5 @@
 <?php
-// DB: crm_music TABLE event
-// | Field          | Type                | Null | Key | Default | Extra          |
-// |----------------|---------------------|------|-----|---------|----------------|
-// | description     | varchar(255)        | YES  |     | NULL    |                |
-// | duration        | int(11)             | YES  |     | NULL    |                |
-// | price           | decimal(10,2)       | YES  |     | NULL    |                |
-// | discount        | decimal(10,2)       | YES  |     | NULL    |                |
-// | paid_for        | tinyint(1)          | YES  |     | NULL    |                |
-// | notes           | text                | YES  |     | NULL    |                |
-// | date_of_service | datetime            | YES  |     | NULL    |                |
-// | recurrence      | varchar(255)        | YES  |     | NULL    |                |
-// | attendance      | varchar(255)        | YES  |     | NULL    |                |
-// | id              | bigint(20) unsigned | NO   | PRI | NULL    | auto_increment |
 
-    ///////    NOTE Saved for later for when we learn JOIN !
     class Service
     {
         private $description;

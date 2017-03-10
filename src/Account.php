@@ -11,7 +11,7 @@ class Account
     private $billing_history;
     private $outstanding_balance;
     private $id;
-    // public $create_was_clicked;
+    //NOTE create STATUS key.
 
     function __construct($family_name, $parent_one_name, $street_address, $phone_number, $email_address, $id = null)
     {
@@ -329,6 +329,7 @@ class Account
         }
         return $lessons;
     }
+
 
 
 }
