@@ -346,12 +346,18 @@
         function removeTeacher($teacher_id)
         {
             $GLOBALS['DB']->exec("DELETE FROM schools_teachers WHERE teacher_id = {$teacher_id};");
+            $GLOBALS['DB']->exec("DELETE FROM accounts_teachers WHERE teacher_id = {$teacher_id};");
+            $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE teacher_id = {$teacher_id};");
+            $GLOBALS['DB']->exec("DELETE FROM courses_teachers WHERE teacher_id = {$teacher_id};");
         }
 
         // NOTE UNTESTED
         function removeStudent($student_id)
         {
             $GLOBALS['DB']->exec("DELETE FROM schools_students WHERE student_id = {$student_id};");
+            $GLOBALS['DB']->exec("DELETE FROM accounts_students WHERE student_id = {$student_id};");
+            $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE student_id = {$student_id};");
+            $GLOBALS['DB']->exec("DELETE FROM courses_students WHERE student_id = {$student_id};");
         }
 
         static function csvToArray()

@@ -270,6 +270,11 @@ class Account
         $GLOBALS['DB']->exec("INSERT INTO lessons_accounts (account_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
     }
     // NOTE UNTESTED
+    function addService($service_id)
+    {
+        $GLOBALS['DB']->exec("INSERT INTO accounts_services (account_id, service_id) VALUES ({$this->getId()}, {$service_id})");
+    }
+    // NOTE UNTESTED
     function getTeachers()
     {
         $query = $GLOBALS['DB']->query("SELECT teachers.* FROM accounts JOIN accounts_teachers ON (accounts.id = accounts_teachers.account_id) JOIN teachers ON (accounts_teachers.teacher_id = teachers.id) WHERE accounts.id = {$this->getId()};");
@@ -329,6 +334,28 @@ class Account
         }
         return $lessons;
     }
+    // NOTE unstested
+    function getServices()
+    {
+        $query = $GLOBALS['DB']->query("SELECT accounts.* FROM services JOIN accounts_services ON (services.id = accounts_services.service_id) JOIN accounts ON (accounts_services.account_id = accounts.id) WHERE services.id = {$this->getId()};");
+        $services = array();
+        foreach($query as $service){
+            $description = $service['description'];
+            $duration = $service['duration'];
+            $price = $service['price'];
+            $discount = $service['discount'];
+            $paid_for = (bool) $service['paid_for'];
+            $notes = $service['notes'];
+            $date_of_service = $service['date_of_service'];
+            $recurrence = $service['recurrence'];
+            $attendance = $service['attendance'];
+            $id = (int) $service['id'];
+            $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
+            array_push($services, $new_service);
+        }
+        return $services;
+    }
+
 
 
 

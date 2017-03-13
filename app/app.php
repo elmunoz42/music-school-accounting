@@ -277,6 +277,7 @@
         $new_account = new Account($family_name, $parent_one_name, $street_address, $phone_number, $email_address);
         $parent_two_name = $_POST['parent_two_name'];
         $notes = $_POST['notes'];
+        $notes_array = explode("|", $new_account->getNotes());
         $billing_history = $_POST['billing_history'];
         $outstanding_balance = intval($_POST['outstanding_balance']);
         $new_account->setParentTwoName($parent_two_name);
@@ -287,7 +288,7 @@
         var_dump($new_account);
         $school->addAccount($new_account->getId());
 
-        return $app['twig']->render('owner_clients.html.twig', array('school' => $school, 'accounts' => $school->getAccounts()));
+        return $app['twig']->render('owner_clients.html.twig', array('school' => $school, 'accounts' => $school->getAccounts(), 'notes_array'=>$notes_array));
     });
 
     // READ account
@@ -307,6 +308,7 @@
         'selected_students'=>$selected_students, 'selected_teachers'=>$selected_teachers,
         'selected_courses'=>$selected_courses,
         'notes_array'=>$notes_array,
+        'services'=>$selected_account->getServices(),
         'selected_lessons'=>$selected_lessons));
 
     });
@@ -344,6 +346,7 @@
         $student_id = $student->getId();
         $school->addStudent($student_id);
         $selected_account->addStudent($student_id);
+        $notes_array = explode("|", $selected_account->getNotes());
         $selected_students = $selected_account->getStudents();
         $selected_teachers = $selected_account->getTeachers();
         $selected_courses = $selected_account->getCourses();
@@ -352,6 +355,7 @@
         return $app['twig']->render('owner_client.html.twig', array('school'=>$school,
         'account'=>$selected_account,
         'accounts'=>$school->getAccounts(),
+        'notes_array'=>$notes_array,
         'selected_students'=>$selected_students, 'selected_teachers'=>$selected_teachers,
         'selected_courses'=>$selected_courses,
         'selected_lessons'=>$selected_lessons));

@@ -196,6 +196,23 @@
             $GLOBALS['DB']->exec("INSERT INTO service_students (service_id, student_id) VALUES ({$service_id},{$this->getId()})");
         }
 
+        // NOTE where should student practiced live?
+        // AppSheet ==> Timestamp	Student	Date of Lesson	Attended	Skills we worked on	Song/s we are working on	Student Practiced
+
+        // NOTE maybe there should be a different Join table for student_services templates.
+
+        // NOTE UNTESTED
+        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account, $course)
+        {
+            $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
+            $new_service->save();
+            $id = $new_service->getId();
+            $school->addService($id);
+            $account->addService($id);
+            $teacher->addService($id);
+            $course->addService($id);
+
+        }
         // NOTE UNTESTED
         function getAccounts()
         {
@@ -238,6 +255,29 @@
             }
             return $lessons;
         }
+
+        // NOTE unstested
+        function getServices()
+        {
+            $query = $GLOBALS['DB']->query("SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = {$this->getId()};");
+            $services = array();
+            foreach($query as $service){
+                $description = $service['description'];
+                $duration = $service['duration'];
+                $price = $service['price'];
+                $discount = $service['discount'];
+                $paid_for = (bool) $service['paid_for'];
+                $notes = $service['notes'];
+                $date_of_service = $service['date_of_service'];
+                $recurrence = $service['recurrence'];
+                $attendance = $service['attendance'];
+                $id = (int) $service['id'];
+                $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
+                array_push($services, $new_service);
+            }
+            return $services;
+        }
+
     }
 
 

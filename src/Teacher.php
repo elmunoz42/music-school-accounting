@@ -137,7 +137,11 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO lessons_teachers (teacher_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
         }
-
+        // NOTE UNTESTED
+        function addService($service_id)
+        {
+            $GLOBALS['DB']->exec("INSERT INTO services_teachers (teacher_id, service_id) VALUES ({$this->getId()}, {$service_id})");
+        }
         // NOTE UNTESTED
         function getStudents()
        {

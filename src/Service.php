@@ -22,7 +22,8 @@
             $this->paid_for = (bool) $paid_for; // convert to TINIINT 1s and 0s for server!!!
             $this->notes = (string) $notes;
             $this->date_of_service = (string) $date_of_service;
-            $this->recurrence = (string) $recurrence; // "Wednesdays|3:00pm"
+            $this->recurrence = (string) $recurrence; // "Wednesdays|3:00pm|40min"
+            // NOTE Should this information be with student ??? Many to Many ???
             $this->attendance = (string) $attendance; // use codes and translate to numbers
             $this->id = (int) $id;
         }

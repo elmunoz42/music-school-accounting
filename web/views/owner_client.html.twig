@@ -65,6 +65,15 @@
                             {% endfor %}
                         {% endif %}
                     </ul>
+                    <ul>
+                        {% if student.getServices is not empty %}
+                            <ul>
+                                {% for service in student.getServices %}
+                                    <li>{{ service.getDescription }} with {{service.getTeachers[0]}} on {{ service.getDateOfService }} </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </ul>
                 </div>
             {% endfor %}
         {% endif %}

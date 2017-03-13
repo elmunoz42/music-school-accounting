@@ -100,6 +100,11 @@
             $GLOBALS['DB']->exec("INSERT INTO courses_lessons (course_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
         }
         // NOTE UNTESTED
+        function addService($service_id)
+        {
+            $GLOBALS['DB']->exec("INSERT INTO courses_services (course_id, service_id) VALUES ({$this->getId()}, {$service_id})");
+        }
+        // NOTE UNTESTED
         function getAccounts()
         {
             $query = $GLOBALS['DB']->query("SELECT accounts.* FROM courses JOIN accounts_courses ON (courses.id = accounts_courses.course_id) JOIN accounts ON (accounts_courses.account_id = accounts.id) WHERE courses.id = {$this->getId()};");
