@@ -211,8 +211,32 @@
             $account->addService($id);
             $teacher->addService($id);
             $course->addService($id);
+        }
+
+        // NOTE UNTESTED
+        function addPrivateSessionBatch($repetitions, $description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account, $course){
+
+        //$start_date = "2017-03-12 03:30:00";
+
+        $dates = array();
+        for ($x = 1; $x <= intval($repetitions); $x++) {
+
+            $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
+            $new_service->save();
+            $id = $new_service->getId();
+            $school->addService($id);
+            $account->addService($id);
+            $teacher->addService($id);
+            $course->addService($id);
+
+        	$date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
 
         }
+
+
+
+        }
+
         // NOTE UNTESTED
         function getAccounts()
         {
@@ -276,6 +300,11 @@
                 array_push($services, $new_service);
             }
             return $services;
+        }
+
+        // NOTE UNTESTED
+        function getServicesForMonth($month_number){
+
         }
 
     }
