@@ -67,11 +67,12 @@
                     </ul>
                     <ul>
                         {% if student.getServices is not empty %}
-                            <ul>
-                                {% for service in student.getServices %}
-                                    <li>{{ service.getDescription }} with {{service.getTeachers[0]}} on {{ service.getDateOfService }} </li>
-                                {% endfor %}
-                            </ul>
+                            {% for service in student.getServices %}
+                                <div class="well">
+                                    - {{ service.getDateOfService }} - <br>
+                                    {{ service.getDescription }} with {{service.getTeachers[0].getName }}  </li>
+                                </div>
+                            {% endfor %}
                         {% endif %}
                     </ul>
                 </div>

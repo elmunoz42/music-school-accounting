@@ -11,16 +11,21 @@
 
 <div class="row">
     <div class="col-md-4" id="teacher-info">
-        <h3>Teacher Info:</h3>
+        <h3>Sessions:</h3>
         <hr>
+        <h4>Assigned Teachers</h4>
         {% if assigned_teachers is not empty %}
         <ul>
             {% for teacher in assigned_teachers %}
-            <li>&#9654;  <strong>{{ teacher.getName }}</strong></li>
+            <li> <a href="/owner_teachers/{{teacher.getId}}">{{ teacher.getName }}</a></li>
             {% endfor %}
         </ul>
+        <hr>
+        <h4> <a href="/owner_sessions_for_student/{{ student.getId }}">View Sessions</a></h4>
+        <hr>
+        <h4>Schedule Sessions</h4>
         <div class="well">
-            <form class="form-group" action="/schedule_sessions_for_student" method="post">
+            <form class="form-group" action="/owner_sessions_for_student" method="post">
                 <input type="hidden" name="student_id" value="{{ student.getId }}">
                 <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId }}">
                 <select class="form-control" name="teacher_id">
@@ -53,7 +58,7 @@
     </div>
 
     <div id="currentclass" class="col-md-4">
-        <h3>Course Info:</h3>
+        <h3>Courses:</h3>
         <hr>
         <form action="/owner_students/{{ student.getId }}" method="post">
             <label>Enroll in a Course</label>
@@ -85,9 +90,9 @@
             </tbody>
         </table>
         {% endif %}
-    </div>
 
-    <div class="col-md-4" >
+        <hr>
+
         <h3>Add Notes:</h3>
         <hr>
         <form action="/owner_students/{{ student.getId }}" method="post">
@@ -106,24 +111,31 @@
             <button type="submit" class="btn btn-danger btn-sm" name="button">Delete Student</button>
         </form>
     </div>
-</div>
-
-<hr>
-{% if notes_array is not empty %}
-<div class="notes">
-    <table class="table table-bordered">
-        <thead>
+    <!-- middle column -->
+    <div id="currentclass" class="col-md-4">
+      <h3>Notes:</h3>
+      <hr>
+      {% if notes_array is not empty %}
+      <div class="notes">
+        <table class="table table-bordered">
+          <thead>
             <tr>
-                <th>Teacher's Note History:</th>
+              <th>Teacher's Note History:</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for note in notes_array %}
             <tr>
-                <td><strong>{{ note }}</strong></td>
+              <td><strong>{{ note }}</strong></td>
             </tr>
             {% endfor %}
-        </tbody>
-    </div>
+          </tbody>
+        </table>
+      </div>
     {% endif %}
+    </div>
+    <!-- right column -->
+</div>
+<!-- row -->
+
     {% endblock %}

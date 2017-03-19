@@ -26,7 +26,7 @@
             $this->duration = (int) $duration; //in minutes
             $this->price = number_format((float) $price, 2); // stored as decimal(10,2)
             $this->discount = number_format((float) $discount, 2); // stored as decimal(10,2) portion of whole price remaining f.e. 90 => 90% discounted price.
-            $this->paid_for = (bool) $paid_for; // convert to TINIINT 1s and 0s for server!!!
+            $this->paid_for = intval($paid_for); // convert to TINIINT 1s and 0s for server!!!
             $this->notes = (string) $notes;
             $this->date_of_service = (string) $date_of_service;
             $this->recurrence = (string) $recurrence; // "Wednesdays|3:00pm|40min"
@@ -71,7 +71,7 @@
         }
         function setPaidFor($new_paid_for)
         {
-            $this->paid_for = (bool) $new_paid_for;
+            $this->paid_for = $new_paid_for;
         }
         function getPaidFor()
         {
@@ -122,8 +122,7 @@
             $duration = $this->getDuration();
             $price = $this->getPrice();
             $discount = $this->getDiscount();
-            // $paid_for = (int) $this->paid_for;
-            $paid_for = 1;
+            $paid_for = $this->getPaidFor();
             $notes = $this->getNotes();
             $date_of_service = $this->GetDateOfService();
             $recurrence = $this->getRecurrence();
@@ -143,7 +142,7 @@
                 $duration = $service['duration'];
                 $price = $service['price'];
                 $discount = $service['discount'];
-                $paid_for = (bool) $service['paid_for'];
+                $paid_for = $service['paid_for'];
                 $notes = $service['notes'];
                 $date_of_service = $service['date_of_service'];
                 $recurrence = $service['recurrence'];

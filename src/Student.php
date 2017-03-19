@@ -203,7 +203,7 @@
         // NOTE maybe there should be a different Join table for student_services_templates.
 
         // NOTE UNTESTED
-        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account)
+        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $duration,  $student_notes, $teacher, $school, $account)
         {
             $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
             $new_service->save();

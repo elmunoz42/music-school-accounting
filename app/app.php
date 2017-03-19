@@ -255,6 +255,38 @@
         return $app->redirect("/owner_students");
     });
 
+    // JOIN Add (Schedule) Services to student - from student page
+    $app->post('/owner_sessions_for_student', function() use($app) {
+
+        $school = School::find($_SESSION['school_id']);
+        $student = Student::find($_POST['student_id']);
+        $account = Account::find($_POST['account_id']);
+        $teacher = Teacher::find($_POST['teacher_id']);
+        $notes = "Scheduled on " . date('l jS \of F Y ');
+
+
+        $student->addPrivateSessionBatch($_POST['repetitions'], $_POST['description'], $_POST['duration'], $_POST['price'], $_POST['discount'], $_POST['paid_for'], $notes, $_POST['date_of_service'], $_POST['recurrence'], $_POST['attendance'], $teacher, $school, $account);
+
+        $services = $student->getServices();
+
+        return $app['twig']->render('owner_student_schedule_lessons.html.twig', array('school'=>$school, 'student'=>$student, 'account'=>$account, 'teacher'=>$teacher, 'services'=>$services, 'assigned_teachers'=>$student->getTeachers()));
+
+    });
+
+    // GET student sessions
+    $app->get('/owner_sessions_for_student/{id}', function($id) use($app) {
+
+        $school = School::find($_SESSION['school_id']);
+        $student = Student::find($id);
+        $account = $student->getAccounts()[0];
+        $teacher = $student->getTeachers()[0];
+        // $date = date('l jS \of F Y '); // TODO incorporate into UI
+        $services = $student->getServices();
+
+        return $app['twig']->render('owner_student_schedule_lessons.html.twig', array('school'=>$school, 'student'=>$student, 'account'=>$account, 'teacher'=>$teacher, 'services'=>$services, 'assigned_teachers'=>$student->getTeachers()));
+
+    });
+
     //READ accounts
     $app->get("/owner_accounts", function() use ($app) {
 
@@ -359,20 +391,6 @@
         'selected_students'=>$selected_students, 'selected_teachers'=>$selected_teachers,
         'selected_courses'=>$selected_courses,
         'selected_lessons'=>$selected_lessons));
-    });
-
-    // JOIN Add (Schedule) Services to student
-    $app->post('/schedule_lessons_for_student', function() use($app) {
-
-        $school= School::find($_SESSION['school_id']);
-        $student = Student::find($_POST['student_id']);
-        $account = Account::find($_POST['account_id']);
-        $teacher = Teacher::find($_POST['teacher_id']);
-
-        $student->addPrivateSessionBatch($repetitions, $description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account);
-
-        return $app['twig']->render('owner_account_schedule_lessons.html.twig', array('school'=>$school, 'student'=>$student, 'account'=>$account, 'teachers'=>$student->getTeachers()));
-
     });
 
     // READ courses

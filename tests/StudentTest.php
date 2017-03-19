@@ -297,8 +297,6 @@
             $result = $student->getServices();
 
             // Assert
-            // var_dump($service);
-            var_dump($result[4]);
             $this->assertEquals($service->getDescription, $result[0]->getDescription);
         }
     }
