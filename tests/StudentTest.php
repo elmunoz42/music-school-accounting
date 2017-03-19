@@ -239,5 +239,67 @@
             // Assert
             $this->assertEquals($input_name, $result[0]->getName());
         }
+
+        function test_addPrivateSessionBatch()
+        {
+            // Arrange Service
+            $service_description = "Test Music Lesson";
+            $service_duration = 40;
+            $service_price = 40;
+            $service_discount = 95;
+            $service_payed_for = 1;
+            $service_notes = "Teacher was tardy.";
+            $service_date_of_service = '2017-02-27 01:02:03';
+            $service_recurrence = "Wednesdays|3:00pm";
+            $service_attendance = "Attended";
+            $service = new Service ($service_description, $service_duration, $service_price, $service_discount, $service_payed_for, $service_notes, $service_date_of_service, $service_recurrence, $service_attendance);
+            $service->save();
+
+            // Arrange Student
+            $student_name = "Flavio";
+            $student_notes = "Wow!";
+            $student = new Student($student_name);
+            $student->setNotes($student_notes);
+            $student->save();
+
+            // Arrange School
+            $school = new School("school_name", "manager_name", "phone_number", "email", "business_address", "city", "state", "country", "zip", "type");
+            $school->save();
+
+            // Arrange Account
+            $account_family_name = "Bobsters";
+            $account_parent_one_name = "Lobster";
+            $account_parent_two_name = "Momster";
+            $account_street_address = "Under the sea";
+            $account_phone_number = "555555555";
+            $account_email_address = "fdsfsda@fdasfads";
+            $account_notes = "happy clients";
+            $account_billing_history = "200 for February";
+            $account_outstanding_balance = 31;
+            $account = new Account($account_family_name, $account_parent_one_name, $account_street_address, $account_phone_number, $account_email_address);
+            $account->setParentTwoName($account_parent_two_name);
+            $account->setNotes($account_notes);
+            $account->setBillingHistory($account_billing_history);
+            $account->setOutstandingBalance($account_outstanding_balance);
+            $account->save();
+
+            // Arrange Teacher
+            $teacher = new Teacher("teacher_name", "instrument");
+            $teacher->setNotes("test-note");
+            $teacher->save();
+
+            $repetitions = 5;
+
+            // Add to Join
+            $student->addPrivateSessionBatch($repetitions, $service_description, $service_duration, $service_price, $service_discount, $service_payed_for, $service_notes, $service_date_of_service, $service_recurrence, $service_attendance, $teacher, $school, $account);
+
+            // Get from Join
+            $result = $student->getServices();
+
+            // Assert
+            // var_dump($service);
+            var_dump($result[4]);
+            $this->assertEquals($service->getDescription, $result[0]->getDescription);
+        }
     }
  ?>

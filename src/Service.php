@@ -13,6 +13,13 @@
         private $attendance;
         private $id;
 
+        // TODO CREATE TEMPLATE JOIN TABLE USED FOR REFERENCE.
+        // 1) students_services_template
+
+        // 2) create student->setSessionTemplate($teacher_id, $school_id, $account_id, $service_id) NOTE HAS TO DELETE PREVIOUS TEMPLATE!
+
+        // 3) create student->findSessionTemplate($teacher_id);
+
         function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance,$id = null)
         {
             $this->description = $description;
@@ -23,10 +30,11 @@
             $this->notes = (string) $notes;
             $this->date_of_service = (string) $date_of_service;
             $this->recurrence = (string) $recurrence; // "Wednesdays|3:00pm|40min"
-            // NOTE Should this information be with student ??? Many to Many ???
+
             $this->attendance = (string) $attendance; // use codes and translate to numbers
             $this->id = (int) $id;
         }
+
 
         // getters and setters
         function setDescription($new_description)

@@ -53,6 +53,7 @@
         static function deleteJoin()
         {
             $GLOBALS['DB']->exec("DELETE FROM students_courses;");
+            $GLOBALS['DB']->exec("DELETE FROM services_students;");
         }
 
         static function getAll()
@@ -190,19 +191,19 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO lessons_students (student_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
         }
-        // NOTE UNTESTED
+        // Tested
         function addService($service_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO service_students (service_id, student_id) VALUES ({$service_id},{$this->getId()})");
+            $GLOBALS['DB']->exec("INSERT INTO services_students (service_id, student_id) VALUES ({$service_id},{$this->getId()})");
         }
 
         // NOTE where should student practiced live?
         // AppSheet ==> Timestamp	Student	Date of Lesson	Attended	Skills we worked on	Song/s we are working on	Student Practiced
 
-        // NOTE maybe there should be a different Join table for student_services templates.
+        // NOTE maybe there should be a different Join table for student_services_templates.
 
         // NOTE UNTESTED
-        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account, $course)
+        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account)
         {
             $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
             $new_service->save();
@@ -210,31 +211,29 @@
             $school->addService($id);
             $account->addService($id);
             $teacher->addService($id);
-            $course->addService($id);
+            $this->addService($id);
         }
 
         // NOTE UNTESTED
-        function addPrivateSessionBatch($repetitions, $description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $description, $duration,  $student_notes, $teacher, $school, $account, $course){
+        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $teacher, $school, $account)
+        {
 
-        //$start_date = "2017-03-12 03:30:00";
+        //$date_of_service = "2017-03-12 03:30:00";
 
-        $dates = array();
-        for ($x = 1; $x <= intval($repetitions); $x++) {
+            $dates = array();
+            for ($x = 1; $x <= intval($repetitions); $x++) {
 
-            $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
-            $new_service->save();
-            $id = $new_service->getId();
-            $school->addService($id);
-            $account->addService($id);
-            $teacher->addService($id);
-            $course->addService($id);
+                $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
+                $new_service->save();
+                $id = $new_service->getId();
+                $school->addService($id);
+                $account->addService($id);
+                $teacher->addService($id);
+                $this->addService($id);
 
-        	$date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
+                $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
 
-        }
-
-
-
+            }
         }
 
         // NOTE UNTESTED
@@ -280,7 +279,7 @@
             return $lessons;
         }
 
-        // NOTE unstested
+        // NOTE UNTESTED
         function getServices()
         {
             $query = $GLOBALS['DB']->query("SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = {$this->getId()};");
@@ -288,8 +287,8 @@
             foreach($query as $service){
                 $description = $service['description'];
                 $duration = $service['duration'];
-                $price = $service['price'];
-                $discount = $service['discount'];
+                $price = number_format((float) $service['price'], 2);
+                $discount = number_format((float)$service['discount'], 2);
                 $paid_for = (bool) $service['paid_for'];
                 $notes = $service['notes'];
                 $date_of_service = $service['date_of_service'];
@@ -304,7 +303,7 @@
 
         // NOTE UNTESTED
         function getServicesForMonth($month_number){
-
+            //
         }
 
     }
