@@ -19,6 +19,36 @@
             <li>&#9654;  <strong>{{ teacher.getName }}</strong></li>
             {% endfor %}
         </ul>
+        <div class="well">
+            <form class="form-group" action="/schedule_sessions_for_student" method="post">
+                <input type="hidden" name="student_id" value="{{ student.getId }}">
+                <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId }}">
+                <select class="form-control" name="teacher_id">
+                    {% for teacher in assigned_teachers %}
+                        <option value="{{ teacher.getId }}">{{teacher.getName}}</option>
+                    {% endfor %}
+                </select>
+                <label for="repetitions">Repetitions:</label>
+                <input type="number" name="repetitions" value=""><br>
+                <label for="description">Description:</label>
+                <input type="text" name="description" value="music lesson"><br>
+                <label for="price">Price:</label>
+                <input type="number" name="price" value="40"><br>
+                <label for="discount">Discount:</label>
+                <input type="number" name="discount" value="1"><br>
+                <label for="paid_for">Paid for?</label>
+                <input type="number" name="paid_for" value="0"><br>
+                <label for="date_of_service">Starting Date:</label>
+                <input type="datetime-local" name="date_of_service" value=""><br>
+                <label for="recurrence">Recurrence:</label>
+                <input type="text" name="recurrence" value="Weakday|Time"><br>
+                <label for="attendance">Attendance:</label>
+                <input type="text" name="attendance" value="Scheduled"><br>
+                <label for="duration">Duration:</label>
+                <input type="number" name="duration" value="40"><br>
+                <button type="submit" name="submit">Submit</button>
+            </form>
+        </div>
         {% endif %}
     </div>
 
