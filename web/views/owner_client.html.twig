@@ -81,16 +81,17 @@
     </div>
     <!-- row -->
 
-    <!-- NOTE: Koji this is the front end for the first spec I'm hard coding the dates for now-->
+    <!-- NOTE: Koji this is the front end for the first spec I'm hard coding the month and year for now-->
     <div class="col-md-4">
         <h3>Services Attended / Month</h3>
+        <hr>
         {% if selected_students is not empty %}
             {% for student in selected_students %}
                 <div class="panel panel-info">
                     <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
                     <ul>
-                        {% if student.getServicesForMonth("2017-09-01 00:00:00", "2017-09-31 23:59:59") is not empty %}
-                            {% for service in student.getServices %}
+                      {% if student.getServicesForMonth(9, 2017) is not empty %}
+                            {% for service in student.getServicesForMonth(9, 2017) %}
                                 <div class="well">
                                     - {{ service.getDateOfService }} - <br>
                                     {{ service.getDescription }} with {{service.getTeachers[0].getName }}  </li>
