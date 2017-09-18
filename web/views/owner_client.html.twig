@@ -80,7 +80,29 @@
         {% endif %}
     </div>
     <!-- row -->
+
+    <!-- NOTE: Koji this is the front end for the first spec I'm hard coding the dates for now-->
     <div class="col-md-4">
+        <h3>Services Attended / Month</h3>
+        {% if selected_students is not empty %}
+            {% for student in selected_students %}
+                <div class="panel panel-info">
+                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
+                    <ul>
+                        {% if student.getServicesForMonth("2017-09-01 00:00:00", "2017-09-31 23:59:59") is not empty %}
+                            {% for service in student.getServices %}
+                                <div class="well">
+                                    - {{ service.getDateOfService }} - <br>
+                                    {{ service.getDescription }} with {{service.getTeachers[0].getName }}  </li>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <hr>
         <h3>Navigation</h3>
         <hr>
         <form action="/search_input" method="post">
