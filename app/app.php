@@ -79,7 +79,7 @@
         // $school->save();
         $school = School::find(1); // NOTE placeholder for login
         $_SESSION['school_id'] = intval($school->getId());
-        $school2 = School::find($school->getId());
+        // $school2 = School::find($school->getId());
 
         // This directs to owner main page and sends in keys with values only relating to that school: School Object, teachers, students, courses, accounts, services
         return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServices(), 'lessons' => $school->getLessons()));
@@ -92,6 +92,7 @@
         return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
 
     });
+
 
     //CREATE teacher
     $app->post("/owner_teachers", function() use ($app) {
