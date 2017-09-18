@@ -25,7 +25,7 @@ Music School Administrator Specs:
 |3b)Can delete, update a class.|
 |4a)Can register a lesson to the school. |
 |4b)Can delete, update a lesson.|
-|5a)Can register a service(product) to the school. |
+|5a)Can register a service(session) to the school. |
 |5b)Can delete, update a service. |
 |6a)Can register a customer account to the school. |
 |6b)Can delete, update an account. |
