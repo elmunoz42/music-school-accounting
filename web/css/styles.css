@@ -78,9 +78,16 @@ h3 {
 .notes {
     width: 70%;
     margin-left: 15%;
-    margin-right: 15%;background-color: #ffffe0;
+    margin-right: 15%;
+    background-color: #ffffe0;
 }
 
+.notes-account {
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #ffffe0;
+}
 th {
     text-align: center;
 }

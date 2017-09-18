@@ -42,6 +42,32 @@
                 </div>
             </div>
         </form>
+        <hr>
+        <h3>Navigation</h3>
+        <hr>
+        <form action="/search_input" method="post">
+            <div class="form-group">
+                <label for="search_input"></label>
+                <input class="form-control" type="text" name="search_input" placeholder="Search for Client">
+            </div>
+        </form>
+
+
+          {% if accounts is not empty %}
+              <table class="table table-hover">
+                  <thead>
+                      <th>Clients Name</th>
+                  </thead>
+                  <tbody>
+                      {% for account in accounts %}
+                      <tr>
+                          <td><a href="/owner_accounts/{{account.getId}}">{{ account.getFamilyName}}</a></td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          {% endif %}
+
     </div>
     <!-- row in column -->
     <div class="col-md-4">
@@ -65,74 +91,11 @@
                             {% endfor %}
                         {% endif %}
                     </ul>
-                    <ul>
-                        {% if student.getServices is not empty %}
-                            {% for service in student.getServices %}
-                                <div class="well">
-                                    - {{ service.getDateOfService }} - <br>
-                                    {{ service.getDescription }} with {{service.getTeachers[0].getName }}  </li>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    </ul>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <!-- row -->
 
-    <!-- NOTE: Koji this is the front end for the first spec I'm hard coding the month and year for now-->
-    <div class="col-md-4">
-        <h3>Services Attended / Month</h3>
-        <hr>
-        {% if selected_students is not empty %}
-            {% for student in selected_students %}
-                <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
-                    <ul>
-                      {% if student.getServicesForMonth(9, 2017) is not empty %}
-                            {% for service in student.getServicesForMonth(9, 2017) %}
-                                <div class="well">
-                                    - {{ service.getDateOfService }} - <br>
-                                    {{ service.getDescription }} with {{service.getTeachers[0].getName }}  </li>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    </ul>
                 </div>
             {% endfor %}
         {% endif %}
 
-        <hr>
-        <h3>Navigation</h3>
-        <hr>
-        <form action="/search_input" method="post">
-            <div class="form-group">
-                <label for="search_input"></label>
-                <input class="form-control" type="text" name="search_input" placeholder="Search for Client">
-            </div>
-        </form>
-
-        <div class="col-md-12">
-            {% if accounts is not empty %}
-                <table class="table table-hover">
-                    <thead>
-                        <th>Clients Name</th>
-                    </thead>
-                    <tbody>
-                        {% for account in accounts %}
-                        <tr>
-                            <td><a href="/owner_accounts/{{account.getId}}">{{ account.getFamilyName}}</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
         <h3>Add Notes:</h3>
         <hr>
         <form action="/owner_accounts/{{ account.getId }}" method="post">
@@ -146,27 +109,90 @@
             </div>
         </form>
     </div>
-    <!-- left column -->
+    <!-- row -->
+
+    <!-- NOTE: Koji this is the front end for the first spec I'm hard coding the month and year for now-->
     <div class="col-md-4">
-        {% if notes_array is not empty %}
-        <div class="notes">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Note History:</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for note in notes_array %}
-                <tr>
-                    <td><strong>{{ note }}</strong></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </div>
+        <h3>Services Attended / Month</h3>
+
+        <!-- NOTE: Koji this is how I can get the month and year in twig -->
+        <!-- <h4>Current Month and Date</h4>
+        {% set month = 'now'|date('m')  %}
+        {{ dump(month) }}
+        {% set year = 'now'|date('Y') %}
+        {{ dump(year) }} -->
+
+        <hr>
+        {% if selected_students is not empty %}
+            {% for student in selected_students %}
+                <div class="panel panel-info">
+                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
+
+                    {% if student.getServicesForMonth(9, 2017) is not empty %}
+                    {% for service in student.getServicesForMonth(9, 2017) %}
+                    <div class="well">
+                      - {{ service.getDateOfService }} - <br>
+                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+            {% endfor %}
         {% endif %}
+
+
     </div>
-    <!-- right column -->
 </div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Service History</h3>
+    <hr>
+    {% if selected_students is not empty %}
+        {% for student in selected_students %}
+            <div class="panel panel-info">
+                <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
+                {% if student.getServices is not empty %}
+                {% for service in student.getServices %}
+                <div class="well">
+                  - {{ service.getDateOfService }} - <br>
+                  {{ service.getDescription }} with {{service.getTeachers[0].getName }}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+  </div>
+
+  <div class="col-md-6">
+
+    <h3>Note History</h3>
+    <hr>
+      {% if notes_array is not empty %}
+      <div class="notes-account">
+          <table class="table table-bordered">
+              <thead>
+                  <tr>
+                      <th>Note History:</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {% for note in notes_array %}
+              <tr>
+                  <td><strong>{{ note }}</strong></td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </div>
+      {% endif %}
+
+  </div>
+  <!-- middle column -->
+
+</div>
+
 
     {% endblock %}
