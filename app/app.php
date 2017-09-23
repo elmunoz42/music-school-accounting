@@ -220,6 +220,10 @@
         $selected_student->addCourse($course_id);
         $notes_array = explode("|", $selected_student->getNotes());
         $assigned_teachers = $selected_student->getTeachers();
+        $this_month=intval(date('m',strtotime('this month')));
+        $this_months_year=intval(date('Y',strtotime('this month')));
+        $last_month=intval(date('m',strtotime('last month')));
+        $last_months_year=intval(date('Y',strtotime('last month')));
         return $app['twig']->render('owner_student.html.twig', array(
             'school' => $school,
             'student' => $selected_student,
@@ -228,7 +232,11 @@
             'courses'=>$school->getCourses(), 'enrolled_courses'=>$selected_student->getCourses(),
             'teachers' => $school->getTeachers(),
             'lessons' => $school->getLessons(),
-            'assigned_lessons' => $selected_student->getLessons()));
+            'assigned_lessons' => $selected_student->getLessons(),
+            'this_month' => $this_month,
+            'this_months_year'=>$this_months_year,
+            'last_month'=>$last_month,
+            'last_months_year'=>$last_months_year));
     });
 
     //UPDATE student notes
@@ -241,6 +249,10 @@
         $selected_student->updateNotes($updated_notes);
         $notes_array = explode("|", $updated_notes);
         $assigned_teachers = $selected_student->getTeachers();
+        $this_month=intval(date('m',strtotime('this month')));
+        $this_months_year=intval(date('Y',strtotime('this month')));
+        $last_month=intval(date('m',strtotime('last month')));
+        $last_months_year=intval(date('Y',strtotime('last month')));
 
         return $app['twig']->render('owner_student.html.twig', array(
             'school' => $school,
@@ -250,7 +262,11 @@
             'courses'=>$school->getCourses(), 'enrolled_courses'=>$selected_student->getCourses(),
             'teachers' => $school->getTeachers(),
             'lessons' => $school->getLessons(),
-            'assigned_lessons' => $selected_student->getLessons()));
+            'assigned_lessons' => $selected_student->getLessons(),
+            'this_month' => $this_month,
+            'this_months_year'=>$this_months_year,
+            'last_month'=>$last_month,
+            'last_months_year'=>$last_months_year));
     });
 
     //UPDATE student service NOTE UNTESTED UNTESTED UNTESTED
@@ -302,13 +318,21 @@
         $account = Account::find($_POST['account_id']);
         $teacher = Teacher::find($_POST['teacher_id']);
         $notes = "Scheduled on " . date('l jS \of F Y ');
+        $this_month=intval(date('m',strtotime('this month')));
+        $this_months_year=intval(date('Y',strtotime('this month')));
+        $last_month=intval(date('m',strtotime('last month')));
+        $last_months_year=intval(date('Y',strtotime('last month')));
 
 
         $student->addPrivateSessionBatch($_POST['repetitions'], $_POST['description'], $_POST['duration'], $_POST['price'], $_POST['discount'], $_POST['paid_for'], $notes, $_POST['date_of_service'], $_POST['recurrence'], $_POST['attendance'], $teacher, $school, $account);
 
         $services = $student->getServices();
 
-        return $app['twig']->render('owner_student_schedule_lessons.html.twig', array('school'=>$school, 'student'=>$student, 'account'=>$account, 'teacher'=>$teacher, 'services'=>$services, 'assigned_teachers'=>$student->getTeachers()));
+        return $app['twig']->render('owner_student_schedule_lessons.html.twig', array('school'=>$school, 'student'=>$student, 'account'=>$account, 'teacher'=>$teacher, 'services'=>$services, 'assigned_teachers'=>$student->getTeachers(),
+        'this_month' => $this_month,
+        'this_months_year'=>$this_months_year,
+        'last_month'=>$last_month,
+        'last_months_year'=>$last_months_year));
 
     });
 
