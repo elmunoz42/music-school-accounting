@@ -113,7 +113,7 @@
 
     <!-- NOTE: Koji this is the front end for the first spec I'm hard coding the month and year for now-->
     <div class="col-md-4">
-        <h3>Services Attended / Month</h3>
+        <h3>Services Last Month</h3>
 
         <!-- NOTE: Koji this is how I can get the month and year in twig -->
         <!-- <h4>Current Month and Date</h4>
@@ -128,10 +128,10 @@
                 <div class="panel panel-info">
                     <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
 
-                    {% if student.getServicesForMonth(9, 2017) is not empty %}
-                    {% for service in student.getServicesForMonth(9, 2017) %}
+                    {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
+                    {% for service in student.getServicesForMonth(last_month, last_months_year) %}
                     <div class="well">
-                      - {{ service.getDateOfService }} - <br>
+                      - {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
                       {{ service.getDescription }} with {{service.getTeachers[0].getName }}
                     </div>
                     {% endfor %}
