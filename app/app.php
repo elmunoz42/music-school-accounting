@@ -351,7 +351,7 @@
     });
 
     // GET session
-    $app->get('/owner_session/{id}', function($id) use($app) {
+    $app->get('/owner_sessions/{id}', function($id) use($app) {
 
         $school = School::find($_SESSION['school_id']);
         $service = Service::find($id);
@@ -360,6 +360,16 @@
 
     });
 
+    // Update session NOTE: NEEDS TO BE CREATED
+    $app->patch('/owner_sessions/{id}', function($id) use($app) {
+
+
+        $school = School::find($_SESSION['school_id']);
+        $service = Service::find($id);
+
+        return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service));
+
+    });
 
 
     //READ accounts
