@@ -17,6 +17,9 @@
             Student::deleteAll();
             Teacher::deleteAll();
             Student::deleteJoin();
+            Service::deleteAll();
+            Account::deleteAll();
+
         }
         function test_getName()
         {
@@ -297,7 +300,7 @@
             $result = $student->getServices();
 
             // Assert
-            $this->assertEquals($service->getDescription, $result[0]->getDescription);
+            $this->assertEquals($service->getDescription(), $result[0]->getDescription());
         }
     }
  ?>
