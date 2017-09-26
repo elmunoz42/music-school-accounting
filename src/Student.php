@@ -301,8 +301,6 @@
             return $services;
         }
 
-        // NOTE Koji this our first spec: We want to be able to see the services/sessions a student had in a time period.
-        // NOTE This command WORKS!!! as a SQL command in phpMyAdmin: SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = 2 AND MONTH(date_of_service) = 9 AND YEAR(date_of_service) = 2017
         // NOTE UNTESTED
         function getServicesForMonth($month, $year){
             $query = $GLOBALS['DB']->query("SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = {$this->getId()} AND MONTH(date_of_service) = {$month} AND YEAR(date_of_service) = {$year};");

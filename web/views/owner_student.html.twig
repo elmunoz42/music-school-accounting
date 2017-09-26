@@ -29,8 +29,8 @@
                     {% if student.getServicesForMonth(this_month, this_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(this_month, this_months_year) %}
                     <div class="well">
-                      - {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}
+                      <a href="owner_student_update_service/{{service.getId}}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
+                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
                     </div>
                     {% endfor %}
                     {% endif %}
@@ -46,8 +46,8 @@
                     {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(last_month, last_months_year) %}
                     <div class="well">
-                      - {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}
+                      <a href="owner_student_update_service/{{service.getId}}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
+                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
                     </div>
                     {% endfor %}
                     {% endif %}

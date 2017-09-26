@@ -27,6 +27,9 @@
            $_SESSION['client_id'] = null;
     }
 
+    use Symfony\Component\Debug\Debug;
+    Debug::enable();
+
     $app = new Silex\Application();
 
     $app['debug']=true;
@@ -50,6 +53,7 @@
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/../web/views'
     ));
+
 
     use Symfony\Component\HttpFoundation\Request;
     Request::enableHttpMethodParameterOverride();
@@ -269,8 +273,9 @@
             'last_months_year'=>$last_months_year));
     });
 
-    //UPDATE student service NOTE UNTESTED UNTESTED UNTESTED
-    // $app->update("/owner_students/student_student_update_service/{id}, function($id) use($app)" {
+    // GET student service NOTE UNTESTED UNTESTED UNTESTED
+    // NOTE NOTE Figure out why broken!! is find static function broken
+    // $app->get("/owner_service/{id}", function($id) use($app)" {
     //
     //     $school=School::find($_SESSION['school_id']);
     //     $selected_service = Service::find($id);
@@ -282,15 +287,12 @@
     //     $last_month=intval(date('m',strtotime('last month')));
     //     $last_months_year=intval(date('Y',strtotime('last month')));
     //
-    //     return $app['twig']->render('owner_student.html.twig', array(
+    //     return $app['twig']->render('owner_student_update_service.html.twig', array(
     //       'school' => $school,
     //       'student' => $selected_student,
+    //       'service' => $selected_service,
     //       'assigned_teachers' => $assigned_teachers,
     //       'notes_array' => $notes_array,
-    //       'courses'=>$school->getCourses(), 'enrolled_courses'=>$selected_student->getCourses(),
-    //       'teachers' => $school->getTeachers(),
-    //       'lessons' => $school->getLessons(),
-    //       'assigned_lessons' => $selected_student->getLessons(),
     //       'this_month' => $this_month,
     //       'this_months_year'=>$this_months_year,
     //       'last_month'=>$last_month,

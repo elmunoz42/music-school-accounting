@@ -154,24 +154,38 @@
             return $services;
         }
 
-        static function find($service_id)
+        // NOTE: This would be less server intensive way of doing the find.
+        // static function find($service_id)
+        // {
+        //     $returned_services = $GLOBALS['DB']->query("SELECT * FROM services WHERE id = {$service_id};");
+        //     $re_service = null;
+        //     foreach($returned_services as $service){
+        //         $description = $service['description'];
+        //         $duration = $service['duration'];
+        //         $price = $service['price'];
+        //         $discount = $service['discount'];
+        //         $paid_for = (bool) $service['paid_for'];
+        //         $notes = $service['notes'];
+        //         $date_of_service = $service['date_of_service'];
+        //         $recurrence = $service['recurrence'];
+        //         $attendance = $service['attendance'];
+        //         $id = (int) $service['id'];
+        //         $re_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
+        //     }
+        //     return $re_service;
+        // }
+
+        static function find($search_id)
         {
-            $returned_services = $GLOBALS['DB']->query("SELECT * FROM services WHERE id = {$service_id};");
-            $re_service = null;
-            foreach($returned_services as $service){
-                $description = $service['description'];
-                $duration = $service['duration'];
-                $price = $service['price'];
-                $discount = $service['discount'];
-                $paid_for = (bool) $service['paid_for'];
-                $notes = $service['notes'];
-                $date_of_service = $service['date_of_service'];
-                $recurrence = $service['recurrence'];
-                $attendance = $service['attendance'];
-                $id = (int) $service['id'];
-                $re_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
-            }
-            return $re_service;
+           $found_service = null;
+           $services = Service::getAll();
+           foreach($services as $service){
+               $service_id = $service->getId();
+               if ( $service_id == $search_id){
+                   $found_service = $service;
+               }
+           }
+           return $found_service;
         }
 
         // Update functions
