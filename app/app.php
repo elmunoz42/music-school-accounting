@@ -350,6 +350,18 @@
 
     });
 
+    // GET session
+    $app->get('/owner_session/{id}', function($id) use($app) {
+
+        $school = School::find($_SESSION['school_id']);
+        $service = Service::find($id);
+
+        return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service));
+
+    });
+
+
+
     //READ accounts
     $app->get("/owner_accounts", function() use ($app) {
 
