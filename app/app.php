@@ -355,17 +355,25 @@
 
         $school = School::find($_SESSION['school_id']);
         $service = Service::find($id);
+        $notes_array = explode("|", $service->getNotes());
 
-        return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service));
+        return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service, 'notes_array'=>$notes_array));
 
     });
 
     // Update session NOTE: NEEDS TO BE CREATED
     $app->patch('/owner_sessions/{id}', function($id) use($app) {
 
-
         $school = School::find($_SESSION['school_id']);
         $service = Service::find($id);
+        $service->updateDateOfService($_POST['date_of_service']);
+        $service->updateRecurrence($_POST['recurrence']);
+        $service->updateAttendance($_POST['attendance']);
+        $service->updateDuration($_POST['duration']);
+        $new_notes = $_POST['new_notes'];
+        $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" . $service->getNotes();
+        $service->updateNotes($updated_notes);
+        $notes_array = explode("|", $updated_notes);
 
         return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service));
 

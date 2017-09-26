@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4" id="teacher-info">
+    <div class="col-md-4">
         <h3>Session Date: {{ service.getDateOfService }}</h3>
         <hr>
         <h4>Teachers in this session:</h4>
@@ -30,21 +30,20 @@
             {% endfor %}
         </ul>
         {% endif %}
+        <h3>Session Info:</h3>
+        {% if service is not empty %}
+        <ul>
+          <li>Attendance: {{ service.getAttendance }} </li><br>
+          <li>Recurrence: {{ service.getRecurrence }}</li><br>
+          <li>Payment Status: {{ service.getPaidFor }}</li><br>
+          <li>Notes: <br>{{ service.getNotes }}</li><br>
+        </ul>
         <hr>
     </div>
     <!-- left column -->
     <div class="col-md-8" id="session-update">
-        <h3>Session Info:</h3>
-        {% if service is not empty %}
-        <ul>
-            <li>Attendance: {{ service.getAttendance }} </li><br>
-            <li>Notes: <br>{{ service.getNotes }}</li><br>
-            <li>Recurrence: {{ service.getRecurrence }}</li><br>
-            <li>Payment Status: {{ service.getPaidFor }}</li><br>
-        </ul>
-        <hr>
 
-        <!-- NOTE UNTESTED UNTESTE UNTESTED -->
+        <h3>Update Session Information/Attendance</h3>
         <div class="well">
           <form action="/owner_sessions/{{ service.getId }}" method="post">
               <input name="_method" type="hidden" value="patch" required>
