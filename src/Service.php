@@ -154,6 +154,7 @@
             return $services;
         }
 
+        // Tested :-)
         static function find($service_id)
         {
             $returned_services = $GLOBALS['DB']->query("SELECT * FROM services WHERE id = {$service_id};");
