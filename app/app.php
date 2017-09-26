@@ -375,7 +375,7 @@
         $service->updateNotes($updated_notes);
         $notes_array = explode("|", $updated_notes);
 
-        return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service));
+        return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service, 'notes_array'=>$notes_array));
 
     });
 

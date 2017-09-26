@@ -10,39 +10,9 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h3>Session Date: {{ service.getDateOfService }}</h3>
-        <hr>
-        <h4>Teachers in this session:</h4>
-        {% if service.getTeachers is not empty %}
-        <ul>
-            {% for teacher in service.getTeachers %}
-            <li> <a href="/owner_teachers/{{teacher.getId}}">{{ teacher.getName }}</a></li>
-            {% endfor %}
 
-        {% endif %}
-        </ul>
-        <h4>Students in this session:</h4>
-        {% if service.getStudents is not empty %}
-        <ul>
-            {% for student in service.getStudents %}
-            <li> <a href="/owner_students/{{student.getId}}">{{ student.getName }}</a></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        <h3>Session Info:</h3>
-        {% if service is not empty %}
-        <ul>
-          <li>Attendance: {{ service.getAttendance }} </li><br>
-          <li>Recurrence: {{ service.getRecurrence }}</li><br>
-          <li>Payment Status: {{ service.getPaidFor }}</li><br>
-          <li>Notes: <br>{{ service.getNotes }}</li><br>
-        </ul>
-        <hr>
-    </div>
-    <!-- left column -->
     <div class="col-md-8" id="session-update">
-
+        {% if service is not empty %}
         <h3>Update Session Information/Attendance</h3>
         <div class="well">
           <form action="/owner_sessions/{{ service.getId }}" method="post">
@@ -74,6 +44,54 @@
           </form>
         </div>
         {% endif %}
+    </div>
+    <!-- left column -->
+    <div class="col-md-4">
+        <h3>Session Date: {{ service.getDateOfService }}</h3>
+        <hr>
+        <h4>Teachers in this session:</h4>
+        {% if service.getTeachers is not empty %}
+        <ul>
+            {% for teacher in service.getTeachers %}
+            <li> <a href="/owner_teachers/{{teacher.getId}}">{{ teacher.getName }}</a></li>
+            {% endfor %}
+
+        {% endif %}
+        </ul>
+        <h4>Students in this session:</h4>
+        {% if service.getStudents is not empty %}
+        <ul>
+            {% for student in service.getStudents %}
+            <li> <a href="/owner_students/{{student.getId}}">{{ student.getName }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <h3>Session Info:</h3>
+        {% if service is not empty %}
+
+          <p>Attendance: {{ service.getAttendance }} </p><br>
+          <p>Recurrence: {{ service.getRecurrence }}</p><br>
+          <p>Payment Status: {{ service.getPaidFor }}</p><br>
+          {% if notes_array is not empty %}
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Session Note History:</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for note in notes_array %}
+                <tr>
+                  <td><strong>{{ note }}</strong></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+      {% endif %}
+        <hr>
     </div>
     <!-- right column -->
 </div>
