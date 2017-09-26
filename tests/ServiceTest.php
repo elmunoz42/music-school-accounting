@@ -203,5 +203,26 @@
             $this->assertEquals($test_service, $result[0]);
         }
 
+        function test_findService()
+        {
+            // Arrange
+            $input_description = "Music Lesson";
+            $input_duration = 40;
+            $input_price = 40;
+            $input_discount = 95;
+            $input_payed_for = 1;
+            $input_notes = "Teacher was tardy.";
+            $input_date_of_service = '2017-02-27 01:02:03';
+            $input_recurrence = "Wednesdays|3:00pm";
+            $input_attendance = "Attended";
+            $test_service = new Service ($input_description, $input_duration, $input_price, $input_discount, $input_payed_for, $input_notes, $input_date_of_service, $input_recurrence, $input_attendance);
+            $test_service->save();
+            $test_service->getId();
+            // Act
+            $result = Service::find($test_service->getId());
+            // Assert
+            $this->assertEquals($test_service, $result);
+        }
+
     }
  ?>

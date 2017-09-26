@@ -42,7 +42,7 @@
             $result = Account::getAll();
 
             // Assert
-            $this->assertEquals($new_account, $result[1]);
+            $this->assertEquals($new_account, $result[0]);
             // NOTE not sure why I had to add 1 index and not 0 ???
         }
         function test_getFamilyName()
