@@ -12,9 +12,9 @@
     <div class="col-sm-8">
         <h1>{{lesson.getTitle}}</h1>
         <h4>{{lesson.getDescription}}</h4>
-        <div class="well">
+        <div class="well" style="height: 500px;">
             <p>
-                {{lesson.getContent}}
+                <iframe src="{{lesson.getContent}}" height="500px" width="100%" frameBorder="0" allowfullscreen></iframe>
             </p>
         </div>
     </div>
