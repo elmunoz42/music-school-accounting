@@ -34,11 +34,11 @@
         <form class="form-control" action="/add_lesson_to_course" method="post">
             <p>Create a Lesson for this course</p>
             <input type="hidden" name="course_id" value="{{course.getId}}"><br>
-            <label for="title">Lesson title</label><br>
+            <label for="title">Lesson Title</label><br>
             <input type="text" name="title" value=""><br>
-            <label for="description">Lesson Description</label><br>
+            <label for="description">Media URL</label><br>
             <input type="text" name="description"><br>
-            <label for="content">Content</label><br>
+            <label for="content">Written Content</label><br>
             <textarea name="content" rows="8" cols="40"></textarea>
             <button type="submit">Add Lesson</button>
         </form>

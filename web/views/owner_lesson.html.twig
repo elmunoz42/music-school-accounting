@@ -10,12 +10,16 @@
 </div>
 <div class="row">
     <div class="col-sm-8">
-        <h1>{{lesson.getTitle}}</h1>
-        <h4>{{lesson.getDescription}}</h4>
-        <div class="well" style="height: 500px;">
-            <p>
-                <iframe src="{{lesson.getContent}}" height="500px" width="100%" frameBorder="0" allowfullscreen></iframe>
-            </p>
+
+        {% if lesson.getCourses is not empty %}
+        {% for course in lesson.getCourses %}
+        <h1><a href="../owner_courses/{{ course.getId }}">{{ course.getTitle }}</a></h1>
+        {% endfor %}
+        {% endif %}
+        <h1>Lesson: {{lesson.getTitle}}</h1>
+        <div class="well" style="height: 800px;">
+            <iframe src="{{lesson.getDescription}}" height="500px" width="100%" frameBorder="0" allowfullscreen></iframe>
+            <p>{{lesson.getContent}}</p>
         </div>
     </div>
     <div class="col-sm-4">
@@ -29,9 +33,9 @@
             </select>
             <label for="title">Lesson title</label><br>
             <input type="text" name="title" value=""><br>
-            <label for="description">Lesson Description</label><br>
+            <label for="description">Media URL</label><br>
             <input type="text" name="description"><br>
-            <label for="content">Content</label><br>
+            <label for="content">Writen Content</label><br>
             <textarea name="content" rows="8" cols="40"></textarea>
             <button type="submit">Add Lesson</button>
         </form>
