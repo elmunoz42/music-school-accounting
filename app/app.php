@@ -116,9 +116,10 @@
         $school=School::find($_SESSION['school_id']);
 
         $teacher = Teacher::find($id);
+        $courses = $teacher->getCourses();
         $notes_array = explode("|", $teacher->getNotes());
         $students_teachers = $teacher->getStudents();
-        return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents()));
+        return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents(), 'courses' => $courses));
     });
 
     //JOIN teacher with student
