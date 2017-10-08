@@ -1,4 +1,10 @@
 <?php
+    // TODO form validation
+    // TODO escape special character function
+    // TODO change existing query to prepare
+    // TODO authentication using session
+    // TODO recreate owner - school relationship
+    // TODO add Profile class on Teacher and Clients
 
     date_default_timezone_set('America/Los_Angeles');
     require_once __DIR__."/../vendor/autoload.php";
@@ -10,20 +16,20 @@
     require_once __DIR__."/../src/Account.php";
     require_once __DIR__."/../src/Image.php";
     require_once __DIR__."/../src/Service.php";
+    require_once __DIR__."/../src/Owner.php";
 
     use Herrera\Pdo\PdoServiceProvider;
 
     session_start();
-    if (empty($_SESSION['school_id']))
-    {
+    if (empty($_SESSION['school_id'])) {
            $_SESSION['school_id'] = null;
     }
-    if (empty($_SESSION['teacher_id']))
-    {
+
+    if (empty($_SESSION['teacher_id'])) {
            $_SESSION['teacher_id'] = null;
     }
-    if (empty($_SESSION['client_id']))
-    {
+
+    if (empty($_SESSION['client_id'])) {
            $_SESSION['client_id'] = null;
     }
 
@@ -35,6 +41,7 @@
     $username = 'root';
     $password = 'root';
     $DB = new PDO($server, $username, $password);
+    $GLOBALS['DB']->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // for postgresql
     // $dbopts = parse_url(getenv('DATABASE_URL'));
