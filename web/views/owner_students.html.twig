@@ -10,21 +10,6 @@
 </div>
 
 <div class="row" id="alignstudents">
-    <div class="col-md-4" id="addstudentbox">
-        <form action="/owner_students" method="post">
-            <div class="panel panel-info">
-                <h3 class="panel-heading">Add New Student</h3>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="student_name">Name</label><br>
-                        <input class="form-control" type="text" name="student_name" required><br>
-                        <button class="btn btn-info btn-md"type="submit">Submit</button><br>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </form>
-
         {% if students is not empty %}
         <div id="currentstudentsbox" class="col-md-4">
             <h3 >Current Students</h3>
