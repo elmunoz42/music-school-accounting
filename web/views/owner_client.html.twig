@@ -131,8 +131,9 @@
                     {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(last_month, last_months_year) %}
                     <div class="well">
-                      - {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}
+                      <a href="../owner_sessions/{{ service.getId }}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
+                      payment status: {{ service.getPaidFor }} <br>
+                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
                     </div>
                     {% endfor %}
                     {% endif %}

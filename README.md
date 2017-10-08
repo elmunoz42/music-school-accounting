@@ -16,26 +16,29 @@ A web application for managing tutors and clients for music tutoring businesses 
 
 Music School Administrator Specs:
 
-|------|
-|1a)Can register a student to the school. |
-|1b)Can delete, update a student to the school. |
-|2a)Can register a teacher to the school. |
-|2b)Can delete, update a teacher to the school. |
-|3a)Can register a class to the school. |
-|3b)Can delete, update a class.|
-|4a)Can register a lesson to the school. |
-|4b)Can delete, update a lesson.|
-|5a)Can register a service(session) to the school. |
-|5b)Can delete, update a service. |
-|6a)Can register a customer account to the school. |
-|6b)Can delete, update an account. |
-|7)Students, Teachers, Classes, Lessons and Customers can be retrieved in relationship with each other.|
-|8)Review the sessions that where scheduled to a client.|
+|Status|Spec|
+|------|-----|
+|DONE|1a)Can register a student to the school. |
+|TODO|1b)Can delete, update a student to the school. |
+|DONE|2a)Can register a teacher to the school. |
+|TODO|2b)Can delete, update a teacher to the school. |
+|DONE|3a)Can register a course to the school. |
+|TODO|3b)Can delete, update a course.|
+|DONE|4a)Can register a lesson to the school. |
+|TODO|4b)Can delete, update a lesson.|
+|DONE|5a)Can register a service(session) to the school. |
+|Needs More|5b)Can delete, update a service. |
+|DONE|5c) Assign multiple lessons to student|
+|DONE|6a)Can register a customer account to the school. |
+|TODO|6b)Can delete, update an account. |
+|Kind of Done|7)Students, Teachers, Courses, Lessons and Customers can be retrieved in relationship with each other.|
+|DONE|8)Review the sessions that where scheduled to a client last month.|
+
 
 MVP Music School Administrator Specs:
 |Status|Behaviour|Input|Output|
-|TO DO| Filter sessions(services) that where scheduled to a client per month, student, teacher, attendance, "paid_for".| From account page and teacher page| See table of results|
-|TO DO| Update session attendance status and notes. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
+|TO DO| Filter sessions(services) that where scheduled to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
+|TO DO| Update session/service attendance status, payment status and notes. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
 |TO DO| As an admin-user I can go online and see information, about my sessions, lessons, teachers, students and accounts. And I have CRUD functionality  | no login yet just url | CRUD functionality ( hosted on Dreamhost) |
 
 Video Streaming SPECS:

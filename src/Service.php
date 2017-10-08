@@ -20,6 +20,8 @@
 
         // 3) create student->findSessionTemplate($teacher_id);
 
+        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function. 
+
         function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance,$id = null)
         {
             $this->description = $description;

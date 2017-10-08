@@ -65,18 +65,18 @@
     $app->get("/owner_login", function() use ($app) {
 
         // NOTE This is going to create the school object from the Login using FIND
-        // $input_school_name = "SPMS";
-        // $input_manager_name = "Carlos Munoz Kampff";
-        // $input_phone_number = "617-780-8362";
-        // $input_email = "info@starpowermusic.net";
-        // $input_business_address = "PO 6267";
-        // $input_city = "Alameda";
-        // $input_state = "CA";
-        // $input_country = "USA";
-        // $input_zip = "94706";
-        // $input_type = "music";
-        // $school = new School($input_school_name,$input_manager_name,$input_phone_number,$input_email,$input_business_address,$input_city,$input_state,$input_country,$input_zip,$input_type);
-        // $school->save();
+        $input_school_name = "SPMS";
+        $input_manager_name = "Carlos Munoz Kampff";
+        $input_phone_number = "617-780-8362";
+        $input_email = "info@starpowermusic.net";
+        $input_business_address = "PO 6267";
+        $input_city = "Alameda";
+        $input_state = "CA";
+        $input_country = "USA";
+        $input_zip = "94706";
+        $input_type = "music";
+        $school = new School($input_school_name,$input_manager_name,$input_phone_number,$input_email,$input_business_address,$input_city,$input_state,$input_country,$input_zip,$input_type);
+        $school->save();
         $school = School::find(1); // NOTE placeholder for login
         $_SESSION['school_id'] = intval($school->getId());
         // $school2 = School::find($school->getId());
@@ -185,7 +185,7 @@
 
     });
 
-    //READ student
+    //READ student NOTE use for family and teacher
     $app->get("/owner_students/{id}", function($id) use ($app) {
 
         $school=School::find($_SESSION['school_id']);
@@ -457,6 +457,8 @@
         $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" .$selected_account->getNotes();
         $selected_account->updateNotes($updated_notes);
         $notes_array = explode("|", $updated_notes);
+        $last_month = intval(date('m',strtotime('last month')));
+        $last_months_year = intval(date('Y',strtotime('last month')));
 
         return $app['twig']->render('owner_client.html.twig', array('school'=>$school,
         'account'=>$selected_account,
@@ -464,7 +466,9 @@
         'selected_students'=>$selected_students, 'selected_teachers'=>$selected_teachers,
         'selected_courses'=>$selected_courses,
         'notes_array'=>$notes_array,
-        'selected_lessons'=>$selected_lessons));
+        'selected_lessons'=>$selected_lessons,
+        'last_month'=>$last_month,
+        'last_months_year'=>$last_months_year));
     });
 
     // JOIN add student to account

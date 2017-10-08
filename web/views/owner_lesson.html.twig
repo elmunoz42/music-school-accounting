@@ -18,8 +18,8 @@
         {% endif %}
         <h1>Lesson: {{lesson.getTitle}}</h1>
         <div class="well" style="height: 800px;">
-            <iframe src="{{lesson.getDescription}}" height="500px" width="100%" frameBorder="0" allowfullscreen></iframe>
-            <p>{{lesson.getContent}}</p>
+          <p>Teacher's notes for this lesson: {{lesson.getContent}}</p>
+          <iframe src="{{lesson.getDescription}}" height="500px" width="100%" frameBorder="0" allowfullscreen></iframe>
         </div>
     </div>
     <div class="col-sm-4">
