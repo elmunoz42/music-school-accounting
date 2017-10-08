@@ -37,12 +37,15 @@ Music School Administrator Specs:
 
 MVP Music School Administrator Specs:
 |Status|Behaviour|Input|Output|
+|------|---------|-----|------|
 |TO DO| Filter sessions(services) that where scheduled to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
 |TO DO| Update session/service attendance status, payment status and notes. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
 |TO DO| As an admin-user I can go online and see information, about my sessions, lessons, teachers, students and accounts. And I have CRUD functionality  | no login yet just url | CRUD functionality ( hosted on Dreamhost) |
 
 Video Streaming SPECS:
 
+|Status|Behaviour|Input|Output|
+|------|---------|-----|------|
 |TO DO | As an admin-user I can start a tokbox video streaming session with another admin user | each user navigates to a respective url | users have a video streaming session within our domain.|
 |TODO| As an teacher-user I can start a video streaming session with student user and see lesson materials on half of the screen, the video on the upper left corner of the screen and ( student name, instrument, parent guardian name, parent account phone number and email, and student notes ) info on the bottom left corner of the screen.| a teacher navigates to their url clicks a link to start a video-session with one of their assigned students, student navigates to their home page| users have a video streaming session within our domain. The teacher and student have almost identical screens with lesson and info except student page does not have student notes |
 
