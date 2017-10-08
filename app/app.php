@@ -68,7 +68,7 @@
     });
 
     $app->get("/create_owner", function() use ($app) {
-        return $app['twig']->render('create_owner.html.twig', array('errors' => []));
+        return $app['twig']->render('create_owner.html.twig');
     });
 
     //CREATE teacher
@@ -142,7 +142,7 @@
 
     // LOGIN
     $app->get("/owner_login", function() use ($app) {
-        return $app['twig']->render('owner_login.html.twig', array('errors' => []));
+        return $app['twig']->render('owner_login.html.twig');
     });
 
     $app->post("/owner_login", function() use ($app) {
