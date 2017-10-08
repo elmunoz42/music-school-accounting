@@ -54,6 +54,23 @@ INSERT INTO `accounts` (`id`, `family_name`, `street_address`, `phone_number`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `owners`
+--
+
+DROP TABLE IF EXISTS `owners`;
+CREATE TABLE `owners` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `email_address` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `role` varchar (30) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `accounts_courses`
 --
 
