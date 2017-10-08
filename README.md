@@ -36,6 +36,7 @@ Music School Administrator Specs:
 
 
 MVP Music School Administrator Specs:
+
 |Status|Behaviour|Input|Output|
 |------|---------|-----|------|
 |TO DO| Filter sessions(services) that where scheduled to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
