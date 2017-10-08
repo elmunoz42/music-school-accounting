@@ -91,7 +91,7 @@
                 $new_owner->createAccount($password);
                 if ($new_owner->getId()) {
                   loginOwner($new_owner);
-                  return $app->redirect("/owner_main/" . $new_owner->getId());
+                  return $app->redirect("/owner_main");
                 } else {
                   return $app->redirect("/create_owner");
                 }
@@ -160,7 +160,7 @@
             if($owner) {
                 if(password_verify($password, $owner->getPassword())) {
                   loginOwner($owner);
-                  return $app->redirect("/owner_main/" . $owner->getId());
+                  return $app->redirect("/owner_main");
                 } else {
                   $errors[] = "Email or Password didn't match with existing account";
                 }
@@ -173,18 +173,7 @@
 
     $app->get("/owner_main", function() use ($app) {
         if(isLoggedIn()) {
-            return $app->redirect("/owner_main/". $_SESSION['owner_id']);
-        } else {
-            // not logged in
-            return $app->redirect("/owner_login");
-        }
-    });
-
-    $app->get("/owner_main/{owner_id}", function($owner_id) use ($app) {
-        $errors = [];
-
-        if(isLoggedIn()) {
-            $owner = Owner::findOwnerById($owner_id);
+            $owner = Owner::findOwnerById($_SESSION['owner_id']);
 
             if($owner) {
               // NOTE This is going to create the school object from the Login using FIND
@@ -209,10 +198,9 @@
             } else {
               var_dump("else");
             }
-
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            // not logged in
+            return $app->redirect("/owner_login");
         }
     });
 
