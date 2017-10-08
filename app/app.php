@@ -60,36 +60,50 @@
 
     use Symfony\Component\HttpFoundation\Request;
     Request::enableHttpMethodParameterOverride();
+
     //LOGIN
     $app->get("/", function() use ($app) {
-
         return $app['twig']->render('index.html.twig');
-
     });
 
-    // OWNER STORY ROUTES
-    // ROOT
-    $app->get("/owner_login", function() use ($app) {
+    $app->get("/create_owner", function() use ($app) {
+        return $app['twig']->render('create_owner.html.twig', array('errors' => []));
+    });
 
-        // NOTE This is going to create the school object from the Login using FIND
-        $input_school_name = "SPMS";
-        $input_manager_name = "Carlos Munoz Kampff";
-        $input_phone_number = "617-780-8362";
-        $input_email = "info@starpowermusic.net";
-        $input_business_address = "PO 6267";
-        $input_city = "Alameda";
-        $input_state = "CA";
-        $input_country = "USA";
-        $input_zip = "94706";
-        $input_type = "music";
-        $school = new School($input_school_name,$input_manager_name,$input_phone_number,$input_email,$input_business_address,$input_city,$input_state,$input_country,$input_zip,$input_type);
-        $school->save();
-        $school = School::find(1); // NOTE placeholder for login
-        $_SESSION['school_id'] = intval($school->getId());
-        // $school2 = School::find($school->getId());
+    //CREATE teacher
+    $app->post("/create_owner", function() use ($app) {
+        // TODO VERIFY
+        if ( !empty($_POST['first_name']) && !empty($_POST['last_name']) && !empty($_POST['email_address']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) ) {
 
-        // This directs to owner main page and sends in keys with values only relating to that school: School Object, teachers, students, courses, accounts, services
-        return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServices(), 'lessons' => $school->getLessons()));
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
+            $email_address = $_POST['email_address'];
+            $password = $_POST['password'];
+            $role = 'owner';
+
+            $errors = [];
+
+            $owner = Owner::findOwnerByEmailAddress($email_address);
+
+            if (!$owner) {
+                $new_owner = new Owner($first_name, $last_name, $email_address, $role);
+
+                $new_owner->createAccount($password);
+                if ($new_owner->getId()) {
+                  return $app->redirect("/owner_main/" . $new_owner->getId());
+                } else {
+                  return $app->redirect("/create_owner");
+                }
+            } else {
+                $errors[] = "Account already exist";
+                return $app['twig']->render(
+                    'create_owner.html.twig',
+                    array(
+                        'errors' => $errors
+                    )
+                );
+            }
+        }
     });
 
     //READ teachers
@@ -115,6 +129,64 @@
         $school->addTeacher($new_teacher->getId());
         return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
 
+    });
+
+    // LOGIN
+    $app->get("/owner_login", function() use ($app) {
+        return $app['twig']->render('owner_login.html.twig', array('errors' => []));
+    });
+
+    $app->post("/owner_login", function() use ($app) {
+        $errors = [];
+        $email_address = isset($_POST['email_address']) ? $_POST['email_address'] : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        if(!$email_address) {
+          $errors[] = "Username cannot be blank.";
+        }
+        if(!$password) {
+          $errors[] = "Password cannot be blank";
+        }
+        if(empty($errors)) {
+            $owner = Owner::findOwnerByEmailAddress($email_address);
+            if($owner) {
+                if(password_verify($password, $owner->getPassword())) {
+                  return $app->redirect("/owner_main/" . $owner->getId());
+                } else {
+                  $errors[] = "Email or Password didn't match with existing account";
+                }
+            } else {
+              $errors[] = "Email or Password didn't match with existing account";
+            }
+        }
+        return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
+    });
+
+    $app->get("/owner_main/{owner_id}", function($owner_id) use ($app) {
+        $owner = Owner::findOwnerById($owner_id);
+
+        if($owner) {
+          // NOTE This is going to create the school object from the Login using FIND
+          // $input_school_name = "SPMS";
+          // $input_manager_name = "Carlos Munoz Kampff";
+          // $input_phone_number = "617-780-8362";
+          // $input_email = "info@starpowermusic.net";
+          // $input_business_address = "PO 6267";
+          // $input_city = "Alameda";
+          // $input_state = "CA";
+          // $input_country = "USA";
+          // $input_zip = "94706";
+          // $input_type = "music";
+          // $school = new School($input_school_name,$input_manager_name,$input_phone_number,$input_email,$input_business_address,$input_city,$input_state,$input_country,$input_zip,$input_type);
+          // $school->save();
+          $school = School::find(1); // NOTE placeholder for login
+          $_SESSION['school_id'] = intval($school->getId());
+          // $school2 = School::find($school->getId());
+
+          // This directs to owner main page and sends in keys with values only relating to that school: School Object, teachers, students, courses, accounts, services
+          return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServices(), 'lessons' => $school->getLessons()));
+        } else {
+          var_dump("else");
+        }
     });
 
     //READ teacher

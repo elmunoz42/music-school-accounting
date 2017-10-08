@@ -9,7 +9,6 @@
     <title>Music School - {% block title %}{% endblock %}</title>
 </head>
 <body>
-
     <div class="container">
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -39,7 +38,11 @@
             </form>
         </div>
     </nav>
-
+    {% if errors %}
+      {% for error in errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endfor %}
+    {% endif %}
 {% block content %}
 
 {% endblock %}
