@@ -56,7 +56,12 @@
     // $DB = $app['pdo'];
 
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
-        'twig.path' => __DIR__.'/../web/views'
+        'twig.path' => [
+          __DIR__.'/../web/views',
+          __DIR__.'/../web/views/owner',
+          __DIR__.'/../web/views/teacher',
+          __DIR__.'/../web/views/client',                               
+        ]
     ));
 
     use Symfony\Component\HttpFoundation\Request;
