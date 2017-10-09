@@ -129,7 +129,7 @@
 
         <h3>Add Notes:</h3>
         <hr>
-        <form action="/owner_students/{{ student.getId }}" method="post">
+        <form action="/owner_students/{{ student.getId }}/add_notes" method="post">
             <input name="_method" type="hidden" value="patch" required>
             <div class="form-group">
                 <label class="control-label" for="new_notes">Notes</label>

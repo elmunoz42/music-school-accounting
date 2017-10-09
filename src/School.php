@@ -400,6 +400,8 @@
             $GLOBALS['DB']->exec("DELETE FROM accounts_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM courses_teachers WHERE teacher_id = {$teacher_id};");
+
+            return true;
         }
 
         // NOTE UNTESTED

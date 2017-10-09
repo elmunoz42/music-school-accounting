@@ -22,7 +22,7 @@
         {% if lessons is not empty %}
         <ul>
             {% for lesson in lessons  %}
-            <li><a href="/owner_lessons/{{lesson.getId}}">{{lesson.getTitle}}</a></li>
+            <li><a href="/owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a></li>
             {% endfor %}
         </ul>
         {% endif %}

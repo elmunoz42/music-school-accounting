@@ -3,8 +3,6 @@
 {% block title %}Teacher{% endblock %}
 
 {% block content %}
-
-
 <div class="jumbotron">
     <h1>{{ teacher.getName }}</h1>
     <hr>
@@ -21,11 +19,11 @@
             </thead>
             <tbody>
                 {% if courses is not empty %}
-                {% for course in courses %}
-                <tr>
-                    <td><a href="../owner_courses/{{ course.getId }}">{{ course.getTitle }}</a></td>
-                </tr>
-                {% endfor %}
+                    {% for course in courses %}
+                    <tr>
+                        <td><a href="../owner_courses/{{ course.getId }}">{{ course.getTitle }}</a></td>
+                    </tr>
+                    {% endfor %}
                 {% endif %}
             </tbody>
             <thead>
@@ -38,58 +36,58 @@
             </tbody>
         </table>
 
-        <form action="/owner_teacher/teacher_termination/{{ teacher.getId }}" method="post">
+        <form action="/owner_teachers/teacher_termination/{{ teacher.getId }}" method="post">
             <input name="_method" type="hidden" value="delete">
             <button type="submit" class="btn btn-danger btn-sm"  name="button">delete</button>
         </form>
     </div>
 
-<div class="col-md-4">
-    <h3>Student Info:</h3>
-    <hr>
-    {% if students_teachers is not empty %}
-        <h4 class="panel-heading">
-        <table class="table table-hover">
-            <thead>
-                <th>Name</th>
-            </thead>
-            <tbody>
-                {% for student in students_teachers %}
-                <tr>
-                    <td><a href="/owner_students/{{ student.getId }}">{{ student.getName }}</a></td>
-                </tr>
+    <div class="col-md-4">
+        <h3>Student Info:</h3>
+        <hr>
+        {% if students_teachers is not empty %}
+            <h4 class="panel-heading">
+            <table class="table table-hover">
+                <thead>
+                    <th>Name</th>
+                </thead>
+                <tbody>
+                    {% for student in students_teachers %}
+                    <tr>
+                        <td><a href="/owner_students/{{ student.getId }}">{{ student.getName }}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
+        <form action="/owner_teachers/{{ teacher.getId }}" method="post">
+            <label for="student_id">Assign a student</label>
+            {% if students is not empty %}
+            <select id="student_id" class="form-control" name="student_id">
+                {% for student in students %}
+                <option value="{{student.getId}}">{{student.getName}}</option>
                 {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
+            </select>
+            <button type="submit" name="button">submit</button>
+            {% endif %}
+        </form>
+    </div>
 
-    <form action="/owner_teachers/{{ teacher.getId }}" method="post">
-        <label for="student_id">Assign a student</label>
-        {% if students is not empty %}
-        <select id="student_id" class="form-control" name="student_id">
-            {% for student in students %}
-            <option value="{{student.getId}}">{{student.getName}}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" name="button">submit</button>
-        {% endif %}
-    </form>
-</div>
-
-<div class="col-md-4">
-    <h3>Add Notes:</h3>
-    <hr>
-    <form action="/owner_teachers/{{ teacher.getId }}" method="post">
-        <input name="_method" type="hidden" value="patch">
-        <div class="form-group">
-            <label class ="control-label" for="new_notes">Notes</label><br>
-            <textarea class="form-control" name="new_notes" rows="10" cols="40"></textarea>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-info btn-sm" name="button">Submit</button>
-        </div>
-    </form>
-</div>
+    <div class="col-md-4">
+        <h3>Add Notes:</h3>
+        <hr>
+        <form action="/owner_teachers/{{ teacher.getId }}/add_notes" method="post">
+            <input name="_method" type="hidden" value="patch">
+            <div class="form-group">
+                <label class ="control-label" for="new_notes">Notes</label><br>
+                <textarea class="form-control" name="new_notes" rows="10" cols="40"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-info btn-sm" name="button">Submit</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <hr>

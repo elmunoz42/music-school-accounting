@@ -23,22 +23,6 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <h3>Create another Lesson for a course</h3>
-        <form class="form-control" action="/add_lesson_to_course" method="post">
-
-            <select class="form-control" name="course_id">
-                {% for course in school.getCourses %}
-                    <option value="{{course.getId}}">{{course.getTitle}}</option>
-                {% endfor %}
-            </select>
-            <label for="title">Lesson title</label><br>
-            <input type="text" name="title" value=""><br>
-            <label for="description">Media URL</label><br>
-            <input type="text" name="description"><br>
-            <label for="content">Writen Content</label><br>
-            <textarea name="content" rows="8" cols="40"></textarea>
-            <button type="submit">Add Lesson</button>
-        </form>
     </div>
 </div>
 {% endblock %}
