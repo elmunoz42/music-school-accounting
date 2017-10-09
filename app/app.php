@@ -107,6 +107,40 @@
         }
     });
 
+    $app->get("/create_school", function() use ($app) {
+        if(isLoggedIn()) {
+            return $app['twig']->render('create_school.html.twig');
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
+    $app->post("/create_school", function() use ($app) {
+        if(isLoggedIn()) {
+            $owner_id = $_SESSION['owner_id'];
+            $school_name = $_POST['school_name'];
+            $manager_name = $_POST['manager_name'];
+            $phone_number = $_POST['phone_number'];
+            $email = $_POST['email'];
+            $business_address = $_POST['business_address'];
+            $city = $_POST['city'];
+            $state = $_POST['state'];
+            $country = $_POST['country'];
+            $zip = $_POST['zip'];
+            $type = $_POST['type'];
+
+            $new_school = new School($school_name, $manager_name, $phone_number, $email, $business_address, $city, $state, $country, $zip, $type);
+
+            if($new_school->save()) {
+                if($new_school->addOwner($owner_id)) {
+                    return $app->redirect("/owner_main");
+                };
+            }
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
     //READ teachers
     $app->get("/owner_teachers", function() use ($app) {
         if(isLoggedIn()) {
@@ -142,61 +176,59 @@
 
     // LOGIN
     $app->get("/owner_login", function() use ($app) {
-        return $app['twig']->render('owner_login.html.twig');
+        if(isLoggedIn()) {
+            return $app->redirect("/owner_main");
+        } else {
+            return $app['twig']->render('owner_login.html.twig');
+        }
     });
 
     $app->post("/owner_login", function() use ($app) {
-        $errors = [];
-        $email_address = isset($_POST['email_address']) ? $_POST['email_address'] : '';
-        $password = isset($_POST['password']) ? $_POST['password'] : '';
-        if(!$email_address) {
-          $errors[] = "Username cannot be blank.";
-        }
-        if(!$password) {
-          $errors[] = "Password cannot be blank";
-        }
-        if(empty($errors)) {
-            $owner = Owner::findOwnerByEmailAddress($email_address);
-            if($owner) {
+        if(isLoggedIn()) {
+            return $app->redirect("/owner_main");
+        } else {
+            $errors = [];
+            $email_address = isset($_POST['email_address']) ? $_POST['email_address'] : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
+            if(!$email_address) {
+              $errors[] = "Username cannot be blank.";
+            }
+            if(!$password) {
+              $errors[] = "Password cannot be blank";
+            }
+            if(empty($errors)) {
+              $owner = Owner::findOwnerByEmailAddress($email_address);
+              if($owner) {
                 if(password_verify($password, $owner->getPassword())) {
                   loginOwner($owner);
                   return $app->redirect("/owner_main");
                 } else {
                   $errors[] = "Email or Password didn't match with existing account";
                 }
-            } else {
-              $errors[] = "Email or Password didn't match with existing account";
+              } else {
+                $errors[] = "Email or Password didn't match with existing account";
+              }
             }
+            return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
         }
-        return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
     });
 
     $app->get("/owner_main", function() use ($app) {
         if(isLoggedIn()) {
             $owner = Owner::findOwnerById($_SESSION['owner_id']);
-
             if($owner) {
-              // NOTE This is going to create the school object from the Login using FIND
-              // $input_school_name = "SPMS";
-              // $input_manager_name = "Carlos Munoz Kampff";
-              // $input_phone_number = "617-780-8362";
-              // $input_email = "info@starpowermusic.net";
-              // $input_business_address = "PO 6267";
-              // $input_city = "Alameda";
-              // $input_state = "CA";
-              // $input_country = "USA";
-              // $input_zip = "94706";
-              // $input_type = "music";
-              // $school = new School($input_school_name,$input_manager_name,$input_phone_number,$input_email,$input_business_address,$input_city,$input_state,$input_country,$input_zip,$input_type);
-              // $school->save();
-              $school = School::find(1); // NOTE placeholder for login
-              $_SESSION['school_id'] = intval($school->getId());
-              // $school2 = School::find($school->getId());
+              //TODO FUTURE: if several school exists, show list and choose
+              $schools = School::findSchoolsByOwnerId($owner->getId());
+              if($schools) {
+                  $school = $schools[0];
+                  $_SESSION['school_id'] = intval($school->getId());
 
-              // This directs to owner main page and sends in keys with values only relating to that school: School Object, teachers, students, courses, accounts, services
-              return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServices(), 'lessons' => $school->getLessons()));
+                  return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServices(), 'lessons' => $school->getLessons() ));
+              } else {
+                  return $app->redirect("/create_school");
+              }
             } else {
-              var_dump("else");
+              //error
             }
         } else {
             // not logged in
