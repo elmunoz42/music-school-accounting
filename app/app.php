@@ -949,6 +949,27 @@
 
     });
 
+    $app->post("/update_student/{student_id}", function($student_id) use ($app) {
+
+        $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
+
+        if ($new_student_name) {
+            $student = Student::find($student_id);
+            if ($student) {
+                if ($student->updateName($new_student_name)) {
+                  //add success message
+                } else {
+                  // add error message
+                }
+            } else {
+              // add error message
+            }
+        } else {
+          // add error message
+        }
+        return $app->redirect("/owner_students/" . $student_id);
+    });
+
     $app->get("logout", function() use ($app) {
         logout();
         return $app->redirect("/");

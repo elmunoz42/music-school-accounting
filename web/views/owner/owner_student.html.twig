@@ -144,6 +144,13 @@
             <input name="_method" type="hidden" value="delete">
             <button type="submit" class="btn btn-danger btn-sm" name="button">Delete Student</button>
         </form>
+        <form action="/update_student/{{ student.getId() }}" method="post">
+          <div class="form-group">
+            <label for="student_name">Name</label>
+            <input type="text" id="student_name" class="form-control" name="student_name" placeholder="{{student.getName}}">
+            <button class="btn btn-success" type="submit" name="submit">Update</button>
+          </div>
+        </form>
     </div>
     <!-- middle column -->
     <div id="currentclass" class="col-md-4">

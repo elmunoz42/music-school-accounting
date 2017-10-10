@@ -78,10 +78,12 @@
             $this->setNotes($new_note);
         }
 
-        function updateName($update)
+        function updateName($student_name)
         {
-            $GLOBALS['DB']->exec("UPDATE students SET student_name = '{$update}' WHERE id = {$this->getId()};");
-            $this->setName($update);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE students SET student_name = :student_name WHERE id = :id");
+            $stmt->bindParam(':student_name', $student_name, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
         function delete()
@@ -323,7 +325,6 @@
             }
             return $services;
         }
-
     }
 
 
