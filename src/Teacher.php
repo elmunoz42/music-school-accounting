@@ -50,8 +50,18 @@
 
         function save()
         {
-            $GLOBALS['DB']->exec("INSERT INTO teachers (teacher_name, instrument, notes) VALUES ('{$this->getName()}', '{$this->getInstrument()}', '{$this->getNotes()}');");
-            $this->id = $GLOBALS['DB']->lastInsertId();
+            $stmt = $GLOBALS['DB']->prepare("INSERT INTO teachers (teacher_name, instrument, notes) VALUES (:teacher_name, :instrument, :notes)");
+
+            $stmt->bindParam(':teacher_name', $this->getName(), PDO::PARAM_STR);
+            $stmt->bindParam(':instrument', $this->getInstrument(), PDO::PARAM_STR);
+            $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         static function find($search_id)
@@ -99,16 +109,22 @@
             $this->setNotes($new_note);
         }
 
-        function updateName($new_name)
+        function updateName($teacher_name)
         {
-            $GLOBALS['DB']->exec("UPDATE teachers SET teacher_name = '{$new_name}' WHERE id = {$this->getId()};");
-            $this->setName($new_name);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE teachers SET teacher_name = :teacher_name WHERE id = :id");
+            $stmt->bindParam(':teacher_name', $teacher_name, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
 
-        function updateInstrument($new_instrument)
+        function updateInstrument($instrument)
         {
-            $GLOBALS['DB']->exec("UPDATE teachers SET instrument = '{$new_instrument}' WHERE id = {$this->getId()};");
-            $this->setInstrument($new_instrument);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE teachers SET instrument = :instrument WHERE id = :id");
+            $stmt->bindParam(':instrument', $instrument, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
 
         function delete()

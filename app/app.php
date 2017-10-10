@@ -76,7 +76,7 @@
         return $app['twig']->render('create_owner.html.twig');
     });
 
-    //CREATE teacher
+    //CREATE owner
     $app->post("/create_owner", function() use ($app) {
         // TODO VERIFY
         if ( !empty($_POST['first_name']) && !empty($_POST['last_name']) && !empty($_POST['email_address']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) ) {
@@ -162,19 +162,33 @@
 
     //CREATE teacher
     $app->post("/owner_teachers", function() use ($app) {
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
+        if (isLoggedIn()) {
+            $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
+            $new_teacher_instrument = $_POST['teacher_instrument'] ? $_POST['teacher_name'] : '';
 
-            $new_teacher_name = $_POST['teacher_name'];
-            $new_teacher_instrument = $_POST['teacher_instrument'];
-            $new_teacher = new Teacher($new_teacher_name, $new_teacher_instrument);
-            $new_teacher->setNotes(date('l jS \of F Y h:i:s A') . " of first entry.");
-            $new_teacher->save();
+            if ($new_teacher_name && $new_teacher_instrument) {
+                $school = School::find($_SESSION['school_id']);
+                if ($school) {
+                    $new_teacher = new Teacher($new_teacher_name, $new_teacher_instrument);
+                    $new_teacher->setNotes(date('l jS \of F Y h:i:s A') . " of first entry.");
 
-            $school->addTeacher($new_teacher->getId());
-            return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
+                    if ($new_teacher->save()) {
+                        if ($school->addTeacher($new_teacher->getId())) {
+                            // success message
+                        } else {
+                            //error message
+                        }
+                    } else {
+                        // error message
+                    }
+                } else {
+                    // unknown error
+                }
+            } else {
+                // error message
+            }
+            return $app->redirect("/owner_teachers");
         } else {
-            // not logged in
             return $app->redirect("/owner_login");
         }
     });
@@ -949,25 +963,53 @@
     });
 
     $app->post("/update_student/{student_id}", function($student_id) use ($app) {
-
-        $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
-
-        if ($new_student_name) {
-            $student = Student::find($student_id);
-            if ($student) {
-                if ($student->updateName($new_student_name)) {
-                  //add success message
+        if (isLoggedIn()) {
+            $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
+            if ($new_student_name) {
+                $student = Student::find($student_id);
+                if ($student) {
+                    if ($student->updateName($new_student_name)) {
+                        //add success message
+                    } else {
+                        // add error message
+                    }
                 } else {
-                  // add error message
+                    // add error message
                 }
             } else {
-              // add error message
+                // add error message
             }
+            return $app->redirect("/owner_students/" . $student_id);
         } else {
-          // add error message
+            return $app->redirect("/owner_login");
         }
-        return $app->redirect("/owner_students/" . $student_id);
     });
+
+    $app->post("/update_teacher/{teacher_id}", function($teacher_id) use ($app) {
+        if (isLoggedIn()) {
+            $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
+            $new_instrument = $_POST['instrument'] ? $_POST['instrument'] : '';
+
+            if ($new_teacher_name && $new_instrument) {
+                $teacher = Teacher::find($teacher_id);
+                if ($teacher) {
+                    if ($teacher->updateName($new_teacher_name) && $teacher->updateInstrument($new_instrument)) {
+                        //add success message
+                    } else {
+                        // add error message
+                    }
+                } else {
+                    // add error message
+                }
+            } else {
+                // add error message
+            }
+            return $app->redirect("/owner_teachers/" . $teacher_id);
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
 
     $app->get("logout", function() use ($app) {
         logout();
