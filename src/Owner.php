@@ -24,7 +24,7 @@ class Owner extends Profile
         $stmt = $GLOBALS['DB']->prepare("SELECT * FROM owners WHERE email_address = :email_address");
         $stmt->bindParam(':email_address', $email_address, PDO::PARAM_STR);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $result = $stmt->fetch();
             if ($result) {
               return new Owner($result['first_name'], $result['last_name'], $result['email_address'], $result['role'], $result['id'], $result['password']);
@@ -40,7 +40,7 @@ class Owner extends Profile
     {
         $stmt = $GLOBALS['DB']->prepare("SELECT * FROM owners WHERE id = :id");
         $stmt->bindParam(':id', $owner_id, PDO::PARAM_STR);
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $result = $stmt->fetch();
             if ($result) {
               return new Owner($result['first_name'], $result['last_name'], $result['email_address'], $result['role'], $result['id'], $result['password']);

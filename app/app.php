@@ -466,8 +466,7 @@
 
             return $app->redirect("/owner_students");
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 
