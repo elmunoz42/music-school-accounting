@@ -62,16 +62,29 @@
 
         }
 
-        static function find($search_id)
+        static function find($course_id)
         {
-            $query = $GLOBALS['DB']->query("SELECT * FROM courses WHERE id = {$search_id};");
-            $courses = array();
-            foreach( $query as $course){
-                $id = $course['id'];
-                $title = $course['title'];
-                $found_course = new Course($title, $id);
+            $stmt = $GLOBALS['DB']->prepare("SELECT courses.* FROM courses JOIN courses_schools ON (courses.id = courses_schools.course_id) JOIN schools ON (courses_schools.school_id = schools.id) WHERE courses.id = :course_id AND schools.id = :school_id");
+
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $title = $result['title'];
+                    $id = $result['id'];
+
+                    return new Course($title, $id);
+                } else {
+                    // course is not belong to the school
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $found_course;
         }
 
         function deleteCourse()

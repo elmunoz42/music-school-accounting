@@ -79,20 +79,30 @@
             $GLOBALS['DB']->exec("DELETE FROM lessons;");
         }
 
-        // NOTE add find and delete
         static function find($lesson_id)
         {
-            $retrieved_lessons = $GLOBALS['DB']->query("SELECT * FROM lessons WHERE id = {$lesson_id};");
-            $re_lesson = null;
-            foreach( $retrieved_lessons as $lesson )
-            {
-                $title_re = $lesson['title'];
-                $description_re = $lesson['description'];
-                $content_re = $lesson['content'];
-                $id_re = $lesson['id'];
-                $re_lesson = new Lesson($title_re, $description_re, $content_re, $id_re);
+            $stmt = $GLOBALS['DB']->prepare("SELECT lessons.* FROM lessons JOIN lessons_schools ON (lessons.id = lessons_schools.lesson_id) JOIN schools ON (lessons_schools.school_id = schools.id) WHERE lessons.id = :lesson_id AND schools.id = :school_id");
+
+            $stmt->bindParam(':lesson_id', $lesson_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($result) {
+                    $title =  $result['title'];
+                    $description = $result['description'];
+                    $content = $result['content'];
+                    $id = $result['id'];
+
+                    return new Lesson($title, $description, $content, $id);
+                } else {
+                    // lesson is not belong to the school
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $re_lesson;
         }
 
         function delete()

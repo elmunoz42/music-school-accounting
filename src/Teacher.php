@@ -6,11 +6,12 @@
         private $notes;
         private $id;
 
-        function __construct($teacher_name, $instrument, $id = null)
+        function __construct($teacher_name, $instrument, $id = null, $notes = null)
         {
             $this->teacher_name = $teacher_name;
             $this->instrument = $instrument;
             $this->id = $id;
+            $this->notes = $notes;
         }
 
         function setName($new_teacher_name)
@@ -64,17 +65,31 @@
             }
         }
 
-        static function find($search_id)
+        static function find($teacher_id)
         {
-           $found_teacher = null;
-           $teachers = Teacher::getAll();
-           foreach($teachers as $teacher){
-               $teacher_id = $teacher->getId();
-               if ( $teacher_id == $search_id){
-                   $found_teacher = $teacher;
-               }
-           }
-           return $found_teacher;
+            $stmt = $GLOBALS['DB']->prepare("SELECT teachers.* FROM teachers JOIN schools_teachers ON (teachers.id = schools_teachers.teacher_id) JOIN schools ON (schools_teachers.school_id = schools.id) WHERE teachers.id = :teacher_id AND schools.id = :school_id");
+
+            $stmt->bindParam(':teacher_id', $teacher_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $teacher_name =  $result['teacher_name'];
+                    $instrument = $result['instrument'];
+                    $id = $result['id'];
+                    $notes = $result['notes'];
+
+                    return new Teacher($teacher_name, $instrument, $id, $notes);
+                } else {
+                    // teacher is not belong to the school
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
         }
 
         static function deleteAll()

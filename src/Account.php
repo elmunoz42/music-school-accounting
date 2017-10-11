@@ -13,7 +13,7 @@ class Account
     private $id;
     //NOTE create STATUS key.
 
-    function __construct($family_name, $parent_one_name, $street_address, $phone_number, $email_address, $id = null)
+    function __construct($family_name, $parent_one_name, $street_address, $phone_number, $email_address, $id = null, $parent_two_name = null, $notes = null, $billing_history = null, $outstanding_balance = null)
     {
         $this->family_name = $family_name;
         $this->parent_one_name = $parent_one_name;
@@ -21,6 +21,10 @@ class Account
         $this->phone_number = $phone_number;
         $this->email_address = $email_address;
         $this->id = $id;
+        $this->parent_two_name = $parent_two_name;
+        $this->notes = $notes;
+        $this->billing_history = $billing_history;
+        $this->outstanding_balance = $outstanding_balance;
     }
 
     // getters
@@ -169,29 +173,52 @@ class Account
         $GLOBALS['DB']->exec("DELETE FROM accounts;");
     }
 
-    static function find($search_id)
+    static function find($account_id)
     {
-        $returned_accounts = $GLOBALS['DB']->query("SELECT * FROM accounts WHERE id = {$search_id};");
-        $found_account = null;
-        foreach($returned_accounts as $account){
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = $account['outstanding_balance'];
-                $id = $account['id'];
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                $found_account = $new_account;
+        $stmt = $GLOBALS['DB']->prepare("SELECT accounts.* FROM accounts JOIN accounts_schools ON (accounts.id = accounts_schools.account_id) JOIN schools ON (accounts_schools.school_id = schools.id) WHERE accounts.id = :account_id AND schools.id = :school_id");
+
+        $stmt->bindParam(':account_id', $account_id, PDO::PARAM_STR);
+        $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                $family_name = $result['family_name'];
+                $parent_one_name = $result['parent_one_name'];
+                $parent_two_name = $result['parent_two_name'];
+                $street_address = $result['street_address'];
+                $phone_number = $result['phone_number'];
+                $email_address = $result['email_address'];
+                $notes = $result['notes'];
+                $billing_history = $result['billing_history'];
+                $outstanding_balance = $result['outstanding_balance'];
+                $id = $result['id'];
+                $parent_two_name = $result['parent_two_name'];
+                $notes = $result['notes'];
+                $billing_history = $result['billing_history'];
+                $outstanding_balance = $result['outstanding_balance'];
+
+                return new Account(
+                    $family_name,
+                    $parent_one_name,
+                    $street_address,
+                    $phone_number,
+                    $email_address,
+                    $id,
+                    $parent_two_name,
+                    $notes,
+                    $billing_history,
+                    $outstanding_balance
+              );
+            } else {
+                // account is not belong to the school
+                return false;
+            }
+        } else {
+            // sql failed for some reason
+            return false;
         }
-        return $found_account;
     }
 
     function delete()

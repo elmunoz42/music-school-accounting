@@ -257,13 +257,20 @@
 
     //READ teacher
     $app->get("/owner_teachers/{teacher_id}", function($teacher_id) use ($app) {
-        if(isLoggedIn()) {
+        if (isLoggedIn()) {
             $school = School::find($_SESSION['school_id']);
             $teacher = Teacher::find($teacher_id);
-            $courses = $teacher->getCourses();
-            $notes_array = explode("|", $teacher->getNotes());
-            $students_teachers = $teacher->getStudents();
-            return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents(), 'courses' => $courses));
+
+            if ($teacher) {
+                $courses = $teacher->getCourses();
+                $notes_array = explode("|", $teacher->getNotes());
+                $students_teachers = $teacher->getStudents();
+
+                return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents(), 'courses' => $courses));
+            } else {
+              // teacher is not found
+              return $app->redirect("/owner_teachers");
+            }
         } else {
             // not logged in
             return $app->redirect("/owner_login");
@@ -358,33 +365,39 @@
     });
 
     //READ student NOTE use for family and teacher
-    $app->get("/owner_students/{id}", function($id) use ($app) {
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
-            $selected_student = Student::find($id);
-            $notes_array = explode("|", $selected_student->getNotes());
-            $assigned_teachers = $selected_student->getTeachers();
-            $this_month=intval(date('m',strtotime('this month')));
-            $this_months_year=intval(date('Y',strtotime('this month')));
-            $last_month=intval(date('m',strtotime('last month')));
-            $last_months_year=intval(date('Y',strtotime('last month')));
-            return $app['twig']->render('owner_student.html.twig', array(
-              'school' => $school,
-              'student' => $selected_student,
-              'assigned_teachers' => $assigned_teachers,
-              'notes_array' => $notes_array,
-              'courses'=>$school->getCourses(), 'enrolled_courses'=>$selected_student->getCourses(),
-              'teachers' => $school->getTeachers(),
-              'lessons' => $school->getLessons(),
-              'assigned_lessons' => $selected_student->getLessons(),
-              'this_month' => $this_month,
-              'this_months_year'=>$this_months_year,
-              'last_month'=>$last_month,
-              'last_months_year'=>$last_months_year
-            ));
+    $app->get("/owner_students/{student_id}", function($student_id) use ($app) {
+        if (isLoggedIn()) {
+            $school = School::find($_SESSION['school_id']);
+            $student = Student::find($student_id);
+
+            if ($student) {
+              $notes_array = explode("|", $student->getNotes());
+              $assigned_teachers = $student->getTeachers();
+              $this_month=intval(date('m',strtotime('this month')));
+              $this_months_year=intval(date('Y',strtotime('this month')));
+              $last_month=intval(date('m',strtotime('last month')));
+              $last_months_year=intval(date('Y',strtotime('last month')));
+
+              return $app['twig']->render('owner_student.html.twig', array(
+                'school' => $school,
+                'student' => $student,
+                'assigned_teachers' => $assigned_teachers,
+                'notes_array' => $notes_array,
+                'courses'=>$school->getCourses(), 'enrolled_courses'=>$student->getCourses(),
+                'teachers' => $school->getTeachers(),
+                'lessons' => $school->getLessons(),
+                'assigned_lessons' => $student->getLessons(),
+                'this_month' => $this_month,
+                'this_months_year'=>$this_months_year,
+                'last_month'=>$last_month,
+                'last_months_year'=>$last_months_year
+              ));
+            } else {
+                // student is not found
+                return $app->redirect("/owner_students");
+            }
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 
@@ -531,16 +544,25 @@
     });
 
     // GET session
-    $app->get('/owner_sessions/{id}', function($id) use($app) {
-        if(isLoggedIn()) {
+    $app->get('/owner_sessions/{service_id}', function($service_id) use($app) {
+        if (isLoggedIn()) {
             $school = School::find($_SESSION['school_id']);
-            $service = Service::find($id);
-            $notes_array = explode("|", $service->getNotes());
+            $service = Service::find($service_id);
 
-            return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service, 'notes_array'=>$notes_array));
+            if ($service) {
+                $notes_array = explode("|", $service->getNotes());
+                return $app['twig']->render(
+                    'owner_session.html.twig', array(
+                        'school'=>$school, 'service'=>$service, 'notes_array'=>$notes_array
+                    )
+                );
+            } else {
+                // NOTE: which page the user should be redirected to??
+                // session is not found
+                return $app->redirect("/owner_main");
+            }
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 
@@ -607,31 +629,38 @@
     });
 
     // READ account
-    $app->get('/owner_accounts/{id}', function($id) use ($app) {
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
-            $selected_account = Account::find($id);
-            $selected_students = $selected_account->getStudents();
-            $selected_teachers = $selected_account->getTeachers();
-            $selected_courses = $selected_account->getCourses();
-            $selected_lessons = $selected_account->getLessons();
-            $notes_array = explode("|", $selected_account->getNotes());
-            $last_month = intval(date('m',strtotime('last month')));
-            $last_months_year = intval(date('Y',strtotime('last month')));
+    $app->get('/owner_accounts/{account_id}', function($account_id) use ($app) {
+        if (isLoggedIn()) {
+            $school = School::find($_SESSION['school_id']);
+            $account = Account::find($account_id);
 
-            return $app['twig']->render('owner_client.html.twig', array('school'=>$school,
-            'account'=>$selected_account,
-            'accounts'=>$school->getAccounts(),
-            'selected_students'=>$selected_students, 'selected_teachers'=>$selected_teachers,
-            'selected_courses'=>$selected_courses,
-            'notes_array'=>$notes_array,
-            'services'=>$selected_account->getServices(),
-            'selected_lessons'=>$selected_lessons,
-            'last_month'=>$last_month,
-            'last_months_year'=>$last_months_year));
+            if ($account) {
+                $students = $account->getStudents();
+                $teachers = $account->getTeachers();
+                $courses = $account->getCourses();
+                $lessons = $account->getLessons();
+                $notes_array = explode("|", $account->getNotes());
+                $last_month = intval(date('m',strtotime('last month')));
+                $last_months_year = intval(date('Y',strtotime('last month')));
+
+                return $app['twig']->render('owner_client.html.twig', array(
+                    'school'=>$school,
+                    'account'=>$account,
+                    'accounts'=>$school->getAccounts(),
+                    'selected_students'=>$students, 'selected_teachers'=>$teachers,
+                    'selected_courses'=>$courses,
+                    'notes_array'=>$notes_array,
+                    'services'=>$account->getServices(),
+                    'selected_lessons'=>$lessons,
+                    'last_month'=>$last_month,
+                    'last_months_year'=>$last_months_year
+                ));
+            } else {
+                // account is not found
+                return $app->redirect("/owner_accounts");
+            }
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 
@@ -715,21 +744,25 @@
     });
 
     //READ course
-    $app->get("/owner_courses/{id}", function($id) use ($app){
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
-            $course = Course::find($id);
+    $app->get("/owner_courses/{course_id}", function($course_id) use ($app){
+        if (isLoggedIn()) {
+            $school = School::find($_SESSION['school_id']);
+            $course = Course::find($course_id);
 
-
-            return $app['twig']->render('owner_course.html.twig', array(
-              'school'=>$school,
-              'course' => $course,
-              'courses' => $school->getCourses(),
-              'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
-              'lessons' => $school->getLessons() ));
+            if ($course) {
+                return $app['twig']->render('owner_course.html.twig', array(
+                    'school'=>$school,
+                    'course' => $course,
+                    'courses' => $school->getCourses(),
+                    'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
+                    'lessons' => $school->getLessons()
+                ));
+            } else {
+                // course is not found
+                return $app->redirect("/owner_courses");
+            }
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 
@@ -825,12 +858,17 @@
     $app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
         if (isLoggedIn()) {
             $school = School::find($_SESSION['school_id']);
-
             $lesson = Lesson::find($lesson_id);
 
-            return $app['twig']->render('owner_lesson.html.twig', array(
-              'school'=>$school,
-              'lesson'=>$lesson));
+            if ($lesson) {
+              return $app['twig']->render('owner_lesson.html.twig', array(
+                  'school'=>$school,
+                  'lesson'=>$lesson
+              ));
+            } else {
+                // lesson is not found
+                return $app->redirect("/owner_courses");
+            }
         } else {
             return $app->redirect("/owner_login");
         }
