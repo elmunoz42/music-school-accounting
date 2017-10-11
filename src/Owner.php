@@ -14,9 +14,13 @@ class Owner extends Profile
         $stmt->bindParam(':email_address', $this->getEmailAddress(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
         $stmt->bindParam(':role', $this->getRole(), PDO::PARAM_STR);
-        $stmt->execute();
 
-        $this->setId($GLOBALS['DB']->lastInsertId());
+        if ($stmt->execute()) {
+            $this->setId($GLOBALS['DB']->lastInsertId());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function findOwnerByEmailAddress($email_address)
@@ -26,13 +30,14 @@ class Owner extends Profile
 
         if ($stmt->execute()) {
             $result = $stmt->fetch();
+
             if ($result) {
-              return new Owner($result['first_name'], $result['last_name'], $result['email_address'], $result['role'], $result['id'], $result['password']);
+                return new Owner($result['first_name'], $result['last_name'], $result['email_address'], $result['role'], $result['id'], $result['password']);
             } else {
-              return false;
+                return false;
             }
         } else {
-          return false;
+            return false;
         }
     }
 
@@ -40,15 +45,16 @@ class Owner extends Profile
     {
         $stmt = $GLOBALS['DB']->prepare("SELECT * FROM owners WHERE id = :id");
         $stmt->bindParam(':id', $owner_id, PDO::PARAM_STR);
+
         if ($stmt->execute()) {
             $result = $stmt->fetch();
             if ($result) {
-              return new Owner($result['first_name'], $result['last_name'], $result['email_address'], $result['role'], $result['id'], $result['password']);
+                return new Owner($result['first_name'], $result['last_name'], $result['email_address'], $result['role'], $result['id'], $result['password']);
             } else {
-              return false;
+                return false;
             }
         } else {
-          return false;
+            return false;
         }
     }
 }

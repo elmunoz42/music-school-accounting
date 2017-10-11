@@ -43,7 +43,6 @@ class Profile
         return $this->password;
     }
 
-
     function getRole()
     {
         return $this->role;

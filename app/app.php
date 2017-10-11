@@ -439,7 +439,7 @@
             $selected_student = Student::find($student_id);
             $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
 
-            if($new_notes) {
+            if ($new_notes) {
                 $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" . $selected_student->getNotes();
                 $selected_student->updateNotes($updated_notes);
                 // add success message
@@ -600,8 +600,8 @@
 
     // CREATE account
     $app->post("/owner_accounts", function() use ($app) {
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
+        if (isLoggedIn()) {
+            $school = School::find($_SESSION['school_id']);
 
             $family_name = $_POST['family_name'];
             $parent_one_name = $_POST['parent_one_name'];
@@ -812,7 +812,7 @@
     //JOIN students to course
     $app->post("/owner_courses/{id}", function($id) use ($app){
         if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
+            $school = School::find($_SESSION['school_id']);
             $course = Course::find($id);
             $selected_student = Student::find($_POST['student_id']);
 
@@ -832,8 +832,8 @@
 
     //CREATE a Lesson NOTE GO BACK TO COURSES THOUGH
     $app->post("/owner_lessons/{id}", function($id) use ($app) {
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
+        if (isLoggedIn()) {
+            $school = School::find($_SESSION['school_id']);
             $course = Course::find($id);
             $title = $_POST['title'];
             $description = $_POST['description'];
