@@ -94,11 +94,12 @@
             if (!$owner) {
                 $new_owner = new Owner($first_name, $last_name, $email_address, $role);
                 $new_owner->createAccount($password);
+
                 if ($new_owner->getId()) {
-                  loginOwner($new_owner);
-                  return $app->redirect("/owner_main");
+                    loginOwner($new_owner);
+                    return $app->redirect("/create_school");
                 } else {
-                  return $app->redirect("/create_owner");
+                    return $app->redirect("/create_owner");
                 }
             } else {
                 $errors[] = "Account already exist";
@@ -138,6 +139,7 @@
 
             if($new_school->save()) {
                 if($new_school->addOwner($owner_id)) {
+                    $_SESSION['school_id'] = $new_school->getId();
                     return $app->redirect("/owner_main");
                 };
             }
@@ -149,7 +151,8 @@
     //READ teachers
     $app->get("/owner_teachers", function() use ($app) {
         if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
+
+            $school = School::find($_SESSION['school_id']);
 
             return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
         } else {
@@ -209,24 +212,32 @@
             $errors = [];
             $email_address = isset($_POST['email_address']) ? $_POST['email_address'] : '';
             $password = isset($_POST['password']) ? $_POST['password'] : '';
-            if(!$email_address) {
-              $errors[] = "Username cannot be blank.";
+
+            if (!$email_address) {
+                $errors[] = "Username cannot be blank.";
             }
-            if(!$password) {
+
+            if (!$password) {
               $errors[] = "Password cannot be blank";
             }
-            if(empty($errors)) {
-              $owner = Owner::findOwnerByEmailAddress($email_address);
-              if($owner) {
-                if(password_verify($password, $owner->getPassword())) {
-                  loginOwner($owner);
-                  return $app->redirect("/owner_main");
+
+            if (empty($errors)) {
+                $owner = Owner::findOwnerByEmailAddress($email_address);
+
+                if ($owner) {
+                    if (password_verify($password, $owner->getPassword())) {
+                        loginOwner($owner);
+                        $schools = School::findSchoolsByOwnerId($owner->getId());
+
+                        //TODO for the future changw
+                        $_SESSION['school_id'] = $schools[0]->getId();
+                        return $app->redirect("/owner_main");
+                    } else {
+                        $errors[] = "Email or Password didn't match with existing account";
+                    }
                 } else {
-                  $errors[] = "Email or Password didn't match with existing account";
+                    $errors[] = "Email or Password didn't match with existing account";
                 }
-              } else {
-                $errors[] = "Email or Password didn't match with existing account";
-              }
             }
             return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
         }

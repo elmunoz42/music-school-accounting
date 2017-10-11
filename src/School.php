@@ -198,7 +198,7 @@
         static function findSchoolsByOwnerId($owner_id)
         {
           $stmt = $GLOBALS['DB']->prepare(
-              "SELECT * FROM schools JOIN owners_schools ON schools.id = owners_schools.school_id JOIN owners ON owners_schools.owner_id = owners.id WHERE owners.id = :owner_id");
+              "SELECT schools.* FROM schools JOIN owners_schools ON schools.id = owners_schools.school_id JOIN owners ON owners_schools.owner_id = owners.id WHERE owners.id = :owner_id");
           $stmt->bindParam(':owner_id', $owner_id, PDO::PARAM_STR);
           $stmt->execute();
 
