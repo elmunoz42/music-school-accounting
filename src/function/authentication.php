@@ -25,5 +25,6 @@
   function logout() {
     unset($_SESSION['owner_id']);
     unset($_SESSION['last_login']);
+    session_destroy();
     return true;
   }
