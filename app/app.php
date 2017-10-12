@@ -762,11 +762,11 @@
 
             if ($course) {
                 return $app['twig']->render('owner_course.html.twig', array(
-                    'school'=>$school,
+                    'school'=> $school,
                     'course' => $course,
                     'courses' => $school->getCourses(),
                     'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
-                    'lessons' => $school->getLessons()
+                    'lessons' => $course->getLessons()
                 ));
             } else {
                 // course is not found
