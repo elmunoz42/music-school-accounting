@@ -200,7 +200,6 @@
           $stmt = $GLOBALS['DB']->prepare(
               "SELECT schools.* FROM schools JOIN owners_schools ON schools.id = owners_schools.school_id JOIN owners ON owners_schools.owner_id = owners.id WHERE owners.id = :owner_id");
           $stmt->bindParam(':owner_id', $owner_id, PDO::PARAM_STR);
-          $stmt->execute();
 
           if($stmt->execute()) {
               $results = $stmt->fetchAll();
@@ -396,6 +395,7 @@
         // NOTE UNTESTED
         function removeTeacher($teacher_id)
         {
+
             $GLOBALS['DB']->exec("DELETE FROM schools_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM accounts_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE teacher_id = {$teacher_id};");
