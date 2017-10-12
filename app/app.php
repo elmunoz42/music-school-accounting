@@ -777,6 +777,30 @@
         }
     });
 
+    $app->post("/owner_courses/{course_id}/update", function($course_id) use ($app) {
+        if (isLoggedIn()) {
+            $new_title = $_POST['title'] ? $_POST['title'] : '';
+            if ($new_title) {
+                $course = Course::find($course_id);
+                if ($course) {
+                    if ($course->updateTitle($new_title)) {
+                        //add success message
+                    } else {
+                        // add error message
+                    }
+                } else {
+                    // add error message
+                }
+            } else {
+                // add error message
+            }
+            return $app->redirect("/owner_courses/" . $course_id);
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
+
     //REDIRECT post to course
     $app->post("/owner_courses/redirect", function() use ($app) {
         if(isLoggedIn()) {
@@ -794,6 +818,23 @@
           // not logged in
           return $app->redirect("/owner_login");
         }
+    });
+
+    $app->delete("/owner_courses/{course_id}/delete", function($course_id) use ($app) {
+      if (isLoggedIn()) {
+          $school = School::find($_SESSION['school_id']);
+          $course = Course::find($course_id);
+
+          if ($course->deleteCourse()) {
+              // add success message
+              return $app->redirect("/owner_courses");
+          } else {
+              // add error message
+              return $app->redirect("/owner_courses");
+          }
+      } else {
+          return $app->redirect("/owner_login");
+      }
     });
 
     //JOIN add a lesson to a course

@@ -54,12 +54,12 @@
             $GLOBALS['DB']->exec("DELETE FROM courses");
         }
 
-        function update($new_title)
+        function updateTitle($new_title)
         {
-            $GLOBALS['DB']->exec("UPDATE courses SET title = '{$new_title}';");
-
-            $this->setTitle($new_title);
-
+            $stmt = $GLOBALS['DB']->prepare("UPDATE courses SET title = :title WHERE id = :id");
+            $stmt->bindParam(':title', $new_title, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
         static function find($course_id)
@@ -89,7 +89,10 @@
 
         function deleteCourse()
         {
-            $GLOBALS['DB']->exec("DELETE FROM courses WHERE id = '{$this->getId()}';");
+            $stmt = $GLOBALS['DB']->prepare("DELETE FROM courses WHERE id = :id");
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
 
         // NOTE UNTESTED
