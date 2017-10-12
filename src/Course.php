@@ -1,6 +1,6 @@
 <?php
 
-    class   Course
+    class Course
     {
         private $title;
         private $id;
@@ -182,22 +182,38 @@
             }
             return $teachers;
         }
+
         // NOTE UNTESTED
         function getLessons()
         {
-            $query = $GLOBALS['DB']->query("SELECT lessons.* FROM courses JOIN courses_lessons ON (courses.id = courses_lessons.course_id) JOIN lessons ON (courses_lessons.lesson_id = lessons.id) WHERE courses.id = {$this->getId()};");
-            $lessons = array();
-            foreach ($query as $lesson )
-            {
-                $title = $lesson['title'];
-                $description = $lesson['description'];
-                $content = $lesson['content'];
-                $id = $lesson['id'];
-                $returned_lesson = new Lesson($title, $description, $content, $id);
-                array_push($lessons, $returned_lesson);
-            }
-            return $lessons;
-        }
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT lessons.* FROM courses
+                JOIN courses_lessons ON courses.id = courses_lessons.course_id
+                JOIN lessons ON courses_lessons.lesson_id = lessons.id
+                WHERE courses.id = :course_id
+            ");
+            $stmt->bindParam(':course_id', $this->getId(), PDO::PARAM_STR);
 
+            if ($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $lessons = [];
+                    forEach($results as $result) {
+                        $lesson = new Lesson(
+                            $result['title'],
+                            $result['description'],
+                            $result['content'],
+                            $result['id']
+                        );
+                        array_push($lessons, $lesson);
+                    }
+                    return $lessons;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
     }
  ?>
