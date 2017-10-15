@@ -39,7 +39,7 @@ MVP Music School Administrator Specs:
 
 |Status|Behaviour|Input|Output|
 |------|---------|-----|------|
-|TO DO| Update session/service attendance status, payment status and notes. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
+|TO DO| Update multiple session/service payment status, duration and recurrence with a batch edit functionality. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
 |TO DO| As an admin-user I can go online and see information, about my sessions, lessons, teachers, students and accounts. And I have CRUD functionality  | no login yet just url | CRUD functionality ( hosted on Dreamhost) |
 |TO DO| Filter sessions(services) that where schedul ed to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
 
@@ -47,9 +47,28 @@ Video Streaming SPECS:
 
 |Status|Behaviour|Input|Output|
 |------|---------|-----|------|
-|TO DO | As an admin-user I can start a tokbox video streaming session with another admin user | each user navigates to a respective url | users have a video streaming session within our domain.|
+|TODO | As an admin-user I can start a tokbox video streaming session with another admin user | each user navigates to a respective url | users have a video streaming session within our domain.|
 |TODO| As an teacher-user I can start a video streaming session with student user and see lesson materials on half of the screen, the video on the upper left corner of the screen and ( student name, instrument, parent guardian name, parent account phone number and email, and student notes ) info on the bottom left corner of the screen.| a teacher navigates to their url clicks a link to start a video-session with one of their assigned students, student navigates to their home page| users have a video streaming session within our domain. The teacher and student have almost identical screens with lesson and info except student page does not have student notes |
 
+Teacher user Stories:
+
+|Status|Behaviour|Input|Output|
+|------|---------|-----|------|
+|TODO | As a teacher-user I can see my students and their notes | | |
+|TODO | ... I can see all the courses and lessons| ||
+|TODO | ... I can create courses | | |
+|TODO | ... I can create lessons assigned to a course | | |
+|TODO | ... I can assign a student to a course | | |
+|TODO | ... I can see all the sessions/services related to me in a given month, week or day, I can also see the notes| | |
+|TODO | ... I can update attendance, notes, duration and recurrence for a given session/service (one at a time)| | |
+
+Account (client) user Stories:
+
+|Status|Behaviour|Input|Output|
+|------|---------|-----|------|
+|TODO | As an account-user I can see the students in my account | | |
+|TODO | ... I can see the teachers, courses and lessons they are assigned to |||
+|TODO | ... I can see the services/sessions that are assigned to my students in this month, the previous month and all history. I will see attendance, duration, paid_for, recurrence, notes, teacher that was joined to service|||
 
 ## Setup/Installation Requirements
 
