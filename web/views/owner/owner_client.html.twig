@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "base_private.html.twig" %}
 
 {% block title %}Account{% endblock %}
 
@@ -98,7 +98,7 @@
 
         <h3>Add Notes:</h3>
         <hr>
-        <form action="/owner_accounts/{{ account.getId }}" method="post">
+        <form action="/owner_accounts/{{ account.getId }}/add_notes" method="post">
             <input name="_method" type="hidden" value="patch">
             <div class="form-group">
                 <label class ="control-label" for="new_notes">Notes</label><br>
@@ -155,12 +155,12 @@
             <div class="panel panel-info">
                 <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
                 {% if student.getServices is not empty %}
-                {% for service in student.getServices %}
-                <div class="well">
-                  - {{ service.getDateOfService }} - <br>
-                  {{ service.getDescription }} with {{service.getTeachers[0].getName }}
-                </div>
-                {% endfor %}
+                    {% for service in student.getServices %}
+                        <div class="well">
+                          - {{ service.getDateOfService }} - <br>
+                          {{ service.getDescription }} with {{service.getTeachers[0].getName }}
+                        </div>
+                    {% endfor %}
                 {% endif %}
             </div>
         {% endfor %}

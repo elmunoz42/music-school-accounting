@@ -9,7 +9,6 @@
     <title>Music School - {% block title %}{% endblock %}</title>
 </head>
 <body>
-
     <div class="container">
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -24,6 +23,7 @@
             <!-- <div class="center-div">
             <div class="sidebar"> -->
             <ul class="nav navbar-nav">
+
                 <li><a href="/owner_login">Home</a></li>
                 <li><a href="/owner_teachers">Teachers</a></li>
                 <li><a href="/owner_students">Students</a></li>
@@ -38,7 +38,11 @@
             </form>
         </div>
     </nav>
-
+    {% if errors is defined %}
+      {% for error in errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endfor %}
+    {% endif %}
 {% block content %}
 
 {% endblock %}

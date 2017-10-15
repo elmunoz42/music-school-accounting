@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.7.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Sep 18, 2017 at 01:59 AM
--- Server version: 5.6.34-log
--- PHP Version: 5.6.30
+-- Generation Time: Oct 12, 2017 at 01:08 AM
+-- Server version: 5.6.35
+-- PHP Version: 7.1.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -21,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `crm_music`
 --
-CREATE DATABASE IF NOT EXISTS `crm_music` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `crm_music` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `crm_music`;
 
 -- --------------------------------------------------------
@@ -44,13 +42,6 @@ CREATE TABLE `accounts` (
   `parent_two_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `accounts`
---
-
-INSERT INTO `accounts` (`id`, `family_name`, `street_address`, `phone_number`, `email_address`, `notes`, `billing_history`, `outstanding_balance`, `parent_one_name`, `parent_two_name`) VALUES
-(1, 't', 't', 't', 't', 'First entry', 'First entry', 0, 'tt', 't');
-
 -- --------------------------------------------------------
 
 --
@@ -60,8 +51,8 @@ INSERT INTO `accounts` (`id`, `family_name`, `street_address`, `phone_number`, `
 DROP TABLE IF EXISTS `accounts_courses`;
 CREATE TABLE `accounts_courses` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `course_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -74,8 +65,8 @@ CREATE TABLE `accounts_courses` (
 DROP TABLE IF EXISTS `accounts_images`;
 CREATE TABLE `accounts_images` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `image_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -88,8 +79,8 @@ CREATE TABLE `accounts_images` (
 DROP TABLE IF EXISTS `accounts_lessons`;
 CREATE TABLE `accounts_lessons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -102,21 +93,10 @@ CREATE TABLE `accounts_lessons` (
 DROP TABLE IF EXISTS `accounts_schools`;
 CREATE TABLE `accounts_schools` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `accounts_schools`
---
-
-INSERT INTO `accounts_schools` (`id`, `account_id`, `school_id`, `date_of_join`) VALUES
-(1, 0, 1, NULL),
-(2, 0, 1, NULL),
-(3, 0, 1, NULL),
-(4, 0, 1, NULL),
-(5, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -127,8 +107,8 @@ INSERT INTO `accounts_schools` (`id`, `account_id`, `school_id`, `date_of_join`)
 DROP TABLE IF EXISTS `accounts_services`;
 CREATE TABLE `accounts_services` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `service_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -141,17 +121,10 @@ CREATE TABLE `accounts_services` (
 DROP TABLE IF EXISTS `accounts_students`;
 CREATE TABLE `accounts_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `accounts_students`
---
-
-INSERT INTO `accounts_students` (`id`, `account_id`, `student_id`, `date_of_join`) VALUES
-(1, 1, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -162,8 +135,8 @@ INSERT INTO `accounts_students` (`id`, `account_id`, `student_id`, `date_of_join
 DROP TABLE IF EXISTS `accounts_teachers`;
 CREATE TABLE `accounts_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `account_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -179,13 +152,6 @@ CREATE TABLE `courses` (
   `id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `courses`
---
-
-INSERT INTO `courses` (`title`, `id`) VALUES
-('Piano Level One', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -195,8 +161,8 @@ INSERT INTO `courses` (`title`, `id`) VALUES
 DROP TABLE IF EXISTS `courses_images`;
 CREATE TABLE `courses_images` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `image_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -209,8 +175,8 @@ CREATE TABLE `courses_images` (
 DROP TABLE IF EXISTS `courses_lessons`;
 CREATE TABLE `courses_lessons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -223,17 +189,10 @@ CREATE TABLE `courses_lessons` (
 DROP TABLE IF EXISTS `courses_schools`;
 CREATE TABLE `courses_schools` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `courses_schools`
---
-
-INSERT INTO `courses_schools` (`id`, `course_id`, `school_id`, `date_of_join`) VALUES
-(1, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -244,8 +203,8 @@ INSERT INTO `courses_schools` (`id`, `course_id`, `school_id`, `date_of_join`) V
 DROP TABLE IF EXISTS `courses_services`;
 CREATE TABLE `courses_services` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `service_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -258,17 +217,10 @@ CREATE TABLE `courses_services` (
 DROP TABLE IF EXISTS `courses_students`;
 CREATE TABLE `courses_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `courses_students`
---
-
-INSERT INTO `courses_students` (`id`, `course_id`, `student_id`, `date_of_join`) VALUES
-(1, 1, 2, '2017-09-17 03:56:51');
 
 -- --------------------------------------------------------
 
@@ -279,8 +231,8 @@ INSERT INTO `courses_students` (`id`, `course_id`, `student_id`, `date_of_join`)
 DROP TABLE IF EXISTS `courses_teachers`;
 CREATE TABLE `courses_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -292,7 +244,7 @@ CREATE TABLE `courses_teachers` (
 
 DROP TABLE IF EXISTS `images`;
 CREATE TABLE `images` (
-  `idpic` int(10) UNSIGNED NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `caption` varchar(45) NOT NULL,
   `img` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -306,8 +258,8 @@ CREATE TABLE `images` (
 DROP TABLE IF EXISTS `images_lessons`;
 CREATE TABLE `images_lessons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -320,8 +272,8 @@ CREATE TABLE `images_lessons` (
 DROP TABLE IF EXISTS `images_schools`;
 CREATE TABLE `images_schools` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -334,8 +286,8 @@ CREATE TABLE `images_schools` (
 DROP TABLE IF EXISTS `images_services`;
 CREATE TABLE `images_services` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `service_id` int(11) DEFAULT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -348,8 +300,8 @@ CREATE TABLE `images_services` (
 DROP TABLE IF EXISTS `images_students`;
 CREATE TABLE `images_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -362,8 +314,8 @@ CREATE TABLE `images_students` (
 DROP TABLE IF EXISTS `images_teachers`;
 CREATE TABLE `images_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `image_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -390,8 +342,8 @@ CREATE TABLE `lessons` (
 DROP TABLE IF EXISTS `lessons_schools`;
 CREATE TABLE `lessons_schools` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
+  `school_id` bigint(20) UNSIGNED DEFAULT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -404,8 +356,8 @@ CREATE TABLE `lessons_schools` (
 DROP TABLE IF EXISTS `lessons_services`;
 CREATE TABLE `lessons_services` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
-  `service_id` int(11) DEFAULT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -418,8 +370,8 @@ CREATE TABLE `lessons_services` (
 DROP TABLE IF EXISTS `lessons_students`;
 CREATE TABLE `lessons_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -432,9 +384,38 @@ CREATE TABLE `lessons_students` (
 DROP TABLE IF EXISTS `lessons_teachers`;
 CREATE TABLE `lessons_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `lesson_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `lesson_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `owners`
+--
+
+DROP TABLE IF EXISTS `owners`;
+CREATE TABLE `owners` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `email_address` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `role` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `owners_schools`
+--
+
+DROP TABLE IF EXISTS `owners_schools`;
+CREATE TABLE `owners_schools` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `owner_id` bigint(20) UNSIGNED NOT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -458,21 +439,6 @@ CREATE TABLE `schools` (
   `type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `schools`
---
-
-INSERT INTO `schools` (`id`, `school_name`, `manager_name`, `phone_number`, `email`, `business_address`, `city`, `state`, `country`, `zip`, `type`) VALUES
-(1, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(2, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(3, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(4, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(5, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(6, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(7, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(8, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music'),
-(9, 'SPMS', 'Carlos Munoz Kampff', '617-780-8362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'music');
-
 -- --------------------------------------------------------
 
 --
@@ -482,8 +448,8 @@ INSERT INTO `schools` (`id`, `school_name`, `manager_name`, `phone_number`, `ema
 DROP TABLE IF EXISTS `schools_services`;
 CREATE TABLE `schools_services` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `school_id` int(11) DEFAULT NULL,
-  `service_id` int(11) DEFAULT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -496,18 +462,10 @@ CREATE TABLE `schools_services` (
 DROP TABLE IF EXISTS `schools_students`;
 CREATE TABLE `schools_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `school_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `schools_students`
---
-
-INSERT INTO `schools_students` (`id`, `school_id`, `student_id`, `date_of_join`) VALUES
-(1, 1, 1, NULL),
-(2, 1, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -518,20 +476,10 @@ INSERT INTO `schools_students` (`id`, `school_id`, `student_id`, `date_of_join`)
 DROP TABLE IF EXISTS `schools_teachers`;
 CREATE TABLE `schools_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `school_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `school_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `schools_teachers`
---
-
-INSERT INTO `schools_teachers` (`id`, `school_id`, `teacher_id`, `date_of_join`) VALUES
-(1, 1, 0, NULL),
-(2, 1, 0, NULL),
-(3, 1, 0, NULL),
-(4, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -562,8 +510,8 @@ CREATE TABLE `services` (
 DROP TABLE IF EXISTS `services_students`;
 CREATE TABLE `services_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `service_id` int(11) DEFAULT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -576,8 +524,8 @@ CREATE TABLE `services_students` (
 DROP TABLE IF EXISTS `services_teachers`;
 CREATE TABLE `services_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `service_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `service_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -594,14 +542,6 @@ CREATE TABLE `students` (
   `notes` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `students`
---
-
-INSERT INTO `students` (`id`, `student_name`, `notes`) VALUES
-(1, 'Johnny Ball', 'Sunday 17th of September 2017 03:23:23 PM of first entry.'),
-(2, 'Johnny Ball', '');
-
 -- --------------------------------------------------------
 
 --
@@ -611,17 +551,10 @@ INSERT INTO `students` (`id`, `student_name`, `notes`) VALUES
 DROP TABLE IF EXISTS `students_teachers`;
 CREATE TABLE `students_teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `student_id` int(11) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `date_of_join` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `students_teachers`
---
-
-INSERT INTO `students_teachers` (`id`, `student_id`, `teacher_id`, `date_of_join`) VALUES
-(1, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -636,13 +569,6 @@ CREATE TABLE `teachers` (
   `instrument` varchar(100) DEFAULT NULL,
   `notes` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `teachers`
---
-
-INSERT INTO `teachers` (`id`, `teacher_name`, `instrument`, `notes`) VALUES
-(1, 'Jimi Marks', 'Piano', 'Sunday 17th of September 2017 03:22:30 PM of first entry.');
 
 --
 -- Indexes for dumped tables
@@ -660,49 +586,63 @@ ALTER TABLE `accounts`
 --
 ALTER TABLE `accounts_courses`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `course_id` (`course_id`);
 
 --
 -- Indexes for table `accounts_images`
 --
 ALTER TABLE `accounts_images`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `image_id` (`image_id`);
 
 --
 -- Indexes for table `accounts_lessons`
 --
 ALTER TABLE `accounts_lessons`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `lesson_id` (`lesson_id`);
 
 --
 -- Indexes for table `accounts_schools`
 --
 ALTER TABLE `accounts_schools`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `school_id` (`school_id`);
 
 --
 -- Indexes for table `accounts_services`
 --
 ALTER TABLE `accounts_services`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `service_id` (`service_id`);
 
 --
 -- Indexes for table `accounts_students`
 --
 ALTER TABLE `accounts_students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `student_id` (`student_id`);
 
 --
 -- Indexes for table `accounts_teachers`
 --
 ALTER TABLE `accounts_teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `account_id` (`account_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indexes for table `courses`
@@ -716,83 +656,105 @@ ALTER TABLE `courses`
 --
 ALTER TABLE `courses_images`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `image_id` (`image_id`);
 
 --
 -- Indexes for table `courses_lessons`
 --
 ALTER TABLE `courses_lessons`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `lesson_id` (`lesson_id`);
 
 --
 -- Indexes for table `courses_schools`
 --
 ALTER TABLE `courses_schools`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `school_id` (`school_id`);
 
 --
 -- Indexes for table `courses_services`
 --
 ALTER TABLE `courses_services`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `service_id` (`service_id`);
 
 --
 -- Indexes for table `courses_students`
 --
 ALTER TABLE `courses_students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `student_id` (`student_id`);
 
 --
 -- Indexes for table `courses_teachers`
 --
 ALTER TABLE `courses_teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indexes for table `images`
 --
 ALTER TABLE `images`
-  ADD PRIMARY KEY (`idpic`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `images_lessons`
 --
 ALTER TABLE `images_lessons`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `image_id` (`image_id`),
+  ADD KEY `lesson_id` (`lesson_id`);
 
 --
 -- Indexes for table `images_schools`
 --
 ALTER TABLE `images_schools`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `image_id` (`image_id`),
+  ADD KEY `school_id` (`school_id`);
 
 --
 -- Indexes for table `images_services`
 --
 ALTER TABLE `images_services`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `image_id` (`image_id`),
+  ADD KEY `service_id` (`service_id`);
 
 --
 -- Indexes for table `images_students`
 --
 ALTER TABLE `images_students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `image_id` (`image_id`),
+  ADD KEY `student_id` (`student_id`);
 
 --
 -- Indexes for table `images_teachers`
 --
 ALTER TABLE `images_teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `image_id` (`image_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indexes for table `lessons`
@@ -806,28 +768,52 @@ ALTER TABLE `lessons`
 --
 ALTER TABLE `lessons_schools`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `lesson_id` (`lesson_id`),
+  ADD KEY `school_id` (`school_id`);
 
 --
 -- Indexes for table `lessons_services`
 --
 ALTER TABLE `lessons_services`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `lesson_id` (`lesson_id`),
+  ADD KEY `service_id` (`service_id`);
 
 --
 -- Indexes for table `lessons_students`
 --
 ALTER TABLE `lessons_students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `lesson_id` (`lesson_id`),
+  ADD KEY `student_id` (`student_id`);
 
 --
 -- Indexes for table `lessons_teachers`
 --
 ALTER TABLE `lessons_teachers`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `lesson_id` (`lesson_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
+
+--
+-- Indexes for table `owners`
+--
+ALTER TABLE `owners`
+  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `owners_schools`
+--
+ALTER TABLE `owners_schools`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `owner_id` (`owner_id`),
+  ADD KEY `school_id` (`school_id`);
 
 --
 -- Indexes for table `schools`
@@ -841,21 +827,27 @@ ALTER TABLE `schools`
 --
 ALTER TABLE `schools_services`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `school_id` (`school_id`),
+  ADD KEY `service_id` (`service_id`);
 
 --
 -- Indexes for table `schools_students`
 --
 ALTER TABLE `schools_students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `school_id` (`school_id`),
+  ADD KEY `student_id` (`student_id`);
 
 --
 -- Indexes for table `schools_teachers`
 --
 ALTER TABLE `schools_teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `school_id` (`school_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indexes for table `services`
@@ -869,14 +861,18 @@ ALTER TABLE `services`
 --
 ALTER TABLE `services_students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `service_id` (`service_id`),
+  ADD KEY `student_id` (`student_id`);
 
 --
 -- Indexes for table `services_teachers`
 --
 ALTER TABLE `services_teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `service_id` (`service_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indexes for table `students`
@@ -890,7 +886,9 @@ ALTER TABLE `students`
 --
 ALTER TABLE `students_teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `student_id` (`student_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indexes for table `teachers`
@@ -907,7 +905,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `accounts_courses`
 --
@@ -927,17 +925,17 @@ ALTER TABLE `accounts_lessons`
 -- AUTO_INCREMENT for table `accounts_schools`
 --
 ALTER TABLE `accounts_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `accounts_services`
 --
 ALTER TABLE `accounts_services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `accounts_students`
 --
 ALTER TABLE `accounts_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `accounts_teachers`
 --
@@ -947,7 +945,7 @@ ALTER TABLE `accounts_teachers`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `courses_images`
 --
@@ -957,12 +955,12 @@ ALTER TABLE `courses_images`
 -- AUTO_INCREMENT for table `courses_lessons`
 --
 ALTER TABLE `courses_lessons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `courses_schools`
 --
 ALTER TABLE `courses_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `courses_services`
 --
@@ -972,7 +970,7 @@ ALTER TABLE `courses_services`
 -- AUTO_INCREMENT for table `courses_students`
 --
 ALTER TABLE `courses_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `courses_teachers`
 --
@@ -982,7 +980,7 @@ ALTER TABLE `courses_teachers`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `idpic` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `images_lessons`
 --
@@ -1012,12 +1010,12 @@ ALTER TABLE `images_teachers`
 -- AUTO_INCREMENT for table `lessons`
 --
 ALTER TABLE `lessons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `lessons_schools`
 --
 ALTER TABLE `lessons_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `lessons_services`
 --
@@ -1034,55 +1032,270 @@ ALTER TABLE `lessons_students`
 ALTER TABLE `lessons_teachers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `owners`
+--
+ALTER TABLE `owners`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `owners_schools`
+--
+ALTER TABLE `owners_schools`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
 -- AUTO_INCREMENT for table `schools`
 --
 ALTER TABLE `schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `schools_services`
 --
 ALTER TABLE `schools_services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `schools_students`
 --
 ALTER TABLE `schools_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `schools_teachers`
 --
 ALTER TABLE `schools_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `services_students`
 --
 ALTER TABLE `services_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `services_teachers`
 --
 ALTER TABLE `services_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `students_teachers`
 --
 ALTER TABLE `students_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;COMMIT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `accounts_courses`
+--
+ALTER TABLE `accounts_courses`
+  ADD CONSTRAINT `accounts_courses_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_courses_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `accounts_images`
+--
+ALTER TABLE `accounts_images`
+  ADD CONSTRAINT `accounts_images_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_images_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `accounts_lessons`
+--
+ALTER TABLE `accounts_lessons`
+  ADD CONSTRAINT `accounts_lessons_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_lessons_ibfk_2` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `accounts_schools`
+--
+ALTER TABLE `accounts_schools`
+  ADD CONSTRAINT `accounts_schools_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_schools_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `accounts_services`
+--
+ALTER TABLE `accounts_services`
+  ADD CONSTRAINT `accounts_services_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `accounts_students`
+--
+ALTER TABLE `accounts_students`
+  ADD CONSTRAINT `accounts_students_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_students_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `accounts_teachers`
+--
+ALTER TABLE `accounts_teachers`
+  ADD CONSTRAINT `accounts_teachers_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accounts_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses_images`
+--
+ALTER TABLE `courses_images`
+  ADD CONSTRAINT `courses_images_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `courses_images_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses_lessons`
+--
+ALTER TABLE `courses_lessons`
+  ADD CONSTRAINT `courses_lessons_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `courses_lessons_ibfk_2` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses_schools`
+--
+ALTER TABLE `courses_schools`
+  ADD CONSTRAINT `courses_schools_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `courses_schools_ibfk_2` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses_services`
+--
+ALTER TABLE `courses_services`
+  ADD CONSTRAINT `courses_services_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `courses_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses_students`
+--
+ALTER TABLE `courses_students`
+  ADD CONSTRAINT `courses_students_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `courses_students_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses_teachers`
+--
+ALTER TABLE `courses_teachers`
+  ADD CONSTRAINT `courses_teachers_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `courses_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `images_lessons`
+--
+ALTER TABLE `images_lessons`
+  ADD CONSTRAINT `images_lessons_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `images_lessons_ibfk_2` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `images_schools`
+--
+ALTER TABLE `images_schools`
+  ADD CONSTRAINT `images_schools_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `images_schools_ibfk_2` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `images_services`
+--
+ALTER TABLE `images_services`
+  ADD CONSTRAINT `images_services_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `images_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `images_students`
+--
+ALTER TABLE `images_students`
+  ADD CONSTRAINT `images_students_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `images_students_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `images_teachers`
+--
+ALTER TABLE `images_teachers`
+  ADD CONSTRAINT `images_teachers_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `images_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `lessons_schools`
+--
+ALTER TABLE `lessons_schools`
+  ADD CONSTRAINT `lessons_schools_ibfk_1` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `lessons_schools_ibfk_2` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `lessons_services`
+--
+ALTER TABLE `lessons_services`
+  ADD CONSTRAINT `lessons_services_ibfk_1` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `lessons_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `lessons_students`
+--
+ALTER TABLE `lessons_students`
+  ADD CONSTRAINT `lessons_students_ibfk_1` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `lessons_students_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `lessons_teachers`
+--
+ALTER TABLE `lessons_teachers`
+  ADD CONSTRAINT `lessons_teachers_ibfk_1` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `lessons_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `owners_schools`
+--
+ALTER TABLE `owners_schools`
+  ADD CONSTRAINT `owners_schools_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `owners_schools_ibfk_2` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `schools_services`
+--
+ALTER TABLE `schools_services`
+  ADD CONSTRAINT `schools_services_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `schools_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `schools_students`
+--
+ALTER TABLE `schools_students`
+  ADD CONSTRAINT `schools_students_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `schools_students_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `schools_teachers`
+--
+ALTER TABLE `schools_teachers`
+  ADD CONSTRAINT `schools_teachers_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `services_students`
+--
+ALTER TABLE `services_students`
+  ADD CONSTRAINT `services_students_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `services_students_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `services_teachers`
+--
+ALTER TABLE `services_teachers`
+  ADD CONSTRAINT `services_teachers_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `services_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `students_teachers`
+--
+ALTER TABLE `students_teachers`
+  ADD CONSTRAINT `students_teachers_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `students_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

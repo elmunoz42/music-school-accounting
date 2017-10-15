@@ -5,10 +5,11 @@
         private $notes;
         private $id;
 
-        function __construct($student_name, $id = null)
+        function __construct($student_name, $id = null, $notes = null)
         {
             $this->student_name = $student_name;
             $this->id = (Int)$id;
+            $this->notes = $notes;
         }
 
         function setName($new_student_name)
@@ -78,10 +79,12 @@
             $this->setNotes($new_note);
         }
 
-        function updateName($update)
+        function updateName($student_name)
         {
-            $GLOBALS['DB']->exec("UPDATE students SET student_name = '{$update}' WHERE id = {$this->getId()};");
-            $this->setName($update);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE students SET student_name = :student_name WHERE id = :id");
+            $stmt->bindParam(':student_name', $student_name, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
         function delete()
@@ -89,17 +92,30 @@
             $GLOBALS['DB']->exec("DELETE FROM students WHERE id = {$this->getId()};");
         }
 
-        static function find($search_id)
+        static function find($student_id)
         {
-           $found_student = null;
-           $students = Student::getAll();
-           foreach($students as $student){
-               $student_id = $student->getId();
-               if ( $student_id == $search_id){
-                   $found_student = $student;
-               }
-           }
-           return $found_student;
+            $stmt = $GLOBALS['DB']->prepare("SELECT students.* FROM students JOIN schools_students ON (students.id = schools_students.student_id) JOIN schools ON (schools_students.school_id = schools.id) WHERE students.id = :student_id AND schools.id = :school_id");
+
+            $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $student_name =  $result['student_name'];
+                    $id = $result['id'];
+                    $notes = $result['notes'];
+
+                    return new Student($student_name, $id, $notes);
+                } else {
+                    // student is not belong to the school
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
         }
 
         function getTeachers()
@@ -323,7 +339,6 @@
             }
             return $services;
         }
-
     }
 
 
