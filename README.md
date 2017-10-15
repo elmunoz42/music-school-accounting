@@ -41,7 +41,7 @@ MVP Music School Administrator Specs:
 |------|---------|-----|------|
 |TO DO| Update session/service attendance status, payment status and notes. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
 |TO DO| As an admin-user I can go online and see information, about my sessions, lessons, teachers, students and accounts. And I have CRUD functionality  | no login yet just url | CRUD functionality ( hosted on Dreamhost) |
-|TO DO| Filter sessions(services) that where scheduled to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
+|TO DO| Filter sessions(services) that where schedul ed to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
 
 Video Streaming SPECS:
 
