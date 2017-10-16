@@ -142,6 +142,7 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO schools (school_name, manager_name, phone_number, email, business_address, city, state, country, zip, type) VALUES ('{$this->getSchoolName()}','{$this->getManagerName()}','{$this->getPhoneNumber()}','{$this->getEmail()}','{$this->getBusinessAddress()}','{$this->getCity()}','{$this->getState()}','{$this->getCountry()}','{$this->getZip()}','{$this->getType()}');");
             $this->id = $GLOBALS['DB']->lastInsertId();
+            return true;
         }
 
         static function getAll()
@@ -194,12 +195,61 @@
             return $ret_school;
         }
 
+        static function findSchoolsByOwnerId($owner_id)
+        {
+          $stmt = $GLOBALS['DB']->prepare(
+              "SELECT schools.* FROM schools JOIN owners_schools ON schools.id = owners_schools.school_id JOIN owners ON owners_schools.owner_id = owners.id WHERE owners.id = :owner_id");
+          $stmt->bindParam(':owner_id', $owner_id, PDO::PARAM_STR);
+
+          if($stmt->execute()) {
+              $results = $stmt->fetchAll();
+              if ($results) {
+                $schools = [];
+                forEach($results as $result) {
+                    $school = new School(
+                        $result['school_name'],
+                        $result['manager_name'],
+                        $result['phone_number'],
+                        $result['email'],
+                        $result['business_address'],
+                        $result['city'],
+                        $result['state'],
+                        $result['country'],
+                        $result['zip'],
+                        $result['type'],
+                        $result['id']
+                    );
+                    array_push($schools, $school);
+                }
+                return $schools;
+              } else {
+                return false;
+              }
+          } else {
+            return false;
+          }
+        }
+
         function delete()
         {
             $GLOBALS['DB']->exec("DELETE FROM schools WHERE id = {$this->getId()};");
         }
 
         //Join Methods
+
+        function addOwner($owner_id)
+        {
+          $stmt = $GLOBALS['DB']->prepare(
+            "INSERT INTO owners_schools (owner_id, school_id) VALUES ( :owner_id, :school_id)");
+          $stmt->bindParam(':owner_id', $owner_id, PDO::PARAM_STR);
+          $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+
+          if($stmt->execute()) {
+              return true;
+          } else {
+              return false;
+          }
+        }
 
         function addTeacher($teacher_id)
         {
@@ -345,10 +395,13 @@
         // NOTE UNTESTED
         function removeTeacher($teacher_id)
         {
+
             $GLOBALS['DB']->exec("DELETE FROM schools_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM accounts_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM courses_teachers WHERE teacher_id = {$teacher_id};");
+
+            return true;
         }
 
         // NOTE UNTESTED

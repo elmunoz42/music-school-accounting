@@ -22,7 +22,7 @@
 
         // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function. 
 
-        function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance,$id = null)
+        function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id = null)
         {
             $this->description = $description;
             $this->duration = (int) $duration; //in minutes
@@ -156,25 +156,49 @@
             return $services;
         }
 
-        // Tested :-)
+        // NOTE: 10/10 changed sql logic (it is following other find logic so it should be no problem but I am not checking it...koji)
         static function find($service_id)
         {
-            $returned_services = $GLOBALS['DB']->query("SELECT * FROM services WHERE id = {$service_id};");
-            $re_service = null;
-            foreach($returned_services as $service){
-                $description = $service['description'];
-                $duration = $service['duration'];
-                $price = $service['price'];
-                $discount = $service['discount'];
-                $paid_for = (bool) $service['paid_for'];
-                $notes = $service['notes'];
-                $date_of_service = $service['date_of_service'];
-                $recurrence = $service['recurrence'];
-                $attendance = $service['attendance'];
-                $id = (int) $service['id'];
-                $re_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
+            $stmt = $GLOBALS['DB']->prepare("SELECT services.* FROM services JOIN schools_services ON (services.id = schools_services.service_id) JOIN schools ON (schools_services.school_id = schools.id) WHERE services.id = :service_id AND schools.id = :school_id");
+
+            $stmt->bindParam(':service_id', $service_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $description =  $result['description'];
+                    $duration = $result['duration'];
+                    $price = $result['price'];
+                    $discount = $result['discount'];
+                    $paid_for = $result['paid_for'];
+                    $notes = $result['notes'];
+                    $date_of_service = $result['date_of_service'];
+                    $recurrence = $result['recurrence'];
+                    $attendance = $result['attendance'];
+                    $id = $result['id'];
+
+                    return new Service(
+                        $description,
+                        $duration,
+                        $price,
+                        $discount,
+                        $paid_for,
+                        $notes,
+                        $date_of_service,
+                        $recurrence,
+                        $attendance,
+                        $id
+                    );
+                } else {
+                  // service is not belong to the school
+                  return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $re_service;
         }
 
         // Update functions

@@ -1,6 +1,6 @@
 <?php
 
-    class   Course
+    class Course
     {
         private $title;
         private $id;
@@ -54,29 +54,45 @@
             $GLOBALS['DB']->exec("DELETE FROM courses");
         }
 
-        function update($new_title)
+        function updateTitle($new_title)
         {
-            $GLOBALS['DB']->exec("UPDATE courses SET title = '{$new_title}';");
-
-            $this->setTitle($new_title);
-
+            $stmt = $GLOBALS['DB']->prepare("UPDATE courses SET title = :title WHERE id = :id");
+            $stmt->bindParam(':title', $new_title, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
-        static function find($search_id)
+        static function find($course_id)
         {
-            $query = $GLOBALS['DB']->query("SELECT * FROM courses WHERE id = {$search_id};");
-            $courses = array();
-            foreach( $query as $course){
-                $id = $course['id'];
-                $title = $course['title'];
-                $found_course = new Course($title, $id);
+            $stmt = $GLOBALS['DB']->prepare("SELECT courses.* FROM courses JOIN courses_schools ON (courses.id = courses_schools.course_id) JOIN schools ON (courses_schools.school_id = schools.id) WHERE courses.id = :course_id AND schools.id = :school_id");
+
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $title = $result['title'];
+                    $id = $result['id'];
+
+                    return new Course($title, $id);
+                } else {
+                    // course is not belong to the school
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $found_course;
         }
 
         function deleteCourse()
         {
-            $GLOBALS['DB']->exec("DELETE FROM courses WHERE id = '{$this->getId()}';");
+            $stmt = $GLOBALS['DB']->prepare("DELETE FROM courses WHERE id = :id");
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
 
         // NOTE UNTESTED
@@ -166,22 +182,38 @@
             }
             return $teachers;
         }
+
         // NOTE UNTESTED
         function getLessons()
         {
-            $query = $GLOBALS['DB']->query("SELECT lessons.* FROM courses JOIN courses_lessons ON (courses.id = courses_lessons.course_id) JOIN lessons ON (courses_lessons.lesson_id = lessons.id) WHERE courses.id = {$this->getId()};");
-            $lessons = array();
-            foreach ($query as $lesson )
-            {
-                $title = $lesson['title'];
-                $description = $lesson['description'];
-                $content = $lesson['content'];
-                $id = $lesson['id'];
-                $returned_lesson = new Lesson($title, $description, $content, $id);
-                array_push($lessons, $returned_lesson);
-            }
-            return $lessons;
-        }
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT lessons.* FROM courses
+                JOIN courses_lessons ON courses.id = courses_lessons.course_id
+                JOIN lessons ON courses_lessons.lesson_id = lessons.id
+                WHERE courses.id = :course_id
+            ");
+            $stmt->bindParam(':course_id', $this->getId(), PDO::PARAM_STR);
 
+            if ($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $lessons = [];
+                    forEach($results as $result) {
+                        $lesson = new Lesson(
+                            $result['title'],
+                            $result['description'],
+                            $result['content'],
+                            $result['id']
+                        );
+                        array_push($lessons, $lesson);
+                    }
+                    return $lessons;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
     }
  ?>
