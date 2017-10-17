@@ -60,7 +60,7 @@
           __DIR__.'/../web/views',
           __DIR__.'/../web/views/owner',
           __DIR__.'/../web/views/teacher',
-          __DIR__.'/../web/views/client',                               
+          __DIR__.'/../web/views/client',
         ]
     ));
 
@@ -167,7 +167,8 @@
     $app->post("/owner_teachers", function() use ($app) {
         if (isLoggedIn()) {
             $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
-            $new_teacher_instrument = $_POST['teacher_instrument'] ? $_POST['teacher_name'] : '';
+            $new_teacher_instrument = $_POST['teacher_instrument'] ? $_POST['teacher_instrument'] : '';
+            // NOTE Carlos changed $_POST['teacher_name'] : '' to $_POST['teacher_instrument'] : ''
 
             if ($new_teacher_name && $new_teacher_instrument) {
                 $school = School::find($_SESSION['school_id']);
