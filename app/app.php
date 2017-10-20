@@ -927,6 +927,27 @@
         }
     });
 
+    //DELETE Lesson
+    $app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app) {
+        if (isLoggedIn()) {
+            $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
+
+            if ($course_id) {
+                $lesson = Lesson::find($lesson_id);
+
+                if ($lesson->delete()) {
+                    // add success message
+                    return $app->redirect("/owner_courses/" . $course_id);
+                } else {
+                    // add error message
+                    return $app->redirect("/owner_courses/" . $course_id);
+                }
+            }
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
     // TEACHER STORY ROUTES
     // ROOT
     $app->get("/login_teacher", function() use ($app) {

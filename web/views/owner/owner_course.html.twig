@@ -17,14 +17,21 @@
                 {% endfor %}
             </select>
         </form>
-    {% endif %}
         {% if lessons is not empty %}
         <ul>
-            {% for lesson in lessons  %}
-            <li><a href="/owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a></li>
-            {% endfor %}
+          {% for lesson in lessons  %}
+          <li>
+            <a href="/owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a>
+            <form action="/owner_lesson/{{lesson.getId}}/delete" method="post">
+              <input name="_method" type="hidden" value="delete">
+              <input type="hidden" name="course_id" value="{{course.getId}}">
+              <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
+            </form>
+          </li>
+          {% endfor %}
         </ul>
         {% endif %}
+    {% endif %}
   </div>
   <!-- left column -->
   <div class="col-sm-4">

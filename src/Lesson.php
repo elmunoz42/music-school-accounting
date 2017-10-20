@@ -107,7 +107,10 @@
 
         function delete()
         {
-            $GLOBALS['DB']->exec("DELETE FROM lessons WHERE id = {$this->getId()};");
+          $stmt = $GLOBALS['DB']->prepare("DELETE FROM lessons WHERE id = :id");
+          $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+          return $stmt->execute();
         }
 
         function updateTitle($update)
