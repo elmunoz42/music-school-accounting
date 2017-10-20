@@ -39,9 +39,9 @@
                             <h4 class="modal-title">Update Lesson: {{lesson.getTitle}}</h4>
                         </div>
                         <form action="/owner_lesson/{{lesson.getId}}/update" method="post">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="modal-body">
                                         <div class="form-group">
                                             <label for="title">Lesson Title</label><br>
                                             <input class="form-control" type="text" name="title" value="{{lesson.getTitle}}"><br>
@@ -55,10 +55,10 @@
                                             <textarea class="form-control" name="content" rows="8" cols="40">{{lesson.getContent}}</textarea>
                                         </div>
                                         <input type="hidden" name="course_id" value="{{course.getId}}"><br>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-success">Save</button>
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>

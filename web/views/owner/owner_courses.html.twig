@@ -53,17 +53,17 @@
                                     <h4 class="modal-title">Update Course: {{course.getTitle}}</h4>
                                 </div>
                                 <form action="/owner_courses/{{course.getId}}/update" method="post">
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                              <div class="form-group">
-                                                  <label for="title">Course Name</label>
-                                                  <input type="text" id="title" class="form-control" name="title" value="{{course.getTitle()}}" placeholder="{{course.getTitle()}}">
-                                              </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-success">Save</button>
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="title">Course Name</label>
+                                                    <input type="text" id="title" class="form-control" name="title" value="{{course.getTitle()}}" placeholder="{{course.getTitle()}}">
                                                 </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success">Save</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>

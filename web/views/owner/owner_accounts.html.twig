@@ -94,9 +94,9 @@
                                     <h4 class="modal-title">Update Account: {{account.getFamilyName}}</h4>
                                 </div>
                                 <form action="/owner_account/{{account.getId}}/update" method="post">
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="modal-body">
                                                 <div class="form-group">
                                                     <label for="family_name">Family Name</label><br>
                                                     <input class="form-control" id="family_name" type="text" name="family_name" value="{{account.getFamilyName}}"><br>
@@ -121,10 +121,10 @@
                                                     <label for="email_address">Email Address:</label><br>
                                                     <input id="email_address" class="form-control" type="email" name="email_address" value="{{account.getEmailAddress}}"><br>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-success">Save</button>
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success">Save</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
