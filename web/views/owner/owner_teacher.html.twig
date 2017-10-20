@@ -35,19 +35,6 @@
                 </tr>
             </tbody>
         </table>
-
-        <form action="/owner_teachers/teacher_termination/{{ teacher.getId }}" method="post">
-            <input name="_method" type="hidden" value="delete">
-            <button type="submit" class="btn btn-danger btn-sm"  name="button">delete</button>
-        </form>
-        <form action="/update_teacher/{{teacher.getId}}" method="post">
-          <div class="form-group">
-            <label for="teacher_name">Name</label>
-            <input type="text" id="teacher_name" class="form-control" name="teacher_name" value="{{teacher.getName}}" placeholder="{{teacher.getName}}">
-            <input type="text" id="instrument" class="form-control" name="instrument" value="{{teacher.getInstrument}}" placeholder="{{teacher.getInstrument}}">
-            <button class="btn btn-success" type="submit" name="submit">Update</button>
-          </div>
-        </form>
     </div>
 
     <div class="col-md-4">

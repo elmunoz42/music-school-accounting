@@ -1171,7 +1171,7 @@
         }
     });
 
-    $app->post("/update_teacher/{teacher_id}", function($teacher_id) use ($app) {
+    $app->post("/owner_teacher/{teacher_id}/update", function($teacher_id) use ($app) {
         if (isLoggedIn()) {
             $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
             $new_instrument = $_POST['instrument'] ? $_POST['instrument'] : '';
@@ -1190,7 +1190,7 @@
             } else {
                 // add error message
             }
-            return $app->redirect("/owner_teachers/" . $teacher_id);
+            return $app->redirect("/owner_teachers");
         } else {
             return $app->redirect("/owner_login");
         }
