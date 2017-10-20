@@ -78,6 +78,10 @@
                         <td>
                             <a href="owner_accounts/{{account.getId}}">{{ account.getFamilyName}}</a>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_account_{{account.getId}}">Update</button>
+                            <form action="/owner_account/{{ account.getId }}/delete" method="post">
+                                <input name="_method" type="hidden" value="delete">
+                                <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
+                            </form>
                         </td>
                     </tr>
                     <!-- Update Modal -->

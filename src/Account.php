@@ -223,7 +223,10 @@ class Account
 
     function delete()
     {
-        $GLOBALS['DB']->exec("DELETE FROM accounts WHERE id = {$this->getId()};");
+        $stmt = $GLOBALS['DB']->prepare("DELETE FROM accounts WHERE id = :id");
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     function updateFamilyName($family_name)
@@ -407,7 +410,19 @@ class Account
     }
 
 
-
-
+    function deleteStudents($students)
+    {
+        foreach ($students as $student) {
+            $stmt = $GLOBALS['DB']->prepare("DELETE FROM students WHERE id = :id");
+            $stmt->bindParam(':id', $student->getId(), PDO::PARAM_STR);
+            
+            if (!$stmt->execute()) {
+                return false;
+            } else {
+                continue;
+            }
+        }
+        return true;
+    }
 }
 ?>

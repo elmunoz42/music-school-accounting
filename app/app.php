@@ -721,6 +721,31 @@
         }
     });
 
+    //DELETE account
+    $app->delete("/owner_account/{account_id}/delete", function($account_id) use ($app) {
+        if (isLoggedIn()) {
+            $school = School::find($_SESSION['school_id']);
+            $account = Account::find($account_id);
+            $students = $account->getStudents();
+
+            if ($account->deleteStudents($students)) {
+
+                if ($account->delete()) {
+                    // add success message
+                    return $app->redirect("/owner_accounts");
+                } else {
+                    // add error message
+                    return $app->redirect("/owner_accounts");
+                }
+            } else {
+                // add error message
+                return $app->redirect("/owner_accounts");
+            }
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
     // JOIN add student to account
     $app->post('/owner_add_student_to_account', function() use($app) {
         if (isLoggedIn()) {
