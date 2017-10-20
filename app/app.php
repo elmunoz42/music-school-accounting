@@ -604,7 +604,7 @@
         if(isLoggedIn()) {
             $school = School::find($_SESSION['school_id']);
 
-            return $app['twig']->render('owner_clients.html.twig', array('school' => $school, 'accounts' => $school->getAccounts()));
+            return $app['twig']->render('owner_accounts.html.twig', array('school' => $school, 'accounts' => $school->getAccounts()));
         } else {
             return $app->redirect("/owner_login");
         }
@@ -633,7 +633,7 @@
             $new_account->save();
             $school->addAccount($new_account->getId());
 
-            return $app['twig']->render('owner_clients.html.twig', array('school' => $school, 'accounts' => $school->getAccounts(), 'notes_array'=>$notes_array));
+            return $app['twig']->render('owner_accounts.html.twig', array('school' => $school, 'accounts' => $school->getAccounts(), 'notes_array'=>$notes_array));
         } else {
           // not logged in
           return $app->redirect("/owner_login");
@@ -655,7 +655,7 @@
                 $last_month = intval(date('m',strtotime('last month')));
                 $last_months_year = intval(date('Y',strtotime('last month')));
 
-                return $app['twig']->render('owner_client.html.twig', array(
+                return $app['twig']->render('owner_account.html.twig', array(
                     'school'=>$school,
                     'account'=>$account,
                     'accounts'=>$school->getAccounts(),
