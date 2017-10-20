@@ -113,22 +113,28 @@
           return $stmt->execute();
         }
 
-        function updateTitle($update)
+        function updateTitle($title)
         {
-            $GLOBALS['DB']->exec("UPDATE lessons SET title = '{$update}' WHERE id = {$this->getId()};");
-            $this->setTitle($update);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE lessons SET title = :title WHERE id = :id");
+            $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
-        function updateDescription($update)
+        function updateDescription($description)
         {
-            $GLOBALS['DB']->exec("UPDATE lessons SET description = '{$update}' WHERE id = {$this->getId()};");
-            $this->setDescription($update);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE lessons SET description = :description WHERE id = :id");
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
-        function updateContent($update)
+        function updateContent($content)
         {
-            $GLOBALS['DB']->exec("UPDATE lessons SET content = '{$update}' WHERE id = {$this->getId()};");
-            $this->setContent($update);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE lessons SET content = :content WHERE id = :id");
+            $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
         // Join methods INSERTS

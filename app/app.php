@@ -948,6 +948,29 @@
         }
     });
 
+    //UPDATE Lesson
+    $app->post("/owner_lesson/{lesson_id}/update", function($lesson_id) use ($app) {
+        if (isLoggedIn()) {
+            $lesson = Lesson::find($lesson_id);
+
+            $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
+            $title = $_POST['title'] ? $_POST['title'] : '';
+            $description = $_POST['description'] ? $_POST['description'] : '';
+            $content = $_POST['content'] ? $_POST['content'] : '';
+
+            if ($lesson->updateTitle($title) && $lesson->updateDescription($description) && $lesson->updateContent($content)) {
+                // add success message
+                return $app->redirect("/owner_courses/" . $course_id);
+            } else {
+                // add error message
+                return $app->redirect("/owner_courses/" . $course_id);
+            }
+
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
     // TEACHER STORY ROUTES
     // ROOT
     $app->get("/login_teacher", function() use ($app) {
@@ -1074,6 +1097,7 @@
 
     });
 
+    // UPDATE student
     $app->post("/update_student/{student_id}", function($student_id) use ($app) {
         if (isLoggedIn()) {
             $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';

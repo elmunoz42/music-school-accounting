@@ -4,10 +4,10 @@
 
 {% block content %}
 <div class="jumbotron">
-  <h1>{{ course.getTitle }} </h1>
+    <h1>{{ course.getTitle }} </h1>
 </div>
 <div class="row">
-  <div class="col-sm-4">
+    <div class="col-sm-4">
     {% if courses is not empty %}
         <form class="form-control" action="/owner_courses/redirect" method="post">
             <select name="course_select" onchange="this.form.submit();">
@@ -19,20 +19,58 @@
         </form>
         {% if lessons is not empty %}
         <ul>
-          {% for lesson in lessons  %}
-          <li>
-            <a href="/owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a>
-            <form action="/owner_lesson/{{lesson.getId}}/delete" method="post">
-              <input name="_method" type="hidden" value="delete">
-              <input type="hidden" name="course_id" value="{{course.getId}}">
-              <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
-            </form>
-          </li>
-          {% endfor %}
+            {% for lesson in lessons  %}
+            <li>
+                <a href="/owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a>
+                <form action="/owner_lesson/{{lesson.getId}}/delete" method="post">
+                    <input name="_method" type="hidden" value="delete">
+                    <input type="hidden" name="course_id" value="{{course.getId}}">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_lesson_{{lesson.getId}}">Update</button>
+                    <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
+                </form>
+            </li>
+            <!-- Update Modal -->
+            <div id="update_lesson_{{lesson.getId}}" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-lg">
+                  <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Update Lesson: {{lesson.getTitle}}</h4>
+                        </div>
+                        <form action="/owner_lesson/{{lesson.getId}}/update" method="post">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label for="title">Lesson Title</label><br>
+                                            <input class="form-control" type="text" name="title" value="{{lesson.getTitle}}"><br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Media URL</label><br>
+                                            <input class="form-control" type="text" name="description" value="{{lesson.getDescription}}"><br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="content">Written Content</label><br>
+                                            <textarea class="form-control" name="content" rows="8" cols="40">{{lesson.getContent}}</textarea>
+                                        </div>
+                                        <input type="hidden" name="course_id" value="{{course.getId}}"><br>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-success">Save</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </ul>
         {% endif %}
     {% endif %}
-  </div>
+    </div>
   <!-- left column -->
   <div class="col-sm-4">
         <form class="form-control" action="/add_lesson_to_course" method="post">
