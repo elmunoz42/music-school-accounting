@@ -20,8 +20,45 @@
                 <tbody>
                     {% for student in students %}
                     <tr>
-                        <td><a href="owner_students/{{student.getId}}">{{student.getName}}</a></td>
+                        <td>
+                            <a href="owner_students/{{student.getId}}">{{student.getName}}</a>
+                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_student_{{student.getId}}">Update</button>
+                            <form action="/owner_students/student_termination/{{ student.getId }}" method="post">
+                                <input name="_method" type="hidden" value="delete">
+                                <button type="submit" class="btn btn-danger btn-sm" name="button">Delete Student</button>
+                            </form>
+
+                        </td>
                     </tr>
+
+                    <!-- Update Modal -->
+                    <div id="update_student_{{student.getId}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                          <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Update Student: {{student.getName}}</h4>
+                                </div>
+                                <form action="/owner_student/{{student.getId}}/update" method="post">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="student_name">Name</label>
+                                                    <input type="text" id="student_name" class="form-control" name="student_name" value="{{student.getName}}">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="submit" class="btn btn-success">Save</button>
+                                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </tbody>
             </table>

@@ -1148,7 +1148,7 @@
     });
 
     // UPDATE student
-    $app->post("/update_student/{student_id}", function($student_id) use ($app) {
+    $app->post("/owner_student/{student_id}/update", function($student_id) use ($app) {
         if (isLoggedIn()) {
             $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
             if ($new_student_name) {
@@ -1165,7 +1165,7 @@
             } else {
                 // add error message
             }
-            return $app->redirect("/owner_students/" . $student_id);
+            return $app->redirect("/owner_students");
         } else {
             return $app->redirect("/owner_login");
         }
