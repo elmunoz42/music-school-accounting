@@ -845,7 +845,7 @@
             } else {
                 // add error message
             }
-            return $app->redirect("/owner_courses/" . $course_id);
+            return $app->redirect("/owner_courses");
         } else {
             return $app->redirect("/owner_login");
         }
