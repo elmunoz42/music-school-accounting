@@ -226,40 +226,58 @@ class Account
         $GLOBALS['DB']->exec("DELETE FROM accounts WHERE id = {$this->getId()};");
     }
 
-    function updateFamilyName($update)
+    function updateFamilyName($family_name)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET family_name = '{$update}' WHERE id = {$this->getId()};");
-        $this->setFamilyName($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET family_name = :family_name WHERE id = :id");
+        $stmt->bindParam(':family_name', $family_name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateParentOneName($update)
+    function updateParentOneName($parent_one_name)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET parent_one_name = '{$update}' WHERE id = {$this->getId()};");
-        $this->setParentOneName($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET parent_one_name = :parent_one_name WHERE id = :id");
+        $stmt->bindParam(':parent_one_name', $parent_one_name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateParentTwoName($update)
+    function updateParentTwoName($parent_two_name)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET parent_two_name = '{$update}' WHERE id = {$this->getId()};");
-        $this->setParentTwoName($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET parent_two_name = :parent_two_name WHERE id = :id");
+        $stmt->bindParam(':parent_two_name', $parent_two_name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateSteetAddress($update)
+    function updateSteetAddress($street_address)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET street_address = '{$update}' WHERE id = {$this->getId()};");
-        $this->setStreetAddress($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET street_address = :street_address WHERE id = :id");
+        $stmt->bindParam(':street_address', $street_address, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updatePhoneNumber($update)
+    function updatePhoneNumber($phone_number)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET phone_number = '{$update}' WHERE id = {$this->getId()};");
-        $this->setPhoneNumber($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET phone_number = :phone_number WHERE id = :id");
+        $stmt->bindParam(':phone_number', $phone_number, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateEmailAddress($update)
+    function updateEmailAddress($email_address)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET email_address = '{$update}' WHERE id = {$this->getId()};");
-        $this->setEmailAddress($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET email_address = :email_address WHERE id = :id");
+        $stmt->bindParam(':email_address', $email_address, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     function updateNotes($update)

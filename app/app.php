@@ -696,6 +696,31 @@
         }
     });
 
+    //UPDATE account
+    $app->post("/owner_account/{account_id}/update", function($account_id) use ($app) {
+        if (isLoggedIn()) {
+            $account = Account::find($account_id);
+
+            $family_name = $_POST['family_name'] ? $_POST['family_name'] : '';
+            $parent_one_name = $_POST['parent_one_name'] ? $_POST['parent_one_name'] : '';
+            $parent_two_name = $_POST['parent_two_name'] ? $_POST['parent_two_name'] : '';
+            $street_address = $_POST['street_address'] ? $_POST['street_address'] : '';
+            $phone_number = $_POST['phone_number'] ? $_POST['phone_number'] : '';
+            $email_address = $_POST['email_address'] ? $_POST['email_address'] : '';
+
+            if ($account->updateFamilyName($family_name) && $account->updateParentOneName($parent_one_name) && $account->updateParentTwoName($parent_two_name) && $account->updateSteetAddress($street_address) && $account->updatePhoneNumber($phone_number) && $account->updateEmailAddress($email_address)) {
+                // add success message
+                return $app->redirect("/owner_accounts");
+            } else {
+                // add error message
+                return $app->redirect("/owner_accounts");
+            }
+
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
     // JOIN add student to account
     $app->post('/owner_add_student_to_account', function() use($app) {
         if (isLoggedIn()) {
