@@ -290,24 +290,22 @@
     });
 
     //JOIN teacher with student
-    $app->post("/owner_teachers/{teacher_id}", function($teacher_id) use ($app) {
-        if(isLoggedIn()) {
-            $school = School::find($_SESSION['school_id']);
-            $teacher = Teacher::find($teacher_id);
-            var_dump($teacher);
-            exit;
-            echo $teacher->getName();
-            $student = Student::find($_POST['student_id']);
-            echo $student->getName();
-            $notes_array = explode("|", $teacher->getNotes());
-            $teacher->addStudent($_POST['student_id']);
-            $students_teachers = $teacher->getStudents();
-            var_dump($teacher->getStudents());
-            return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents()));
-            // return $app->redirect("/owner_teachers/".$id);
+    $app->post("/owner_teacher/{teacher_id}/assign", function($teacher_id) use ($app) {
+        if (isLoggedIn()) {
+            $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
+
+            if ($student_id) {
+                $teacher = Teacher::find($teacher_id);
+
+                if ($teacher->addStudent($student_id)) {
+                    // add success message
+                } else {
+                    // add error message
+                }
+                return $app->redirect("/owner_teachers/" . $teacher_id);
+            }
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 

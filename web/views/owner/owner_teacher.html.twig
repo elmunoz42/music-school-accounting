@@ -56,7 +56,7 @@
             </table>
             {% endif %}
 
-        <form action="/owner_teachers/{{ teacher.getId }}" method="post">
+        <form action="/owner_teacher/{{ teacher.getId }}/assign" method="post">
             <label for="student_id">Assign a student</label>
             {% if students is not empty %}
             <select id="student_id" class="form-control" name="student_id">
