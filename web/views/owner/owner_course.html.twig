@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-sm-4">
     {% if courses is not empty %}
-        <form class="form-control" action="/owner_courses/redirect" method="post">
+        <form action="/owner_courses/redirect" method="post">
             <select name="course_select" onchange="this.form.submit();">
                 <option disabled selected value>Choose a course</option>
                 {% for course_select in courses %}
@@ -73,15 +73,21 @@
     </div>
   <!-- left column -->
   <div class="col-sm-4">
-        <form class="form-control" action="/add_lesson_to_course" method="post">
+        <form action="/add_lesson_to_course" method="post">
             <p>Create a lesson for this course</p>
+            <div class="form-group">
+                <label for="title">Lesson Title</label><br>
+                <input class="form-control" type="text" name="title" value=""><br>
+            </div>
+            <div class="form-group">
+                <label for="description">Media URL</label><br>
+                <input class="form-control" type="text" name="description"><br>
+            </div>
+            <div class="form-group">
+                <label for="content">Written Content</label><br>
+                <textarea class="form-control" name="content" rows="8" cols="40"></textarea>
+            </div>
             <input type="hidden" name="course_id" value="{{course.getId}}"><br>
-            <label for="title">Lesson Title</label><br>
-            <input type="text" name="title" value=""><br>
-            <label for="description">Media URL</label><br>
-            <input type="text" name="description"><br>
-            <label for="content">Written Content</label><br>
-            <textarea name="content" rows="8" cols="40"></textarea>
             <button type="submit">Add Lesson</button>
         </form>
   </div>
