@@ -295,11 +295,18 @@
             $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
 
             if ($student_id) {
-                $teacher = Teacher::find($teacher_id);
 
-                if ($teacher->addStudent($student_id)) {
-                    // add success message
+                $teacher = Teacher::find($teacher_id);
+                $student = $teacher->findStudentById($student_id);
+
+                if (!$student) {
+                    if ($teacher->addStudent($student_id)) {
+                      // add success message
+                    } else {
+                      // add error message
+                    }
                 } else {
+                    // already assigned
                     // add error message
                 }
                 return $app->redirect("/owner_teachers/" . $teacher_id);

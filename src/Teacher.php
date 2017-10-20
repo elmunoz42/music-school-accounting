@@ -173,26 +173,54 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO services_teachers (teacher_id, service_id) VALUES ({$this->getId()}, {$service_id})");
         }
+
         // NOTE UNTESTED
         function getStudents()
-       {
+        {
            $students = array();
            $query = $GLOBALS['DB']->query("SELECT students.* FROM
            teachers JOIN students_teachers ON teachers.id = students_teachers.teacher_id
                     JOIN students ON students_teachers.student_id = students.id
                     WHERE teachers.id = {$this->getId()};");
 
-        if(!empty($query)){
-            foreach($query as $student) {
-                $student_name = $student['student_name'];
-                $id = $student['id'];
-                $new_student = new Student($student_name, $id);
-                array_push($students, $new_student);
+          if(!empty($query)){
+              foreach($query as $student) {
+                  $student_name = $student['student_name'];
+                  $id = $student['id'];
+                  $new_student = new Student($student_name, $id);
+                  array_push($students, $new_student);
+              }
+          }
+          return $students;
+        }
+
+
+        function findStudentById($student_id)
+        {
+            $stmt = $GLOBALS['DB']->prepare("SELECT students.* FROM teachers JOIN students_teachers ON (teachers.id = students_teachers.teacher_id) JOIN students ON (students_teachers.student_id = students.id) WHERE teachers.id = :teacher_id AND students.id = :student_id");
+
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $student_name =  $result['student_name'];
+                    $id = $result['id'];
+                    $notes = $result['notes'];
+
+                    return new Student($student_name, $id, $notes);
+                } else {
+                    // student is not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
         }
-        return $students;
 
-        }
         // NOTE UNTESTED
         function getCourses()
         {
