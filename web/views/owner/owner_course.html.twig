@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{{ course.getTitle }} </h1>
+    <h1>{{ course.getTitle | e  }} </h1>
 </div>
 <div class="row">
     <div class="col-sm-4">
@@ -13,7 +13,7 @@
             <select name="course_select" onchange="this.form.submit();">
                 <option disabled selected value>Choose a course</option>
                 {% for course_select in courses %}
-                    <option value="{{course_select.getId}}"> {{course_select.getTitle}}</option>
+                    <option value="{{course_select.getId | e }}"> {{course_select.getTitle | e }}</option>
                 {% endfor %}
             </select>
         </form>
@@ -21,40 +21,40 @@
         <ul>
             {% for lesson in lessons  %}
             <li>
-                <a href="/owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a>
-                <form action="/owner_lesson/{{lesson.getId}}/delete" method="post">
+                <a href="/owner_lesson/{{lesson.getId | e }}">{{lesson.getTitle | e }}</a>
+                <form action="/owner_lesson/{{lesson.getId | e }}/delete" method="post">
                     <input name="_method" type="hidden" value="delete">
-                    <input type="hidden" name="course_id" value="{{course.getId}}">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_lesson_{{lesson.getId}}">Update</button>
+                    <input type="hidden" name="course_id" value="{{course.getId | e }}">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_lesson_{{lesson.getId | e }}">Update</button>
                     <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
                 </form>
             </li>
             <!-- Update Modal -->
-            <div id="update_lesson_{{lesson.getId}}" class="modal fade" role="dialog">
+            <div id="update_lesson_{{lesson.getId | e }}" class="modal fade" role="dialog">
                 <div class="modal-dialog modal-lg">
                   <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Update Lesson: {{lesson.getTitle}}</h4>
+                            <h4 class="modal-title">Update Lesson: {{lesson.getTitle | e }}</h4>
                         </div>
-                        <form action="/owner_lesson/{{lesson.getId}}/update" method="post">
+                        <form action="/owner_lesson/{{lesson.getId | e }}/update" method="post">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="title">Lesson Title</label><br>
-                                            <input class="form-control" type="text" name="title" value="{{lesson.getTitle}}"><br>
+                                            <input class="form-control" type="text" name="title" value="{{lesson.getTitle | e }}"><br>
                                         </div>
                                         <div class="form-group">
                                             <label for="description">Media URL</label><br>
-                                            <input class="form-control" type="text" name="description" value="{{lesson.getDescription}}"><br>
+                                            <input class="form-control" type="text" name="description" value="{{lesson.getDescription | e }}"><br>
                                         </div>
                                         <div class="form-group">
                                             <label for="content">Written Content</label><br>
-                                            <textarea class="form-control" name="content" rows="8" cols="40">{{lesson.getContent}}</textarea>
+                                            <textarea class="form-control" name="content" rows="8" cols="40">{{lesson.getContent | e }}</textarea>
                                         </div>
-                                        <input type="hidden" name="course_id" value="{{course.getId}}"><br>
+                                        <input type="hidden" name="course_id" value="{{course.getId | e }}"><br>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-success">Save</button>
@@ -87,18 +87,18 @@
                 <label for="content">Written Content</label><br>
                 <textarea class="form-control" name="content" rows="8" cols="40"></textarea>
             </div>
-            <input type="hidden" name="course_id" value="{{course.getId}}"><br>
+            <input type="hidden" name="course_id" value="{{course.getId | e }}"><br>
             <button type="submit">Add Lesson</button>
         </form>
   </div>
 
   <div class="col-sm-4">
-      <form action="/owner_courses/{{ course.getId }}" method="post">
+      <form action="/owner_courses/{{ course.getId | e  }}" method="post">
           <label>Enroll Students</label>
           {% if students is not empty %}
           <select class="form-control" name="student_id">
               {% for student in students %}
-              <option value="{{student.getId}}">{{student.getName}}</option>
+              <option value="{{student.getId | e }}">{{student.getName | e }}</option>
               {% endfor %}
           </select>
           <button type="submit" name="button">submit</button>
@@ -107,7 +107,7 @@
       {% if enrolled_students is not empty %}
       <ul>
           {% for student in enrolled_students  %}
-          <li><a href="/../owner_students/{{student.getId}}">{{student.getName}}</a></li>
+          <li><a href="/../owner_students/{{student.getId | e }}">{{student.getName | e }}</a></li>
           {% endfor %}
       </ul>
       {% endif %}

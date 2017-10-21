@@ -15,10 +15,10 @@
                 <h2 class="panel-heading" >Teachers </h2>
                 {% if teachers is not empty %}
                 <div class="panel-body">
-                    <h4 id="totals" class="stats-numbers">Total: {{ teachers|length }}</h4>
+                    <h4 id="totals" class="stats-numbers">Total: {{ teachers|length  | e }}</h4>
                     <ul>
                         {% for teacher in teachers %}
-                        <li><a href="owner_teachers/{{teacher.getId}}">{{teacher.getName}}</a></li>
+                        <li><a href="owner_teachers/{{teacher.getId | e }}">{{teacher.getName | e }}</a></li>
                         {% endfor %}
                     </ul>
                     {% endif %}
@@ -31,10 +31,10 @@
             <h2 class="panel-heading" >Students</h2>
             {% if students is not empty %}
             <div class="panel-body">
-                <h4 id="totals" class="stats-numbers">Total: {{ students|length }}</h4>
+                <h4 id="totals" class="stats-numbers">Total: {{ students|length  | e }}</h4>
                 <ul>
                     {% for student in students %}
-                    <li><a href="owner_students/{{student.getId}}">{{student.getName}}</a></li>
+                    <li><a href="owner_students/{{student.getId | e }}">{{student.getName | e }}</a></li>
                     {% endfor %}
                 </ul>
                 {% endif %}
@@ -46,10 +46,10 @@
         <div class="panel panel-info">
             <h2 class="panel-heading" >Lessons</h2>
             <div class="panel-body">
-                <h4 id="totals" class="stats-numbers">Total: {{lessons|length}} </h4>
+                <h4 id="totals" class="stats-numbers">Total: {{lessons|length | e }} </h4>
                 <ul>
                     {% for lesson in lessons %}
-                    <li><a href="owner_lesson/{{lesson.getId}}">{{lesson.getTitle}}</a></li>
+                    <li><a href="owner_lesson/{{lesson.getId | e }}">{{lesson.getTitle | e }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -61,10 +61,10 @@
             <div class="panel panel-info">
                 <h2 class="panel-heading">Courses</h4>
                 <div class="panel-body">
-                    <h4 id="totals" class="stats-numbers">Total: {{courses|length}} </h4>
+                    <h4 id="totals" class="stats-numbers">Total: {{courses|length | e }} </h4>
                     <ul>
                         {% for course in courses %}
-                        <li><a href="owner_courses/{{course.getId}}">{{course.getTitle}}</a></li>
+                        <li><a href="owner_courses/{{course.getId | e }}">{{course.getTitle | e }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>

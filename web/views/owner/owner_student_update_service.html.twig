@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{{ student.getName }}</h1>
+    <h1>{{ student.getName  | e }}</h1>
     <hr>
 </div>
 
@@ -17,20 +17,20 @@
         {% if assigned_teachers is not empty %}
         <ul>
             {% for teacher in assigned_teachers %}
-            <li> <a href="/owner_teachers/{{teacher.getId}}">{{ teacher.getName }}</a></li>
+            <li> <a href="/owner_teachers/{{teacher.getId | e }}">{{ teacher.getName  | e }}</a></li>
             {% endfor %}
         </ul>
         <hr>
         <h4>This Month's Sessions:</h4>
         {% if student is not empty %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
 
                     {% if student.getServicesForMonth(this_month, this_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(this_month, this_months_year) %}
                     <div class="well">
-                      <a href="/owner_sessions/{{ service.getId }}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
+                      <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
+                      {{ service.getDescription  | e }} with {{service.getTeachers[0].getName  | e }}</a>
                     </div>
                     {% endfor %}
                     {% endif %}
@@ -41,13 +41,13 @@
         <h4>Last Month's Sessions:</h4>
         {% if student is not empty %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
 
                     {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(last_month, last_months_year) %}
                     <div class="well">
-                      <a href="/owner_sessions/{{ service.getId }}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
+                      <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
+                      {{ service.getDescription  | e }} with {{service.getTeachers[0].getName  | e }}</a>
                     </div>
                     {% endfor %}
                     {% endif %}
@@ -55,16 +55,16 @@
                 </div>
         {% endif %}
         <hr>
-        <h4> <a href="/owner_sessions_for_student/{{ student.getId }}">View All Sessions</a></h4>
+        <h4> <a href="/owner_sessions_for_student/{{ student.getId  | e }}">View All Sessions</a></h4>
         <hr>
         <h4>Schedule Sessions</h4>
         <div class="well">
             <form class="form-group" action="/owner_sessions_for_student" method="post">
-                <input type="hidden" name="student_id" value="{{ student.getId }}">
-                <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId }}">
+                <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
+                <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
                 <select class="form-control" name="teacher_id">
                     {% for teacher in assigned_teachers %}
-                        <option value="{{ teacher.getId }}">{{teacher.getName}}</option>
+                        <option value="{{ teacher.getId  | e }}">{{teacher.getName | e }}</option>
                     {% endfor %}
                 </select>
                 <label for="repetitions">Repetitions:</label>
@@ -94,11 +94,11 @@
       <h4>Schedule Sessions</h4>
       <div class="well">
           <form class="form-group" action="/owner_sessions_for_student" method="post">
-              <input type="hidden" name="student_id" value="{{ student.getId }}">
-              <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId }}">
+              <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
+              <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
               <select class="form-control" name="teacher_id">
                   {% for teacher in assigned_teachers %}
-                      <option value="{{ teacher.getId }}">{{teacher.getName}}</option>
+                      <option value="{{ teacher.getId  | e }}">{{teacher.getName | e }}</option>
                   {% endfor %}
               </select>
               <label for="repetitions">Repetitions:</label>

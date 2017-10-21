@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{{ student.getName }}</h1>
+    <h1>{{ student.getName | e }}</h1>
     <hr>
 </div>
 
@@ -29,16 +29,16 @@
       </tr>
       {% for service in services %}
           <tr>
-            <td>{{ service.getDateOfService }}</td>
-            <td>{{ service.getTeachers[0].getName }}</td>
-            <td>{{ service.getAttendance }}</td>
-            <td>{{ service.getPrice }}</td>
-            <td>{{ service.getDiscount }}</td>
-            <td>{{ service.getDescription }}</td>
-            <td>{{ service.getPaidFor }}</td>
-            <td>{{ service.getDuration }}</td>
-            <td>{{ service.getRecurrence }}</td>
-            <td>{{ service.getNotes }}</td>
+            <td>{{ service.getDateOfService | e }}</td>
+            <td>{{ service.getTeachers[0].getName | e }}</td>
+            <td>{{ service.getAttendance | e }}</td>
+            <td>{{ service.getPrice | e }}</td>
+            <td>{{ service.getDiscount | e }}</td>
+            <td>{{ service.getDescription | e }}</td>
+            <td>{{ service.getPaidFor | e }}</td>
+            <td>{{ service.getDuration | e }}</td>
+            <td>{{ service.getRecurrence | e }}</td>
+            <td>{{ service.getNotes | e }}</td>
           </tr>
       {% endfor %}
     </table>

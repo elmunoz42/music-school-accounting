@@ -15,13 +15,13 @@
         {% if service is not empty %}
         <h3>Update Session Information/Attendance</h3>
         <div class="well">
-          <form action="/owner_sessions/{{ service.getId }}" method="post">
+          <form action="/owner_sessions/{{ service.getId | e }}" method="post">
               <input name="_method" type="hidden" value="patch" required>
               <div class="form-group">
                 <label for="date_of_service">Starting Date:</label>
-                <input type="datetime-local" name="date_of_service" value="{{ service.getDateOfService }}"><br>
+                <input type="datetime-local" name="date_of_service" value="{{ service.getDateOfService | e }}"><br>
                 <label for="recurrence">Recurrence:</label>
-                <input type="text" name="recurrence" value="{{ service.getRecurrence }}"><br>
+                <input type="text" name="recurrence" value="{{ service.getRecurrence | e }}"><br>
                 <label for="attendance">Attendance:</label>
                 <select class="form-control" name="attendance">
 
@@ -47,13 +47,13 @@
     </div>
     <!-- left column -->
     <div class="col-md-4">
-        <h3>Session Date: {{ service.getDateOfService }}</h3>
+        <h3>Session Date: {{ service.getDateOfService | e }}</h3>
         <hr>
         <h4>Teachers in this session:</h4>
         {% if service.getTeachers is not empty %}
         <ul>
             {% for teacher in service.getTeachers %}
-            <li> <a href="/owner_teachers/{{teacher.getId}}">{{ teacher.getName }}</a></li>
+            <li> <a href="/owner_teachers/{{teacher.getId| e }}">{{ teacher.getName | e }}</a></li>
             {% endfor %}
 
         {% endif %}
@@ -62,16 +62,16 @@
         {% if service.getStudents is not empty %}
         <ul>
             {% for student in service.getStudents %}
-            <li> <a href="/owner_students/{{student.getId}}">{{ student.getName }}</a></li>
+            <li> <a href="/owner_students/{{student.getId| e }}">{{ student.getName | e }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
         <h3>Session Info:</h3>
         {% if service is not empty %}
 
-          <p>Attendance: {{ service.getAttendance }} </p><br>
-          <p>Recurrence: {{ service.getRecurrence }}</p><br>
-          <p>Payment Status: {{ service.getPaidFor }}</p><br>
+          <p>Attendance: {{ service.getAttendance | e }} </p><br>
+          <p>Recurrence: {{ service.getRecurrence | e }}</p><br>
+          <p>Payment Status: {{ service.getPaidFor | e }}</p><br>
           {% if notes_array is not empty %}
           <div>
             <table class="table table-bordered">
@@ -83,7 +83,7 @@
               <tbody>
                 {% for note in notes_array %}
                 <tr>
-                  <td><strong>{{ note }}</strong></td>
+                  <td><strong>{{ note | e }}</strong></td>
                 </tr>
                 {% endfor %}
               </tbody>

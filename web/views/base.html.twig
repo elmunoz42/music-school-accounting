@@ -42,7 +42,7 @@
     </nav>
     {% if errors is defined %}
       {% for error in errors %}
-        <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger">{{ error  | e }}</div>
       {% endfor %}
     {% endif %}
 {% block content %}
