@@ -24,8 +24,8 @@
         {% for account in accounts  %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ account.getParentOneName | e }}</td>
-            <td>{{ account.getParentTwoName | e }}</td>
+            <td>{{ account.getParentOneName | e }} {{ account.getFamilyName | e}}</td>
+            <td>{{ account.getParentTwoName | e }} {{ account.getFamilyName | e}}</td>
             <td>{{ account.getStreetAddress | e }}</td>
             <td>{{ account.getPhoneNumber | e }}</td>
             <td>{{ account.getEmailAddress | e }}</td>
