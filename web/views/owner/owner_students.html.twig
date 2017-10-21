@@ -21,7 +21,7 @@
                     {% for student in students %}
                     <tr>
                         <td>
-                            <a href="owner_students/{{student.getId | e }}">{{student.getName | e }}</a>
+                            <a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a>
                             <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_student_{{student.getId | e }}">Update</button>
                             <form action="/owner_students/student_termination/{{ student.getId  | e }}" method="post">
                                 <input name="_method" type="hidden" value="delete">

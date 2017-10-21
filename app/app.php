@@ -701,6 +701,30 @@
         }
     });
 
+    //search client
+    $app->post("/owner_accounts/search", function() use ($app) {
+        if (isLoggedIn()) {
+            $search_input = $_POST['search_input'] ? $_POST['search_input'] : '';
+
+            if ($search_input) {
+                $accounts = Account::search($search_input);
+
+                if ($accounts) {
+                    return $app['twig']->render('owner_accounts_search.html.twig', array('accounts' => $accounts));
+                } else {
+                    // no results
+                    // add error message
+                }
+            } else {
+              // input is empty
+              // add error message
+            }
+            return  $app->redirect("/owner_accounts");
+        } else {
+            return $app->redirect("/owner_login");
+        }
+    });
+
     //UPDATE account
     $app->post("/owner_account/{account_id}/update", function($account_id) use ($app) {
         if (isLoggedIn()) {

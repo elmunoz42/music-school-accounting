@@ -39,31 +39,14 @@
     </div>
 
     <div class="col-md-6">
-        <form action="/search_input" method="post">
+        <form action="/owner_accounts/search" method="post">
             <div class="form-group">
                 <label for="search_input">Search for Client</label>
-                <input class="form-control" type="text" name="search_input" placeholder=" search something...">
+                <input id="search_input" class="form-control" type="text" name="search_input" placeholder=" search something...">
+                <button type="submit" class="btn btn-info">Search</button>
             </div>
         </form>
         <br>
-
-        <div id="outer">
-            <div class="inner">
-                <form class="" action="index.html" method="post">
-                    <button  type="submit" name="view_accounts" class="btn btn-info btn-sm" value="view">search accounts</button>
-                </form>
-            </div>
-            <div class="inner">
-                <form action="/owner_clients" method="post">
-                    <button type="submit" name="view_accounts" class="btn btn-warning btn-sm" value="view">view accounts</button>
-                </form>
-            </div>
-            <div class="inner">
-                <form action="/owner_delete-clients" method="post">
-                    <button type="submit" class="btn btn-danger btn-sm" name="delete_accounts">delete accounts</button>
-                </form>
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-md-6">

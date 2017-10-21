@@ -221,6 +221,57 @@ class Account
         }
     }
 
+    static function search($search_input)
+    {
+        $search_input = '%' . $search_input . '%';
+        $stmt = $GLOBALS['DB']->prepare("
+                SELECT accounts.* FROM accounts
+                JOIN accounts_schools
+                ON (accounts.id = accounts_schools.account_id)
+                JOIN schools ON (accounts_schools.school_id = schools.id)
+                WHERE accounts.family_name LIKE :search_input
+                OR accounts.parent_one_name LIKE :search_input
+                OR accounts.parent_two_name LIKE :search_input
+                OR accounts.street_address LIKE :search_input
+                OR accounts.phone_number LIKE :search_input
+                OR accounts.email_address LIKE :search_input
+                AND schools.id = :school_id
+            ");
+
+        $stmt->bindParam(':search_input', $search_input, PDO::PARAM_STR);
+        $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll();
+
+            if ($results) {
+                $accounts = [];
+                forEach($results as $result) {
+                    $account = new Account(
+                        $result['family_name'],
+                        $result['parent_one_name'],
+                        $result['street_address'],
+                        $result['phone_number'],
+                        $result['email_address'],
+                        $result['id'],
+                        $result['parent_two_name'],
+                        $result['notes'],
+                        $result['billing_history'],
+                        $result['outstanding_balance']
+                    );
+                    array_push($accounts, $account);
+                }
+                return $accounts;
+            } else {
+                // any accounts are not belong to the school
+                return false;
+            }
+        } else {
+            // sql failed for some reason
+            return false;
+        }
+    }
+
     function delete()
     {
         $stmt = $GLOBALS['DB']->prepare("DELETE FROM accounts WHERE id = :id");
