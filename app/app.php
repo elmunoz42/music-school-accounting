@@ -1,9 +1,6 @@
 <?php
     // TODO form validation
-    // TODO escape special character function
     // TODO change existing query to prepare
-    // TODO authentication using session
-    // TODO recreate owner - school relationship
     // TODO add Profile class on Teacher and Clients
 
     date_default_timezone_set('America/Los_Angeles');
