@@ -38,27 +38,52 @@
                 </div>
         {% endif %}
         <hr>
+
         <h4>Last Month's Sessions:</h4>
-        
         {% if student is not empty %}
-        <div class="panel panel-info">
             <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
             {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
-                {% for service in student.getServicesForMonth(last_month, last_months_year) %}
-                <div class="well">
-                    <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
-                    {{ service.getDescription  | e }} with {{service.getTeacher.getName  | e }}</a>
-                </div>
-                {% endfor %}
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Teacher</th>
+                        <th>Date and Time</th>
+                        <th>Lesson Name</th>
+                        <th>Status</th>
+                        <th>Paid</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in student.getServicesForMonth(last_month, last_months_year) %}
+                        <tr>
+                            <td>{{ service.getTeacher.getName  | e }}</td>
+                            <td>{{ service.getDateOfService  | e }}</td>
+                            <td>{{ service.getDescription  | e }}</td>
+                            <td>{{ service.getAttendance  | e }}</td>
+                            {% if service.getPaidFor %}
+                            <td>
+                              <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
+                            </td>
+                            {% else %}
+                            <td>
+                              <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        <!-- <button type="submit" name="button">Update Paid Status</button> -->
+                    </tbody>
+                </table>
+            </div>
             {% endif %}
-        </div>
         {% endif %}
         <hr>
         <h4> <a href="/owner_sessions_for_student/{{ student.getId  | e }}">View All Sessions</a></h4>
         <hr>
         <h4>Schedule Sessions</h4>
         <div class="well">
-            <form class="form-group" action="/owner_sessions_for_student" method="post">
+            <form action="/owner_sessions_for_student" method="post">
                 <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
                 <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
                 <select class="form-control" name="teacher_id">
@@ -165,6 +190,6 @@
     </div>
     <!-- right column -->
 </div>
+<script src="/../js/owner_student.js"></script>
 <!-- row -->
-
-    {% endblock %}
+{% endblock %}

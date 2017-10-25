@@ -601,6 +601,22 @@
         }
     });
 
+    $app->post('/owner_sessions_update_paid_for', function() use($app) {
+            $paid_status = $_POST['paid_status'];
+            $service_id = (int)$_POST['service_id'];
+            $service = Service::find($service_id);
+
+            if ($paid_status === "true") {
+              $paid_status = "false";
+              $service->updatePaidFor("0");
+            } else {
+              $paid_status = "true";
+              $service->updatePaidFor("1");
+            }
+            return $app->json($paid_status);
+    });
+
+
     //READ accounts
     $app->get("/owner_accounts", function() use ($app) {
         if(isLoggedIn()) {
