@@ -30,7 +30,7 @@
                     {% for service in student.getServicesForMonth(this_month, this_months_year) %}
                     <div class="well">
                       <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
-                      {{ service.getDescription  | e }} with {{service.getTeachers[0].getName  | e }}</a>
+                      {{ service.getDescription  | e }} with {{service.getTeacher.getName  | e }}</a>
                     </div>
                     {% endfor %}
                     {% endif %}
@@ -39,20 +39,19 @@
         {% endif %}
         <hr>
         <h4>Last Month's Sessions:</h4>
+        
         {% if student is not empty %}
-                <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
-
-                    {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
-                    {% for service in student.getServicesForMonth(last_month, last_months_year) %}
-                    <div class="well">
-                      <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
-                      {{ service.getDescription  | e }} with {{service.getTeachers[0].getName  | e }}</a>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
+        <div class="panel panel-info">
+            <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
+            {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
+                {% for service in student.getServicesForMonth(last_month, last_months_year) %}
+                <div class="well">
+                    <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
+                    {{ service.getDescription  | e }} with {{service.getTeacher.getName  | e }}</a>
                 </div>
+                {% endfor %}
+            {% endif %}
+        </div>
         {% endif %}
         <hr>
         <h4> <a href="/owner_sessions_for_student/{{ student.getId  | e }}">View All Sessions</a></h4>

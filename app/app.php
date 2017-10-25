@@ -254,7 +254,7 @@
                   $school = $schools[0];
                   $_SESSION['school_id'] = intval($school->getId());
 
-                  return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServices(), 'lessons' => $school->getLessons() ));
+                  return $app['twig']->render('owner_main.html.twig', array('school'=> $school, 'teachers' => $school->getTeachers(), 'students' => $school->getStudents(), 'courses' => $school->getCourses(), 'accounts' => $school->getAccounts(), 'services' => $school->getServicesForMonth(), 'lessons' => $school->getLessons() ));
               } else {
                   return $app->redirect("/create_school");
               }

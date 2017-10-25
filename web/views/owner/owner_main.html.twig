@@ -15,7 +15,7 @@
                 <h2 class="panel-heading" >Teachers </h2>
                 {% if teachers is not empty %}
                 <div class="panel-body">
-                    <h4 id="totals" class="stats-numbers">Total: {{ teachers|length  | e }}</h4>
+                    <h4 class="stats-numbers">Total: {{ teachers|length  | e }}</h4>
                     <ul>
                         {% for teacher in teachers %}
                         <li><a href="owner_teachers/{{teacher.getId | e }}">{{teacher.getName | e }}</a></li>
@@ -31,7 +31,7 @@
             <h2 class="panel-heading" >Students</h2>
             {% if students is not empty %}
             <div class="panel-body">
-                <h4 id="totals" class="stats-numbers">Total: {{ students|length  | e }}</h4>
+                <h4 class="stats-numbers">Total: {{ students|length  | e }}</h4>
                 <ul>
                     {% for student in students %}
                     <li><a href="owner_students/{{student.getId | e }}">{{student.getName | e }}</a></li>
@@ -44,14 +44,15 @@
     <!-- column -->
     <div class="col-md-3">
         <div class="panel panel-info">
-            <h2 class="panel-heading" >Lessons</h2>
+            <h2 class="panel-heading" >Services </h2>
             <div class="panel-body">
-                <h4 id="totals" class="stats-numbers">Total: {{lessons|length | e }} </h4>
-                <ul>
-                    {% for lesson in lessons %}
-                    <li><a href="owner_lesson/{{lesson.getId | e }}">{{lesson.getTitle | e }}</a></li>
-                    {% endfor %}
-                </ul>
+              {{ "now"|date("M/Y") }}
+              <h4 class="stats-numbers">Total: {{services|length | e }} </h4>
+              <ul>
+                  {% for teacher in teachers %}
+                    <li>{{ teacher.getName | e}} : {{ teacher.getServicesForMonth|length | e }}</li>
+                  {% endfor %}
+              </ul>
             </div>
         </div>
     </div>
@@ -61,7 +62,7 @@
             <div class="panel panel-info">
                 <h2 class="panel-heading">Courses</h4>
                 <div class="panel-body">
-                    <h4 id="totals" class="stats-numbers">Total: {{courses|length | e }} </h4>
+                    <h4 class="stats-numbers">Total: {{courses|length | e }} </h4>
                     <ul>
                         {% for course in courses %}
                         <li><a href="owner_courses/{{course.getId | e }}">{{course.getTitle | e }}</a></li>

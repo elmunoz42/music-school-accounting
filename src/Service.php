@@ -284,22 +284,36 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO lessons_services (service_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
         }
-        // NOTE UNTESTED
-        function getTeachers()
+
+        function getTeacher()
         {
-            $query = $GLOBALS['DB']->query("SELECT teachers.* FROM services JOIN services_teachers ON (services.id = services_teachers.service_id) JOIN teachers ON (services_teachers.teacher_id = teachers.id) WHERE services.id = {$this->getId()};");
-            $teachers = array();
-            foreach ($query as $teacher) {
-                $teacher_name = $teacher['teacher_name'];
-                $instrument = $teacher['instrument'];
-                $notes= $teacher['notes'];
-                $id = $teacher['id'];
-                $found_teacher = new Teacher($teacher_name, $instrument, $id);
-                $found_teacher->setNotes($notes);
-                array_push($teachers, $found_teacher);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT teachers.* FROM services
+                JOIN services_teachers ON (services.id = services_teachers.service_id)
+                JOIN teachers ON (services_teachers.teacher_id = teachers.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Teacher(
+                        $result['teacher_name'],
+                        $result['instrument'],
+                        $result['id'],
+                        $result['notes']
+                    );
+                } else {
+                    //result not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $teachers;
         }
+
         // NOTE UNTESTED
         function getCourses()
         {

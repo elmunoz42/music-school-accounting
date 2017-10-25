@@ -278,6 +278,52 @@
             return $lessons;
         }
 
+        function getServicesForMonth($month = null, $year = null) {
+            //if arguments are empty, set today's month and year
+            $month = $month ? $month : date('n');
+            $year = $year ? $year : date('Y');
+
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT services.* FROM teachers
+                JOIN services_teachers ON (teachers.id = services_teachers.teacher_id)
+                JOIN services ON (services_teachers.service_id = services.id)
+                WHERE teachers.id = :teacher_id
+                AND MONTH(date_of_service) = :month
+                AND YEAR(date_of_service) = :year
+            ");
+
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':month', $month, PDO::PARAM_STR);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+
+            if($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $services = [];
+                    forEach($results as $result) {
+                        $service = new Service(
+                          $result['description'],
+                          $result['duration'],
+                          number_format((float) $result['price'], 2),
+                          number_format((float) $result['discount'], 2),
+                          (bool) $result['paid_for'],
+                          $result['notes'],
+                          $result['date_of_service'],
+                          $result['recurrence'],
+                          $result['attendance'],
+                          (int) $result['id']
+                        );
+                        array_push($services, $service);
+                    }
+                    return $services;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
     }
 
 

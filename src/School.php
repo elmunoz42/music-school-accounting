@@ -373,23 +373,85 @@
         // NOTE UNTESTED
         function getServices()
         {
-            $query = $GLOBALS['DB']->query("SELECT services.* FROM schools JOIN schools_services ON (schools.id = schools_services.school_id) JOIN services ON (schools_services.service_id = services.id) WHERE schools.id = {$this->getId()};");
-            $services = array();
-            foreach($query as $service){
-                $description = $service['description'];
-                $duration = $service['duration'];
-                $price = $service['price'];
-                $discount = $service['discount'];
-                $paid_for = (bool) $service['paid_for'];
-                $notes = $service['notes'];
-                $date_of_service = $service['date_of_service'];
-                $recurrence = $service['recurrence'];
-                $attendance = $service['attendance'];
-                $id = (int) $service['id'];
-                $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
-                array_push($services, $new_service);
+            $stmt = $GLOBALS['DB']->prepare("
+              SELECT services.* FROM schools
+              JOIN schools_services ON (schools.id = schools_services.school_id)
+              JOIN services ON (schools_services.service_id = services.id)
+              WHERE schools.id = :school_id"
+            );
+            $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+
+            if($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                  $services = [];
+                  forEach($results as $service) {
+                      $service = new Service(
+                          $result['description'],
+                          $result['price'],
+                          $result['discount'],
+                          $result['paid_for'],
+                          $result['notes'],
+                          $result['date_of_service'],
+                          $result['recurrence'],
+                          $result['attendance'],
+                          $result['id']
+                      );
+                      array_push($services, $service);
+                  }
+                  return $services;
+                } else {
+                  return false;
+                }
+            } else {
+              return false;
             }
-            return $services;
+        }
+
+        function getServicesForMonth($month = null, $year = null) {
+            //if arguments are empty, set today's month and year
+            $month = $month ? $month : date('n');
+            $year = $year ? $year : date('Y');
+
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT services.* FROM schools
+                JOIN schools_services ON (schools.id = schools_services.school_id)
+                JOIN services ON (schools_services.service_id = services.id)
+                WHERE schools.id = :school_id
+                AND MONTH(date_of_service) = :month
+                AND YEAR(date_of_service) = :year
+            ");
+
+            $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':month', $month, PDO::PARAM_STR);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+
+            if($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $services = [];
+                    forEach($results as $result) {
+                        $service = new Service(
+                          $result['description'],
+                          $result['duration'],
+                          number_format((float) $result['price'], 2),
+                          number_format((float) $result['discount'], 2),
+                          (bool) $result['paid_for'],
+                          $result['notes'],
+                          $result['date_of_service'],
+                          $result['recurrence'],
+                          $result['attendance'],
+                          (int) $result['id']
+                        );
+                        array_push($services, $service);
+                    }
+                    return $services;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
 
         // NOTE UNTESTED

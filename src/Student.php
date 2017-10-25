@@ -320,24 +320,50 @@
         // NOTE Koji this our first spec: We want to be able to see the services/sessions a student had in a time period.
         // NOTE This command WORKS!!! as a SQL command in phpMyAdmin: SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = 2 AND MONTH(date_of_service) = 9 AND YEAR(date_of_service) = 2017
         // NOTE UNTESTED
-        function getServicesForMonth($month, $year){
-            $query = $GLOBALS['DB']->query("SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = {$this->getId()} AND MONTH(date_of_service) = {$month} AND YEAR(date_of_service) = {$year};");
-            $services = array();
-            foreach($query as $service){
-                $description = $service['description'];
-                $duration = $service['duration'];
-                $price = number_format((float) $service['price'], 2);
-                $discount = number_format((float)$service['discount'], 2);
-                $paid_for = (bool) $service['paid_for'];
-                $notes = $service['notes'];
-                $date_of_service = $service['date_of_service'];
-                $recurrence = $service['recurrence'];
-                $attendance = $service['attendance'];
-                $id = (int) $service['id'];
-                $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
-                array_push($services, $new_service);
+        function getServicesForMonth($month = null, $year = null) {
+            //if arguments are empty, set today's month and year
+            $month = $month ? $month : date('n');
+            $year = $year ? $year : date('Y');
+
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT services.* FROM students
+                JOIN services_students ON (students.id = services_students.student_id)
+                JOIN services ON (services_students.service_id = services.id)
+                WHERE students.id = :student_id
+                AND MONTH(services.date_of_service) = :month
+                AND YEAR(services.date_of_service) = :year
+            ");
+
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':month', $month, PDO::PARAM_STR);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+
+            if($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $services = [];
+                    forEach($results as $result) {
+                        $service = new Service(
+                            $result['description'],
+                            $result['duration'],
+                            number_format((float) $result['price'], 2),
+                            number_format((float) $result['discount'], 2),
+                            (bool) $result['paid_for'],
+                            $result['notes'],
+                            $result['date_of_service'],
+                            $result['recurrence'],
+                            $result['attendance'],
+                            (int) $result['id']
+                        );
+                        array_push($services, $service);
+                    }
+                    return $services;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            return $services;
         }
     }
 
