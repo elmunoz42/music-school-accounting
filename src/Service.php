@@ -120,18 +120,26 @@
         // Create
         function save()
         {
-            $description = $this->getDescription();
-            $duration = $this->getDuration();
-            $price = $this->getPrice();
-            $discount = $this->getDiscount();
-            $paid_for = $this->getPaidFor();
-            $notes = $this->getNotes();
-            $date_of_service = $this->GetDateOfService();
-            $recurrence = $this->getRecurrence();
-            $attendance = $this->getAttendance();
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO services (description, duration, price, discount, paid_for, notes, date_of_service, recurrence, attendance)
+                VALUES (:description, :duration, :price, :discount, :paid_for, :notes, :date_of_service, :recurrence, :attendance)
+            ");
+            $stmt->bindParam(':description', $this->getDescription(), PDO::PARAM_STR);
+            $stmt->bindParam(':duration', $this->getDuration(), PDO::PARAM_STR);
+            $stmt->bindParam(':price', $this->getPrice(), PDO::PARAM_STR);
+            $stmt->bindParam(':discount', $this->getDiscount(), PDO::PARAM_STR);
+            $stmt->bindParam(':paid_for', $this->getPaidFor(), PDO::PARAM_STR);
+            $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
+            $stmt->bindParam(':date_of_service', $this->getDateOfService(), PDO::PARAM_STR);
+            $stmt->bindParam(':recurrence', $this->getRecurrence(), PDO::PARAM_STR);
+            $stmt->bindParam(':attendance', $this->getAttendance(), PDO::PARAM_STR);
 
-            $GLOBALS['DB']->exec("INSERT INTO services (description, duration, price, discount, paid_for, notes, date_of_service, recurrence, attendance) VALUES ('{$description}', {$duration}, {$price}, {$discount}, {$paid_for}, '{$notes}', '{$date_of_service}', '{$recurrence}', '{$attendance}');");
-            $this->id = $GLOBALS['DB']->lastInsertId();
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         // Retrieve

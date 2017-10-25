@@ -40,9 +40,19 @@
 
         function save()
         {
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO students (student_name, notes)
+                VALUES (:student_name, :notes)
+            ");
+            $stmt->bindParam(':student_name', $this->getName(), PDO::PARAM_STR);
+            $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
 
-          $GLOBALS['DB']->exec("INSERT INTO students (student_name, notes) VALUES ('{$this->getName()}', '{$this->getNotes()}');");
-          $this->id = $GLOBALS['DB']->lastInsertId();
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         static function deleteAll()
@@ -231,7 +241,7 @@
         }
 
         // NOTE UNTESTED
-        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $teacher, $school, $account)
+        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $date_of_service, $recurrence, $attendance, $teacher, $school, $account)
         {
 
         //$date_of_service = "2017-03-12 03:30:00";
@@ -239,17 +249,21 @@
             $dates = array();
             for ($x = 1; $x <= intval($repetitions); $x++) {
 
+                $notes = "Scheduled on " . date('Y-m-d h:i:s', strtotime($date_of_service));
                 $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
-                $new_service->save();
-                $id = $new_service->getId();
-                $school->addService($id);
-                $account->addService($id);
-                $teacher->addService($id);
-                $this->addService($id);
-
-                $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
-
+                if ($new_service->save()) {
+                    $id = $new_service->getId();
+                    $school->addService($id);
+                    $account->addService($id);
+                    $teacher->addService($id);
+                    $this->addService($id);
+                    $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
+                } else {
+                    // error
+                    return false;
+                }
             }
+            return true;
         }
 
         // NOTE UNTESTED

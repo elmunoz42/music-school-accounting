@@ -7,46 +7,53 @@
     <h1>{{ student.getName | e }}</h1>
     <hr>
 </div>
-
 <div class="row">
-  <h3>Scheduled Sessions:</h3>
-  <hr>
-
-    {% if services is not empty %}
-    <div class="well">
-    <table class="table">
-      <tr>
-        <th>date_of_service</th>
-        <th>teacher</th>
-        <th>attendance</th>
-        <th>price</th>
-        <th>discount</th>
-        <th>description</th>
-        <th>paid_for</th>
-        <th>duration</th>
-        <th>recurrence</th>
-        <th>notes</th>
-      </tr>
-      {% for service in services %}
-          <tr>
-            <td>{{ service.getDateOfService | e }}</td>
-            <td>{{ service.getTeachers[0].getName | e }}</td>
-            <td>{{ service.getAttendance | e }}</td>
-            <td>{{ service.getPrice | e }}</td>
-            <td>{{ service.getDiscount | e }}</td>
-            <td>{{ service.getDescription | e }}</td>
-            <td>{{ service.getPaidFor | e }}</td>
-            <td>{{ service.getDuration | e }}</td>
-            <td>{{ service.getRecurrence | e }}</td>
-            <td>{{ service.getNotes | e }}</td>
-          </tr>
-      {% endfor %}
-    </table>
+    <h3>Sessions for {{datestamp|date("M-Y")}}</h3>
+    <hr>
+    <div class="col-xs-6">
+        <a href="/owner_sessions_for_student/{{student.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
     </div>
-    <!-- well   -->
+    <div class="col-xs-6 text-right">
+        <a href="/owner_sessions_for_student/{{student.getId}}?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
+    </div>
+    {% if services is not empty %}
+    <table class="table table-hover">
+        <tr>
+            <th>Date of Service</th>
+            <th>Teacher</th>
+            <th>Attendance</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Recurrence</th>
+            <th>Notes</th>
+            <th>Payment Status</th>
+          </tr>
+        {% for service in services %}
+            <tr>
+                <td>{{ service.getDateOfService | e }}</td>
+                <td>{{ service.getTeacher.getName | e }}</td>
+                <td>{{ service.getAttendance | e }}</td>
+                <td>{{ service.getPrice | e }}</td>
+                <td>{{ service.getDiscount | e }}</td>
+                <td>{{ service.getDescription | e }}</td>
+                <td>{{ service.getDuration | e }}</td>
+                <td>{{ service.getRecurrence | e }}</td>
+                <td>{{ service.getNotes | e }}</td>
+                {% if service.getPaidFor %}
+                <td>
+                    <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
+                </td>
+                {% else %}
+                <td>
+                    <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
+                </td>
+                {% endif %}
+              </tr>
+        {% endfor %}
+    </table>
     {% endif %}
-
 </div>
-<!-- row     -->
-
-    {% endblock %}
+<script src="/../js/owner_student.js"></script>
+{% endblock %}
