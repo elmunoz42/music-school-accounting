@@ -51,6 +51,7 @@
                         <th>Date and Time</th>
                         <th>Lesson Name</th>
                         <th>Status</th>
+                        <th>Detail</th>
                         <th>Paid</th>
                       </tr>
                     </thead>
@@ -61,6 +62,7 @@
                             <td>{{ service.getDateOfService  | e }}</td>
                             <td>{{ service.getDescription  | e }}</td>
                             <td>{{ service.getAttendance  | e }}</td>
+                            <td><a class="btn btn-primary btn-sm" href="/owner_sessions/{{service.getId | e}}">View</a></td>
                             {% if service.getPaidFor %}
                             <td>
                               <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
