@@ -50,9 +50,9 @@
         <h3>Session Date: {{ service.getDateOfService | e }}</h3>
         <hr>
         <h4>Teachers in this session:</h4>
-        {% if service.getTeachers is not empty %}
+        {% if service.getTeacher is not empty %}
         <ul>
-            {% for teacher in service.getTeachers %}
+            {% for teacher in service.getTeacher %}
             <li> <a href="/owner_teachers/{{teacher.getId| e }}">{{ teacher.getName | e }}</a></li>
             {% endfor %}
 
