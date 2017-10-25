@@ -417,9 +417,12 @@
                 SELECT services.* FROM schools
                 JOIN schools_services ON (schools.id = schools_services.school_id)
                 JOIN services ON (schools_services.service_id = services.id)
+                JOIN services_teachers ON (services.id = services_teachers.service_id)
+                JOIN teachers ON (services_teachers.teacher_id = teachers.id)
                 WHERE schools.id = :school_id
                 AND MONTH(date_of_service) = :month
                 AND YEAR(date_of_service) = :year
+                ORDER BY services.date_of_service ASC
             ");
 
             $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
