@@ -416,34 +416,29 @@
     });
 
     //JOIN student to course
-    $app->post("/owner_students/{id}", function($id) use ($app) {
-        if(isLoggedIn()) {
-            $school=School::find($_SESSION['school_id']);
-            $selected_student = Student::find($id);
-            $course_id = $_POST['course_id'];
-            $selected_student->addCourse($course_id);
-            $notes_array = explode("|", $selected_student->getNotes());
-            $assigned_teachers = $selected_student->getTeachers();
-            $this_month=intval(date('m',strtotime('this month')));
-            $this_months_year=intval(date('Y',strtotime('this month')));
-            $last_month=intval(date('m',strtotime('last month')));
-            $last_months_year=intval(date('Y',strtotime('last month')));
-            return $app['twig']->render('owner_student.html.twig', array(
-              'school' => $school,
-              'student' => $selected_student,
-              'assigned_teachers' => $assigned_teachers,
-              'notes_array' => $notes_array,
-              'courses'=>$school->getCourses(), 'enrolled_courses'=>$selected_student->getCourses(),
-              'teachers' => $school->getTeachers(),
-              'lessons' => $school->getLessons(),
-              'assigned_lessons' => $selected_student->getLessons(),
-              'this_month' => $this_month,
-              'this_months_year'=>$this_months_year,
-              'last_month'=>$last_month,
-              'last_months_year'=>$last_months_year));
+    $app->post("/owner_students/{student_id}/enroll", function($student_id) use ($app) {
+        if (isLoggedIn()) {
+            $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
+
+            if ($course_id) {
+                $student = Student::find($student_id);
+                $course = $student->findCourseById($course_id);
+
+                if (!$course) {
+                    if ($student->addCourse($course_id)) {
+                        //add success message
+                    } else {
+                        // add error message
+                    }
+                } else {
+                    // already enrolled
+                    // add error message
+                }
+            }
+            return $app->redirect("/owner_students/" . $student_id);
+
         } else {
-          // not logged in
-          return $app->redirect("/owner_login");
+            return $app->redirect("/owner_login");
         }
     });
 

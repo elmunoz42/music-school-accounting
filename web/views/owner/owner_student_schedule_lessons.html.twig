@@ -29,6 +29,7 @@
             <th>Recurrence</th>
             <th>Notes</th>
             <th>Payment Status</th>
+            <th></th>
           </tr>
         {% for service in services %}
             <tr>
@@ -43,13 +44,16 @@
                 <td>{{ service.getNotes | e }}</td>
                 {% if service.getPaidFor %}
                 <td>
-                    <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
+                    <input id="paidFor-{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
                 </td>
                 {% else %}
                 <td>
-                    <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
+                    <input id="paidFor-{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
                 </td>
                 {% endif %}
+                <td>
+                    <a href="/owner_sessions/{{service.getId}}"><button type="button" class="btn btn-sm btn-primary" data-toggle="modal">View</button></a>
+                </td>
               </tr>
         {% endfor %}
     </table>
