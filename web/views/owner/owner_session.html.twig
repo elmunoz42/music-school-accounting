@@ -4,6 +4,9 @@
 {% block title %}Service{% endblock %}
 
 {% block content %}
+
+{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
+
 <div class="jumbotron">
     <h1>Session Update Page</h1>
     <hr>
@@ -24,14 +27,15 @@
                 <input type="text" name="recurrence" value="{{ service.getRecurrence | e }}"><br>
                 <label for="attendance">Attendance:</label>
                 <select class="form-control" name="attendance">
-
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="Attended">Attended</option>
-                    <option value="SCWN">Student Canceled W/ Notice</option>
-                    <option value="SCWON">Student Canceled W/O Notice</option>
-                    <option value="NS">No Show</option>
-                    <option value="TC">Teacher Canceled</option>
-
+                    {% for attendance_value in attendance_values %}
+                        {% for key, value in attendance_value %}
+                            {% if service.getAttendance != key %}
+                            <option value="{{key}}">{{value}}</option>
+                            {% else %}
+                            <option value="{{key}}" selected>{{value}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
                 </select>
                 <label for="duration">Duration:</label>
                 <input type="number" name="duration" value="40"><br>

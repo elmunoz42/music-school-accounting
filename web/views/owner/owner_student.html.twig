@@ -4,6 +4,9 @@
 {% block title %}Student{% endblock %}
 
 {% block content %}
+
+{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
+
 <div class="jumbotron">
     <h1>{{ student.getName  | e }}</h1>
     <hr>
@@ -117,12 +120,11 @@
                     <input id="recurrence" class="form-control" type="text" name="recurrence" value="Weekday|Time"><br>
                     <label for="attendance">Attendance:</label>
                     <select id="attendance" class="form-control" name="attendance" type="text">
-                        <option value="Scheduled">Scheduled</option>
-                        <option value="Attended">Attended</option>
-                        <option value="Student Canceled W/ Notice">Student Canceled W/ Notice</option>
-                        <option value="Student Canceled W/O Notice">Student Canceled W/O Notice</option>
-                        <option value="No Show">No Show</option>
-                        <option value="Teacher Canceled">Teacher Canceled</option>
+                    {% for attendance_value in attendance_values %}
+                        {% for key, value in attendance_value %}
+                            <option value="{{key}}">{{value}}</option>
+                        {% endfor %}
+                    {% endfor %}
                     </select>
                     <label for="duration">Duration:</label>
                     <input id="duration" class="form-control" type="number" name="duration" value="40"><br>
