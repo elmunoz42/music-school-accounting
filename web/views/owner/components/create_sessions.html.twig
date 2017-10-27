@@ -1,0 +1,43 @@
+<div class="well">
+    <form action="/student/{{ student.getId | e }}/add_session" method="post">
+        <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
+        <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
+        <select class="form-control" name="teacher_id">
+            {% for teacher in teachers %}
+                <option value="{{ teacher.getId  | e }}">{{teacher.getName | e }}</option>
+            {% endfor %}
+        </select>
+        <label for="repetitions">Repetitions:</label>
+        <input id="repetitions" class="form-control" type="number" name="repetitions" value="0" min="0"><br>
+        <label for="description">Description:</label>
+        <select id="description" class="form-control" name="description">
+            {% for course in enrolled_courses %}
+              <option value="{{course.getTitle | e}}">{{course.getTitle | e}}</option>
+            {% endfor %}
+        </select>
+        <label for="price">Price:</label>
+        <input id="price" class="form-control" type="number" name="price" value="40"><br>
+        <label for="discount">Discount:</label>
+        <input id="discount" class="form-control" type="number" name="discount" value="1"><br>
+        <label for="paid_for">Paid for?</label>
+        <select id="paid_for" class="form-control" name="paid_for">
+            <option value="0" selected>Not Paid</option>
+            <option value="1">Paid</option>
+        </select>
+        <label for="date_of_service">Starting Date:</label>
+        <input id="date_or_service" class="form-control" type="datetime-local" name="date_of_service" value=""><br>
+        <label for="recurrence">Recurrence:</label>
+        <input id="recurrence" class="form-control" type="text" name="recurrence" value="Weekday|Time"><br>
+        <label for="attendance">Attendance:</label>
+        <select id="attendance" class="form-control" name="attendance" type="text">
+        {% for attendance_value in attendance_values %}
+            {% for key, value in attendance_value %}
+                <option value="{{key}}">{{value}}</option>
+            {% endfor %}
+        {% endfor %}
+        </select>
+        <label for="duration">Duration:</label>
+        <input id="duration" class="form-control" type="number" name="duration" value="40"><br>
+        <button class="btn btn-success btn-sm" type="submit" name="submit">Submit</button>
+    </form>
+</div>

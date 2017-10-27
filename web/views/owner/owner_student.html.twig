@@ -1,215 +1,62 @@
+{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
+
 
 {% extends "base_private.html.twig" %}
-
 {% block title %}Student{% endblock %}
 
 {% block content %}
-
-{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
-
-<div class="jumbotron">
-    <h1>{{ student.getName  | e }}</h1>
-    <hr>
-</div>
-
-<div class="row">
-    <div class="col-md-4" id="teacher-info">
-        <h3>Sessions:</h3>
+    <div class="jumbotron">
+        <h1>{{ student.getName  | e }}</h1>
         <hr>
-        <h4>Assigned Teachers</h4>
-        {% if assigned_teachers is not empty %}
-        <ul>
-            {% for teacher in assigned_teachers %}
-            <li> <a href="/owner_teacher/{{teacher.getId | e }}">{{ teacher.getName  | e }}</a></li>
-            {% endfor %}
-        </ul>
-        <hr>
-        <h4>This Month's Sessions:</h4>
-            {% if student is not empty %}
-                <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a></h4>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            {% include './components/sessions_list.html.twig' %}
+        </div>
 
-                    {% if student.getServicesForMonth(this_month, this_months_year) is not empty %}
-                        {% for service in student.getServicesForMonth(this_month, this_months_year) %}
-                        <div class="well">
-                          <a href="/owner_session/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
-                          {{ service.getDescription  | e }} with {{service.getTeacher.getName  | e }}</a>
-                        </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+        <div class="col-md-6" id="teacher-info">
+            <h3>Sessions:</h3>
+            <hr>
+            <h4>Assigned Teachers</h4>
+            {% if teachers is not empty %}
+                {% include './components/teachers_list.html.twig' %}
             {% endif %}
-        <hr>
-        <h4>Last Month's Sessions:</h4>
-            {% if student is not empty %}
-            <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a></h4>
-                {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>Teacher</th>
-                            <th>Date and Time</th>
-                            <th>Lesson Name</th>
-                            <th>Status</th>
-                            <th>Detail</th>
-                            <th>Paid</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for service in student.getServicesForMonth(last_month, last_months_year) %}
-                            <tr>
-                                <td>{{ service.getTeacher.getName  | e }}</td>
-                                <td>{{ service.getDateOfService  | e }}</td>
-                                <td>{{ service.getDescription  | e }}</td>
-                                <td>{{ service.getAttendance  | e }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="/owner_session/{{service.getId | e}}">View</a></td>
-                                {% if service.getPaidFor %}
-                                <td>
-                                  <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
-                                </td>
-                                {% else %}
-                                <td>
-                                  <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
-                                </td>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-        {% endif %}
+            <hr>
+        </div>
 
-
-        <hr>
-        <h4> <a href="/student/{{ student.getId  | e }}/sessions">View All Sessions</a></h4>
-        <hr>
-
+        <div class="col-md-6">
             {% if enrolled_courses is not empty %}
-            <h4>Schedule Sessions</h4>
-            <div class="well">
-                <form action="/student/{{ student.getId | e }}/add_session" method="post">
-                    <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
-                    <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
-                    <select class="form-control" name="teacher_id">
-                        {% for teacher in assigned_teachers %}
-                            <option value="{{ teacher.getId  | e }}">{{teacher.getName | e }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="repetitions">Repetitions:</label>
-                    <input id="repetitions" class="form-control" type="number" name="repetitions" value="0" min="0"><br>
-                    <label for="description">Description:</label>
-                    <select id="description" class="form-control" name="description">
-                        {% for course in enrolled_courses %}
-                          <option value="{{course.getTitle | e}}">{{course.getTitle | e}}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="price">Price:</label>
-                    <input id="price" class="form-control" type="number" name="price" value="40"><br>
-                    <label for="discount">Discount:</label>
-                    <input id="discount" class="form-control" type="number" name="discount" value="1"><br>
-                    <label for="paid_for">Paid for?</label>
-                    <select id="paid_for" class="form-control" name="paid_for">
-                        <option value="0" selected>Not Paid</option>
-                        <option value="1">Paid</option>
-                    </select>
-                    <label for="date_of_service">Starting Date:</label>
-                    <input id="date_or_service" class="form-control" type="datetime-local" name="date_of_service" value=""><br>
-                    <label for="recurrence">Recurrence:</label>
-                    <input id="recurrence" class="form-control" type="text" name="recurrence" value="Weekday|Time"><br>
-                    <label for="attendance">Attendance:</label>
-                    <select id="attendance" class="form-control" name="attendance" type="text">
-                    {% for attendance_value in attendance_values %}
-                        {% for key, value in attendance_value %}
-                            <option value="{{key}}">{{value}}</option>
-                        {% endfor %}
-                    {% endfor %}
-                    </select>
-                    <label for="duration">Duration:</label>
-                    <input id="duration" class="form-control" type="number" name="duration" value="40"><br>
-                    <button class="btn btn-success btn-sm" type="submit" name="submit">Submit</button>
-                </form>
-            </div>
+                <h4>Schedule Sessions</h4>
+                {% include './components/create_sessions.html.twig' %}
             {% endif %}
-        {% endif %}
-    </div>
+        </div>
 
-    <div id="currentclass" class="col-md-4">
-        <h3>Courses:</h3>
-        <hr>
-        <form action="/owner_student/{{ student.getId  | e }}/enroll" method="post">
-            <label>Enroll in a Course</label>
-            {% if courses is not empty %}
-            <select class="form-control" name="course_id">
-                {% for course in courses %}
-                <option value="{{course.getId | e }}">{{course.getTitle | e }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" name="button">submit</button>
+        <div id="currentclass" class="col-md-6">
+            <h3>Courses:</h3>
+            <hr>
+            {% include './components/enroll_course.html.twig' %}
+            <hr>
+        </div>
+
+        <div class="col-md-6">
+            {% if enrolled_courses is not empty %}
+                {% include './components/course_enrollment_list.html.twig' %}
             {% endif %}
-        </form>
+        </div>
 
-        <hr>
+        <div class="col-md-6">
+            <h3>Add Notes:</h3>
+            <hr>
+            {% include './components/add_note_student.html.twig' %}
+        </div>
 
-        {% if enrolled_courses is not empty %}
-        <table class="table table-hover">
-            <thead>
-                <th>Course Enrollment</th>
-                <th>Date of Enrollment</th>
-            </thead>
-            <tbody>
-                {% for course in enrolled_courses %}
-                <tr>
-                    <td><a href="/owner_course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
-                    <td>{{ student.getDateOfEnrollment(course.getId)  | e }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
-
-        <hr>
-
-        <h3>Add Notes:</h3>
-        <hr>
-        <form action="/owner_student/{{ student.getId  | e }}/add_notes" method="post">
-            <input name="_method" type="hidden" value="patch" required>
-            <div class="form-group">
-                <label class="control-label" for="new_notes">Notes</label>
-                <textarea class="form-control" cols="30" id="message" name="new_notes" rows="10"></textarea>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-info btn-sm" name="button">Submit</button>
-            </div>
-        </form>
+        <div id="currentclass" class="col-md-4">
+            <h3>Notes:</h3>
+            <hr>
+            {% if notes_array is not empty %}
+                {% include './components/note_history.html.twig' %}
+            {% endif %}
+        </div>
     </div>
-    <!-- middle column -->
-    <div id="currentclass" class="col-md-4">
-      <h3>Notes:</h3>
-      <hr>
-      {% if notes_array is not empty %}
-      <div class="notes">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Student's Note History:</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for note in notes_array %}
-            <tr>
-              <td><strong>{{ note  | e }}</strong></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-    </div>
-    <!-- right column -->
-</div>
-<script src="/../js/owner_student.js"></script>
-<!-- row -->
+    <script src="/../js/owner_student.js"></script>
 {% endblock %}

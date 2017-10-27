@@ -25,54 +25,12 @@
     <div class="col-md-4">
         <h3>Services Last Month</h3>
         {% if students is not empty %}
-            {% for student in students %}
-                <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
-
-                    {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
-                    {% for service in student.getServicesForMonth(last_month, last_months_year) %}
-                    <div class="well">
-                      <a href="../owner_session/{{ service.getId | e }}">- {{ service.getDateOfService | e }} - {{ service.getAttendance | e }} <br>
-                      payment status: {{ service.getPaidFor | e }} <br>
-                      {{ service.getDescription | e }} with {{service.getTeacher.getName | e }}</a>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                </div>
-            {% endfor %}
+            {% include './components/students_service_list.html.twig' %}
         {% endif %}
-
-
     </div>
 </div>
 
-<div class="row">
-  <div class="col-md-6">
-    <h3>Service History</h3>
-    <hr>
-    {% if students is not empty %}
-        {% for student in students %}
-            <div class="panel panel-info">
-                <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
-                {% if student.getServices is not empty %}
-                    {% for service in student.getServices %}
-                        <div class="well">
-                          - {{ service.getDateOfService | e }} - <br>
-                          {{ service.getDescription | e }} with {{service.getTeacher.getName | e }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-  </div>
-
-  <div class="col-md-6">
-      {% include './components/note_history.html.twig' %}
-  </div>
+<div class="col-md-6">
+    {% include './components/note_history.html.twig' %}
 </div>
-
-
 {% endblock %}

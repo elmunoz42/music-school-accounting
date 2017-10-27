@@ -156,21 +156,34 @@
 
         function getTeachers()
         {
-            $query = $GLOBALS['DB']->query("SELECT teachers.* FROM
-            students JOIN students_teachers ON students.id = students_teachers.student_id
-                     JOIN teachers ON students_teachers.teacher_id = teachers.id
-                     WHERE students.id = {$this->getId()};");
-            $teachers = array();
-            foreach ($query as $teacher) {
-                $teacher_name = $teacher['teacher_name'];
-                $instrument = $teacher['instrument'];
-                $notes= $teacher['notes'];
-                $id = $teacher['id'];
-                $found_teacher = new Teacher($teacher_name, $instrument, $id);
-                $found_teacher->setNotes($notes);
-                array_push($teachers, $found_teacher);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT teachers.* FROM students
+                JOIN students_teachers ON (students.id = students_teachers.student_id)
+                JOIN teachers ON (students_teachers.teacher_id = teachers.id)
+                WHERE students.id = :student_id
+            ");
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $teachers = [];
+                    forEach($results as $result) {
+                        $teacher = new Teacher(
+                            $result['teacher_name'],
+                            $result['instrument'],
+                            $result['id'],
+                            $result['notes']
+                        );
+                        array_push($teachers, $teacher);
+                    }
+                    return $teachers;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            return $teachers;
         }
 
         function addTeacher($teacher_id)

@@ -2,30 +2,46 @@
 
 //READ student NOTE use for family and teacher
 $app->get("/owner_student/{student_id}", function($student_id) use ($app) {
+
+    $month = date("m");
+    $year = date("Y");
+
+    // if month & year parameters are passed, update $month and $year
+    if (!empty($_GET['month'])) {
+      $month = filter_input(INPUT_GET, 'month', FILTER_VALIDATE_INT);
+      if ($month === false) {
+        $month = date("m");
+      }
+    }
+
+    if (!empty($_GET['year'])) {
+      $year = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT);
+      if ($year === false) {
+        $year = date("Y");
+      }
+    }
+
+
     $school = School::find($_SESSION['school_id']);
     $student = Student::find($student_id);
+
 
     if ($student) {
       $notes_array = explode("|", $student->getNotes());
       $assigned_teachers = $student->getTeachers();
-      $this_month=intval(date('m',strtotime('this month')));
-      $this_months_year=intval(date('Y',strtotime('this month')));
-      $last_month=intval(date('m',strtotime('last month')));
-      $last_months_year=intval(date('Y',strtotime('last month')));
+
+      $datestamp = mktime(0, 0, 0, $month, 1, $year);
+
+      $services = $student->getServicesForMonth($month, $year);
+
 
       return $app['twig']->render('owner_student.html.twig', array(
-        'school' => $school,
         'student' => $student,
-        'assigned_teachers' => $assigned_teachers,
+        'services' => $services,
+        'teachers' => $assigned_teachers,
         'notes_array' => $notes_array,
         'courses'=>$school->getCourses(), 'enrolled_courses'=>$student->getCourses(),
-        'teachers' => $school->getTeachers(),
-        'lessons' => $school->getLessons(),
-        'assigned_lessons' => $student->getLessons(),
-        'this_month' => $this_month,
-        'this_months_year'=>$this_months_year,
-        'last_month'=>$last_month,
-        'last_months_year'=>$last_months_year
+        'datestamp' => $datestamp
       ));
     } else {
         // student is not found

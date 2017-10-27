@@ -48,7 +48,6 @@
     require_once __DIR__."/./app_main.php";
     require_once __DIR__."/./app_payment.php";
     require_once __DIR__."/./app_session.php";
-    require_once __DIR__."/./app_sessions.php";
     require_once __DIR__."/./app_student.php";
     require_once __DIR__."/./app_students.php";
     require_once __DIR__."/./app_teacher.php";

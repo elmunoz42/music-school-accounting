@@ -15,7 +15,10 @@
         <div class="col-md-6">
           <!-- show teachers list -->
             {% if teachers is not empty %}
-                {% include './components/teachers_list.html.twig' %}
+                <div id="teachersalign"class="col-md-6">
+                    <h3>Current Teachers</h3>
+                    {% include './components/teachers_list.html.twig' %}
+                </div>
             {% endif %}
         </div>
     </div>

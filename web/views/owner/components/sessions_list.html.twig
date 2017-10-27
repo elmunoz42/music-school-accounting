@@ -1,20 +1,11 @@
-{% extends "base_private.html.twig" %}
-
-{% block title %}Student Sessions{% endblock %}
-
-{% block content %}
-<div class="jumbotron">
-    <h1>{{ student.getName | e }}</h1>
-    <hr>
-</div>
 <div class="row">
     <h3>Sessions for {{datestamp|date("M-Y")}}</h3>
     <hr>
     <div class="col-xs-6">
-        <a href="/student/{{student.getId}}/sessions?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
+        <a href="/owner_student/{{student.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
     </div>
     <div class="col-xs-6 text-right">
-        <a href="/student/{{student.getId}}/sessions?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
+        <a href="/owner_student/{{student.getId}}?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
     </div>
     {% if services is not empty %}
     <table class="table table-hover">
@@ -59,5 +50,3 @@
     </table>
     {% endif %}
 </div>
-<script src="/../js/owner_student.js"></script>
-{% endblock %}

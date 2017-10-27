@@ -1,0 +1,17 @@
+<div>
+    {% for student in students %}
+        <div class="panel panel-info">
+            <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
+
+            {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
+                {% for service in student.getServicesForMonth(last_month, last_months_year) %}
+                <div class="well">
+                  <a href="../owner_session/{{ service.getId | e }}">- {{ service.getDateOfService | e }} - {{ service.getAttendance | e }} <br>
+                    payment status: {{ service.getPaidFor | e }} <br>
+                    {{ service.getDescription | e }} with {{service.getTeacher.getName | e }}</a>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
