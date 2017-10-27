@@ -23,40 +23,6 @@ $app->post("/owner_students", function() use ($app) {
 })->before($is_logged_in);
 
 
-//DELETE student from school
-$app->delete("/owner_students/student_termination/{id}", function($id) use ($app) {
-    $school=School::find($_SESSION['school_id']);
-    $school->removeStudent($id);
-
-    // NOTE CHECK IF WORKS
-    // $student = Student::find($id);
-    // $student->delete();
-
-    return $app->redirect("/owner_students");
-})->before($is_logged_in);
-
-
-
-// UPDATE student
-$app->post("/owner_student/{student_id}/update", function($student_id) use ($app) {
-    $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
-    if ($new_student_name) {
-        $student = Student::find($student_id);
-        if ($student) {
-            if ($student->updateName($new_student_name)) {
-                //add success message
-            } else {
-                // add error message
-            }
-        } else {
-            // add error message
-        }
-    } else {
-        // add error message
-    }
-    return $app->redirect("/owner_students");
-})->before($is_logged_in);
-
 
 
 

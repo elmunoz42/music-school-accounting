@@ -4,6 +4,7 @@ $app->get("/create_owner", function() use ($app) {
     return $app['twig']->render('create_owner.html.twig');
 });
 
+
 //CREATE owner
 $app->post("/create_owner", function() use ($app) {
     // TODO VERIFY

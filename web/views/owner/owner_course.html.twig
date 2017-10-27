@@ -93,7 +93,7 @@
   </div>
 
   <div class="col-sm-4">
-      <form action="/owner_courses/{{ course.getId | e  }}" method="post">
+      <form action="/owner_course/{{ course.getId | e  }}" method="post">
           <label>Enroll Students</label>
           {% if students is not empty %}
           <select class="form-control" name="student_id">
@@ -107,7 +107,7 @@
       {% if enrolled_students is not empty %}
       <ul>
           {% for student in enrolled_students  %}
-          <li><a href="/../owner_students/{{student.getId | e }}">{{student.getName | e }}</a></li>
+          <li><a href="/../owner_student/{{student.getId | e }}">{{student.getName | e }}</a></li>
           {% endfor %}
       </ul>
       {% endif %}

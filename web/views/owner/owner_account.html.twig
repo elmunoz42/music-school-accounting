@@ -23,7 +23,7 @@
                 <li>Email Address: {{account.getEmailAddress | e}}</li>
                 {% if account.getStudents is not empty %}
                 {% for student in account.getStudents %}
-                <li>Student Name:<a href="/owner_students/{{student.getId | e}}"></a> {{student.getName | e}}</li>
+                <li>Student Name:<a href="/owner_student/{{student.getId | e}}"></a> {{student.getName | e}}</li>
                 {% endfor %}
                 {% endif %}
             </ul>
@@ -61,7 +61,7 @@
                   <tbody>
                       {% for account in accounts %}
                       <tr>
-                          <td><a href="/owner_accounts/{{account.getId | e}}">{{account.getFamilyName | e}}</a></td>
+                          <td><a href="/owner_account/{{account.getId | e}}">{{account.getFamilyName | e}}</a></td>
                       </tr>
                       {% endfor %}
                   </tbody>
@@ -76,15 +76,15 @@
         {% if selected_students is not empty %}
             {% for student in selected_students %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e}}">{{student.getName | e}}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
                     <ul>
                         {% if student.getCourses is not empty %}
                             {% for course in student.getCourses %}
-                                <li><strong><a href="/owner_courses/{{course.getId | e}}">{{course.getTitle | e}}</a></strong></li>
+                                <li><strong><a href="/owner_course/{{course.getId | e}}">{{course.getTitle | e}}</a></strong></li>
                                 {% if course.getLessons is not empty %}
                                     <ul>
                                         {% for lesson in course.getLessons %}
-                                            <li><a href="/owner_lessons/{{lesson.getId | e}}">{{lesson.getTitle | e}}</a></li>
+                                            <li><a href="/owner_lesson/{{lesson.getId | e}}">{{lesson.getTitle | e}}</a></li>
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
@@ -98,7 +98,7 @@
 
         <h3>Add Notes:</h3>
         <hr>
-        <form action="/owner_accounts/{{ account.getId | e }}/add_notes" method="post">
+        <form action="/owner_account/{{ account.getId | e }}/add_note" method="post">
             <input name="_method" type="hidden" value="patch">
             <div class="form-group">
                 <label class ="control-label" for="new_notes">Notes</label><br>
@@ -126,12 +126,12 @@
         {% if selected_students is not empty %}
             {% for student in selected_students %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e}}">{{student.getName | e}}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
 
                     {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(last_month, last_months_year) %}
                     <div class="well">
-                      <a href="../owner_sessions/{{ service.getId | e }}">- {{ service.getDateOfService | e }} - {{ service.getAttendance | e }} <br>
+                      <a href="../owner_session/{{ service.getId | e }}">- {{ service.getDateOfService | e }} - {{ service.getAttendance | e }} <br>
                       payment status: {{ service.getPaidFor | e }} <br>
                       {{ service.getDescription | e }} with {{service.getTeacher.getName | e }}</a>
                     </div>
@@ -153,7 +153,7 @@
     {% if selected_students is not empty %}
         {% for student in selected_students %}
             <div class="panel panel-info">
-                <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e}}">{{student.getName | e}}</a></h4>
+                <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
                 {% if student.getServices is not empty %}
                     {% for service in student.getServices %}
                         <div class="well">

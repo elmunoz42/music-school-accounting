@@ -1,7 +1,7 @@
 <?php
 
 //READ student NOTE use for family and teacher
-$app->get("/owner_students/{student_id}", function($student_id) use ($app) {
+$app->get("/owner_student/{student_id}", function($student_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $student = Student::find($student_id);
 
@@ -35,7 +35,7 @@ $app->get("/owner_students/{student_id}", function($student_id) use ($app) {
 
 
 //JOIN student to course
-$app->post("/owner_students/{student_id}/enroll", function($student_id) use ($app) {
+$app->post("/owner_student/{student_id}/enroll", function($student_id) use ($app) {
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
 
     if ($course_id) {
@@ -53,12 +53,12 @@ $app->post("/owner_students/{student_id}/enroll", function($student_id) use ($ap
             // add error message
         }
     }
-    return $app->redirect("/owner_students/" . $student_id);
+    return $app->redirect("/owner_student/" . $student_id);
 })->before($is_logged_in);
 
 
 //UPDATE student notes
-$app->patch("/owner_students/{student_id}/add_notes", function($student_id) use ($app) {
+$app->patch("/owner_student/{student_id}/add_notes", function($student_id) use ($app) {
     $selected_student = Student::find($student_id);
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
 
@@ -69,8 +69,44 @@ $app->patch("/owner_students/{student_id}/add_notes", function($student_id) use 
     } else {
       // add error
     }
-    return $app->redirect("/owner_students/" . $student_id);
+    return $app->redirect("/owner_student/" . $student_id);
 })->before($is_logged_in);
+
+
+//DELETE student from school
+$app->delete("/owner_student/student_termination/{id}", function($id) use ($app) {
+    $school=School::find($_SESSION['school_id']);
+    $school->removeStudent($id);
+
+    // NOTE CHECK IF WORKS
+    // $student = Student::find($id);
+    // $student->delete();
+
+    return $app->redirect("/owner_students");
+})->before($is_logged_in);
+
+
+// UPDATE student
+$app->post("/owner_student/{student_id}/update", function($student_id) use ($app) {
+    $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
+    if ($new_student_name) {
+        $student = Student::find($student_id);
+        if ($student) {
+            if ($student->updateName($new_student_name)) {
+                //add success message
+            } else {
+                // add error message
+            }
+        } else {
+            // add error message
+        }
+    } else {
+        // add error message
+    }
+    return $app->redirect("/owner_students");
+})->before($is_logged_in);
+
+
 
 
 //UPDATE student service NOTE UNTESTED UNTESTED UNTESTED

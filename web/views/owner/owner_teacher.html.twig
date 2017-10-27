@@ -21,7 +21,7 @@
                 {% if courses is not empty %}
                     {% for course in courses %}
                     <tr>
-                        <td><a href="../owner_courses/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
+                        <td><a href="../owner_course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
                     </tr>
                     {% endfor %}
                 {% endif %}
@@ -49,7 +49,7 @@
                 <tbody>
                     {% for student in students_teachers %}
                     <tr>
-                        <td><a href="/owner_students/{{ student.getId  | e }}">{{ student.getName  | e }}</a></td>
+                        <td><a href="/owner_student/{{ student.getId  | e }}">{{ student.getName  | e }}</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -71,7 +71,7 @@
     <div class="col-md-4">
         <h3>Add Notes:</h3>
         <hr>
-        <form action="/owner_teachers/{{ teacher.getId  | e }}/add_notes" method="post">
+        <form action="/owner_teacher/{{ teacher.getId  | e }}/add_notes" method="post">
             <input name="_method" type="hidden" value="patch">
             <div class="form-group">
                 <label class ="control-label" for="new_notes">Notes</label><br>

@@ -17,19 +17,19 @@
         {% if assigned_teachers is not empty %}
         <ul>
             {% for teacher in assigned_teachers %}
-            <li> <a href="/owner_teachers/{{teacher.getId | e }}">{{ teacher.getName  | e }}</a></li>
+            <li> <a href="/owner_teacher/{{teacher.getId | e }}">{{ teacher.getName  | e }}</a></li>
             {% endfor %}
         </ul>
         <hr>
         <h4>This Month's Sessions:</h4>
         {% if student is not empty %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a></h4>
 
                     {% if student.getServicesForMonth(this_month, this_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(this_month, this_months_year) %}
                     <div class="well">
-                      <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
+                      <a href="/owner_session/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
                       {{ service.getDescription  | e }} with {{service.getTeachers[0].getName  | e }}</a>
                     </div>
                     {% endfor %}
@@ -41,12 +41,12 @@
         <h4>Last Month's Sessions:</h4>
         {% if student is not empty %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a></h4>
 
                     {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
                     {% for service in student.getServicesForMonth(last_month, last_months_year) %}
                     <div class="well">
-                      <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
+                      <a href="/owner_session/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
                       {{ service.getDescription  | e }} with {{service.getTeachers[0].getName  | e }}</a>
                     </div>
                     {% endfor %}

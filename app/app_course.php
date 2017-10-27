@@ -1,6 +1,6 @@
 <?php
 //READ course
-$app->get("/owner_courses/{course_id}", function($course_id) use ($app){
+$app->get("/owner_course/{course_id}", function($course_id) use ($app){
     $school = School::find($_SESSION['school_id']);
     $course = Course::find($course_id);
 
@@ -51,12 +51,12 @@ $app->post("/add_lesson_to_course", function() use($app) {
     $school->addLesson($lesson_id);
     $course->addLesson($lesson_id);
 
-    return $app->redirect("/owner_courses/" . $course_id);
+    return $app->redirect("/owner_course/" . $course_id);
 })->before($is_logged_in);
 
 
 //JOIN students to course
-$app->post("/owner_courses/{id}", function($id) use ($app){
+$app->post("/owner_course/{id}", function($id) use ($app){
     $school = School::find($_SESSION['school_id']);
     $course = Course::find($id);
     $selected_student = Student::find($_POST['student_id']);
@@ -70,6 +70,41 @@ $app->post("/owner_courses/{id}", function($id) use ($app){
       'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
       'lessons' => $school->getLessons() ));
 })->before($is_logged_in);
+
+
+$app->post("/owner_course/{course_id}/update", function($course_id) use ($app) {
+    $new_title = $_POST['title'] ? $_POST['title'] : '';
+    if ($new_title) {
+        $course = Course::find($course_id);
+        if ($course) {
+            if ($course->updateTitle($new_title)) {
+                //add success message
+            } else {
+                // add error message
+            }
+        } else {
+            // add error message
+        }
+    } else {
+        // add error message
+    }
+    return $app->redirect("/owner_courses");
+})->before($is_logged_in);
+
+
+$app->delete("/owner_course/{course_id}/delete", function($course_id) use ($app) {
+    $school = School::find($_SESSION['school_id']);
+    $course = Course::find($course_id);
+
+    if ($course->deleteCourse()) {
+        // add success message
+        return $app->redirect("/owner_courses");
+    } else {
+        // add error message
+        return $app->redirect("/owner_courses");
+    }
+})->before($is_logged_in);
+
 
 
 // //READ course

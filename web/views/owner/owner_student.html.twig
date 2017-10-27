@@ -20,19 +20,19 @@
         {% if assigned_teachers is not empty %}
         <ul>
             {% for teacher in assigned_teachers %}
-            <li> <a href="/owner_teachers/{{teacher.getId | e }}">{{ teacher.getName  | e }}</a></li>
+            <li> <a href="/owner_teacher/{{teacher.getId | e }}">{{ teacher.getName  | e }}</a></li>
             {% endfor %}
         </ul>
         <hr>
         <h4>This Month's Sessions:</h4>
             {% if student is not empty %}
                 <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
+                    <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a></h4>
 
                     {% if student.getServicesForMonth(this_month, this_months_year) is not empty %}
                         {% for service in student.getServicesForMonth(this_month, this_months_year) %}
                         <div class="well">
-                          <a href="/owner_sessions/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
+                          <a href="/owner_session/{{ service.getId  | e }}">- {{ service.getDateOfService  | e }} - {{ service.getAttendance  | e }} <br>
                           {{ service.getDescription  | e }} with {{service.getTeacher.getName  | e }}</a>
                         </div>
                         {% endfor %}
@@ -42,7 +42,7 @@
         <hr>
         <h4>Last Month's Sessions:</h4>
             {% if student is not empty %}
-            <h4 class="panel-heading"><a href="/owner_students/{{student.getId | e }}">{{student.getName | e }}</a></h4>
+            <h4 class="panel-heading"><a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a></h4>
                 {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
                 <div class="panel-body">
                     <table class="table table-striped">
@@ -63,7 +63,7 @@
                                 <td>{{ service.getDateOfService  | e }}</td>
                                 <td>{{ service.getDescription  | e }}</td>
                                 <td>{{ service.getAttendance  | e }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="/owner_sessions/{{service.getId | e}}">View</a></td>
+                                <td><a class="btn btn-primary btn-sm" href="/owner_session/{{service.getId | e}}">View</a></td>
                                 {% if service.getPaidFor %}
                                 <td>
                                   <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
@@ -83,13 +83,13 @@
 
 
         <hr>
-        <h4> <a href="/owner_sessions_for_student/{{ student.getId  | e }}">View All Sessions</a></h4>
+        <h4> <a href="/student/{{ student.getId  | e }}/sessions">View All Sessions</a></h4>
         <hr>
 
             {% if enrolled_courses is not empty %}
             <h4>Schedule Sessions</h4>
             <div class="well">
-                <form action="/owner_sessions_for_student" method="post">
+                <form action="/student/{{ student.getId | e }}/add_session" method="post">
                     <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
                     <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
                     <select class="form-control" name="teacher_id">
@@ -138,7 +138,7 @@
     <div id="currentclass" class="col-md-4">
         <h3>Courses:</h3>
         <hr>
-        <form action="/owner_students/{{ student.getId  | e }}/enroll" method="post">
+        <form action="/owner_student/{{ student.getId  | e }}/enroll" method="post">
             <label>Enroll in a Course</label>
             {% if courses is not empty %}
             <select class="form-control" name="course_id">
@@ -161,7 +161,7 @@
             <tbody>
                 {% for course in enrolled_courses %}
                 <tr>
-                    <td><a href="/owner_courses/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
+                    <td><a href="/owner_course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
                     <td>{{ student.getDateOfEnrollment(course.getId)  | e }}</td>
                 </tr>
                 {% endfor %}
@@ -173,7 +173,7 @@
 
         <h3>Add Notes:</h3>
         <hr>
-        <form action="/owner_students/{{ student.getId  | e }}/add_notes" method="post">
+        <form action="/owner_student/{{ student.getId  | e }}/add_notes" method="post">
             <input name="_method" type="hidden" value="patch" required>
             <div class="form-group">
                 <label class="control-label" for="new_notes">Notes</label>

@@ -3,12 +3,14 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+{% if role == "owner" %}
+    hello
+{% endif %}
 
     <div class="jumbotron">
         <h1>Home</h1>
         <hr>
     </div>
-
     <div class="row">
         <div class="col-md-3">
             <div class="panel panel-info">
@@ -18,7 +20,7 @@
                     <h4 class="stats-numbers">Total: {{ teachers|length  | e }}</h4>
                     <ul>
                         {% for teacher in teachers %}
-                        <li><a href="owner_teachers/{{teacher.getId | e }}">{{teacher.getName | e }}</a></li>
+                        <li><a href="owner_teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a></li>
                         {% endfor %}
                     </ul>
                     {% endif %}
@@ -34,7 +36,7 @@
                 <h4 class="stats-numbers">Total: {{ students|length  | e }}</h4>
                 <ul>
                     {% for student in students %}
-                    <li><a href="owner_students/{{student.getId | e }}">{{student.getName | e }}</a></li>
+                    <li><a href="owner_student/{{student.getId | e }}">{{student.getName | e }}</a></li>
                     {% endfor %}
                 </ul>
                 {% endif %}
@@ -65,7 +67,7 @@
                     <h4 class="stats-numbers">Total: {{courses|length | e }} </h4>
                     <ul>
                         {% for course in courses %}
-                        <li><a href="owner_courses/{{course.getId | e }}">{{course.getTitle | e }}</a></li>
+                        <li><a href="owner_course/{{course.getId | e }}">{{course.getTitle | e }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>

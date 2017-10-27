@@ -1,7 +1,7 @@
 <?php
 
 //CREATE a Lesson NOTE GO BACK TO COURSES THOUGH
-$app->post("/owner_lessons/{id}", function($id) use ($app) {
+$app->post("/owner_lesson/{id}", function($id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $course = Course::find($id);
     $title = $_POST['title'];
@@ -45,10 +45,10 @@ $app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app)
 
         if ($lesson->delete()) {
             // add success message
-            return $app->redirect("/owner_courses/" . $course_id);
+            return $app->redirect("/owner_course/" . $course_id);
         } else {
             // add error message
-            return $app->redirect("/owner_courses/" . $course_id);
+            return $app->redirect("/owner_course/" . $course_id);
         }
     }
 })->before($is_logged_in);
@@ -65,9 +65,9 @@ $app->post("/owner_lesson/{lesson_id}/update", function($lesson_id) use ($app) {
 
     if ($lesson->updateTitle($title) && $lesson->updateDescription($description) && $lesson->updateContent($content)) {
         // add success message
-        return $app->redirect("/owner_courses/" . $course_id);
+        return $app->redirect("/owner_course/" . $course_id);
     } else {
         // add error message
-        return $app->redirect("/owner_courses/" . $course_id);
+        return $app->redirect("/owner_course/" . $course_id);
     }
 });

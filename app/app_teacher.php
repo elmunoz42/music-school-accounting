@@ -1,7 +1,7 @@
 <?php
 
 //READ teacher
-$app->get("/owner_teachers/{teacher_id}", function($teacher_id) use ($app) {
+$app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $teacher = Teacher::find($teacher_id);
 
@@ -37,24 +37,24 @@ $app->post("/owner_teacher/{teacher_id}/assign", function($teacher_id) use ($app
             // already assigned
             // add error message
         }
-        return $app->redirect("/owner_teachers/" . $teacher_id);
+        return $app->redirect("/owner_teacher/" . $teacher_id);
     }
 })->before($is_logged_in);
 
 
 //UPDATE teacher notes
-$app->patch("/owner_teachers/{teacher_id}/add_notes", function($teacher_id) use ($app) {
+$app->patch("/owner_teacher/{teacher_id}/add_notes", function($teacher_id) use ($app) {
     $teacher = Teacher::find($teacher_id);
 
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
     $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" .$teacher->getNotes();
     $teacher->updateNotes($updated_notes);
 
-    return $app->redirect("/owner_teachers/" . $teacher_id);
+    return $app->redirect("/owner_teacher/" . $teacher_id);
 })->before($is_logged_in);
 
 //DELETE JOIN remove teacher from school
-$app->delete("/owner_teachers/teacher_termination/{teacher_id}", function($teacher_id) use ($app) {
+$app->delete("/owner_teacher/teacher_termination/{teacher_id}", function($teacher_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $teacher = Teacher::find($teacher_id);
 

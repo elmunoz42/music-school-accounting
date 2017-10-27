@@ -59,7 +59,7 @@
                 {% for account in accounts %}
                     <tr>
                         <td>
-                            <a href="owner_accounts/{{account.getId | e }}">{{ account.getFamilyName | e }}</a>
+                            <a href="owner_account/{{account.getId | e }}">{{ account.getFamilyName | e }}</a>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_account_{{account.getId | e }}">Update</button>
                             <form action="/owner_account/{{ account.getId | e }}/delete" method="post">
                                 <input name="_method" type="hidden" value="delete">
