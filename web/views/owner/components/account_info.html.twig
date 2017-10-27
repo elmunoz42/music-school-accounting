@@ -1,0 +1,19 @@
+<div class="">
+    <h3>Account Info</h3>
+    <hr>
+    <div class="panel panel-info">
+        <h3 class="panel-heading">{{account.getFamilyName | e}}</h3>
+        <ul>
+            <li>Parent Name:  {{account.getParentOneName | e}}</li>
+            <li>Other Parent Name:  {{account.getParentTwoName | e}}</li>
+            <li>Street Address: {{account.getStreetAddress | e}}</li>
+            <li>Phone Number:  {{account.getPhoneNumber | e}}</li>
+            <li>Email Address: {{account.getEmailAddress | e}}</li>
+            {% if account.getStudents is not empty %}
+                {% for student in account.getStudents %}
+                    <li>Student Name:<a href="/owner_student/{{student.getId | e}}"></a> {{student.getName | e}}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</div>

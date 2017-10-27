@@ -4,7 +4,7 @@
 $app->get('/student/{student_id}/sessions', function($student_id) use($app) {
     $month = date("m");
     $year = date("Y");
-
+    var_dump($_SERVER['HTTP_REFERER']);
     // if month & year parameters are passed, update $month and $year
     if (!empty($_GET['month'])) {
         $month = filter_input(INPUT_GET, 'month', FILTER_VALIDATE_INT);

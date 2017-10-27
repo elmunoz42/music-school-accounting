@@ -18,11 +18,11 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
             'school'=>$school,
             'account'=>$account,
             'accounts'=>$school->getAccounts(),
-            'selected_students'=>$students, 'selected_teachers'=>$teachers,
-            'selected_courses'=>$courses,
+            'students'=>$students, 'teachers'=>$teachers,
+            'courses'=>$courses,
             'notes_array'=>$notes_array,
             'services'=>$account->getServices(),
-            'selected_lessons'=>$lessons,
+            'lessons'=>$lessons,
             'last_month'=>$last_month,
             'last_months_year'=>$last_months_year
         ));

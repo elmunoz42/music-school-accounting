@@ -52,3 +52,9 @@ $app->post("/owner_accounts/search", function() use ($app) {
     }
     return  $app->redirect("/owner_accounts");
 })->before($is_logged_in);
+
+
+$app->get("/owner_accounts/search", function() use ($app) {
+    // this route is not exist. therefore redirect to owner_accounts
+    return  $app->redirect("/owner_accounts");
+})->before($is_logged_in);

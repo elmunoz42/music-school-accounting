@@ -8,117 +8,21 @@
     <h1>Clients</h1>
     <hr>
 </div>
-<!-- jumbotron -->
+
 <div class="row">
     <div class="col-md-6">
-        <form  id="addclient" action="/owner_accounts" method="post">
-            <div class="panel panel-info">
-                <h4 class="panel-heading">Create New Account</h4>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label  for="family_name">Family Name: </label>
-                        <input id="family_name" class="form-control" type="text" name="family_name">
-                        <label  for="parent_one_name">Parent/Guardian Name (primary): </label>
-                        <input id="parent_one_name" class="form-control" type="text" name="parent_one_name">
-                        <label  for="parent_two_name">Parent/Guardian Name (secondary): </label>
-                        <input id="parent_two_name" class="form-control" type="text" name="parent_two_name">
-                        <label  for="street_address">Street Address: </label>
-                        <input id="street_address" class="form-control" type="text" name="street_address">
-                        <label  for="phone_number">Phone Number: </label>
-                        <input id="phone_number" class="form-control" type="number" name="phone_number">
-                        <label  for="email_address">Email Address: </label>
-                        <input id="email_address" class="form-control" type="email" name="email_address">
-                        <input type="hidden" name="notes" value="First entry">
-                        <input type="hidden" name="billing_history" value="First entry">
-                        <input type="hidden" name="outstanding_balance" value="0">
-                    </div>
-                    <button class="btn btn-primary" type="submit">create new account</button>
-                </div>
-            </div>
-        </form>
+        {% include './components/add_account.html.twig' %}
     </div>
 
     <div class="col-md-6">
-        <form action="/owner_accounts/search" method="post">
-            <div class="form-group">
-                <label for="search_input">Search for Client</label>
-                <input id="search_input" class="form-control" type="text" name="search_input" placeholder=" search something...">
-                <button type="submit" class="btn btn-info">Search</button>
-            </div>
-        </form>
-        <br>
+        {% include './components/search_clients.html.twig' %}
     </div>
+
     <div class="row">
         <div class="col-md-6">
-        {% if accounts is not empty %}
-            <table class="table table-hover">
-                <thead>
-                    <th>Clients Name</th>
-                </thead>
-                <tbody>
-                {% for account in accounts %}
-                    <tr>
-                        <td>
-                            <a href="owner_account/{{account.getId | e }}">{{ account.getFamilyName | e }}</a>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_account_{{account.getId | e }}">Update</button>
-                            <form action="/owner_account/{{ account.getId | e }}/delete" method="post">
-                                <input name="_method" type="hidden" value="delete">
-                                <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <!-- Update Modal -->
-                    <div id="update_account_{{account.getId | e}}" class="modal fade" role="dialog">
-                        <div class="modal-dialog modal-lg">
-                          <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Update Account: {{account.getFamilyName | e}}</h4>
-                                </div>
-                                <form action="/owner_account/{{account.getId | e }}/update" method="post">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="family_name">Family Name</label><br>
-                                                    <input class="form-control" id="family_name" type="text" name="family_name" value="{{account.getFamilyName | e}}"><br>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="parent_one_name">Parent/Guardian Name (primary):</label><br>
-                                                    <input id="parent_one_name" class="form-control" type="text" name="parent_one_name" value="{{account.getParentOneName | e }}"><br>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="parent_two_name">Parent/Guardian Name (secondary):</label><br>
-                                                    <input id="parent_two_name" class="form-control" type="text" name="parent_two_name" value="{{account.getParentTwoName | e }}"><br>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="street_address">Street Address:</label><br>
-                                                    <input id="street_address" class="form-control" type="text" name="street_address" value="{{account.getStreetAddress | e}}"><br>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="phone_number">Phone Number:</label><br>
-                                                    <input id="phone_number" class="form-control" type="number" name="phone_number" value="{{account.getPhoneNumber | e}}"><br>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="email_address">Email Address:</label><br>
-                                                    <input id="email_address" class="form-control" type="email" name="email_address" value="{{account.getEmailAddress | e}}"><br>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-success">Save</button>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+            {% if accounts is not empty %}
+                {% include './components/clients_list.html.twig' %}
+            {% endif %}
         </div>
     </div>
 </div>

@@ -1,0 +1,15 @@
+<div class="notes">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Note History:</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for note in notes_array %}
+        <tr>
+            <td><strong>{{ note  | e }}</strong></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</div>
