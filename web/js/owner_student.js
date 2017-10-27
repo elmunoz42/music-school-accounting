@@ -1,6 +1,7 @@
 $(".updatePaidFor").on("click", function() {
     var element = this;
     var paidStatus = "false";
+    var serviceId = $(element).attr('id');
 
     if ($(this).val() === "Paid") {
       paidStatus = "true";
