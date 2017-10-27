@@ -184,6 +184,9 @@
 
     // LOGIN
     $app->get("/owner_login", function() use ($app) {
+        if (isLoggedIn()){
+            return $app->redirect("owner_main");
+        }
         return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
     });
 
