@@ -59,4 +59,21 @@
         </div>
     </div>
     <script src="/../js/owner_student.js"></script>
+    <script>
+        $('.datepicker').datepicker(
+          { dateFormat: "yy-mm-dd" }
+        );
+
+        $('#start_date').datepicker(
+          { dataFormat: "yy-mm-dd" }
+        );
+        
+        $('#create_start_time').combodate({
+          customClass: 'form-control col-xs-6'
+        });
+        $('.update_start_time').combodate({
+          customClass: 'form-control col-xs-6'
+        });
+
+    </script>
 {% endblock %}

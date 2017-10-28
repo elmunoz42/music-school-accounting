@@ -21,19 +21,60 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
 
 
 // Update session NOTE: NEEDS TO BE CREATED
-$app->patch('/owner_session/{id}', function($id) use($app) {
-    $school = School::find($_SESSION['school_id']);
-    $service = Service::find($id);
-    $service->updateDateOfService($_POST['date_of_service']);
-    $service->updateRecurrence($_POST['recurrence']);
-    $service->updateAttendance($_POST['attendance']);
-    $service->updateDuration($_POST['duration']);
-    $new_notes = $_POST['new_notes'];
-    $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" . $service->getNotes();
-    $service->updateNotes($updated_notes);
-    $notes_array = explode("|", $updated_notes);
+$app->patch('/owner_session/{service_id}/update', function($service_id) use($app) {
 
-    return $app['twig']->render('owner_session.html.twig', array('school'=>$school, 'service'=>$service, 'notes_array'=>$notes_array));
+    $service = Service::find($service_id);
+    $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
+
+    $date_of_service = $_POST['date_of_service'] ? $_POST['date_of_service'] : '';
+    $teacher_id = $_POST['teacher_id'] ? $_POST['teacher_id'] : '';
+    $description = $_POST['description'] ? $_POST['description'] : '';
+    $repetitions = $_POST['repetitions'] ? $_POST['repetitions'] : '';
+    $price = $_POST['price'] ? $_POST['price'] : '';
+    $discount = $_POST['discount'] ? $_POST['discount'] : '';
+    $paid_for = $_POST['paid_for'] ? $_POST['paid_for'] : '0';
+    $start_date = $_POST['start_date'] ? $_POST['start_date'] : '';
+    $start_time = $_POST['start_time'] ? $_POST['start_time'] : '';
+    $recurrence = $_POST['recurrence'] ? $_POST['recurrence'] : '';
+    $attendance = $_POST['attendance'] ? $_POST['attendance'] : '';
+    $duration = $_POST['duration'] ? $_POST['duration'] : '';
+    $new_notes = $_POST['note'] ? $_POST['note'] : '';
+
+
+    $date_of_service = '';
+    if ($start_date && $start_time) {
+      // concatanate and create date format
+      $date_of_service = date("Y-m-d", strtotime($start_date)) . 'T' . $start_time;
+    }
+
+    if ($service) {
+      if (isset($date_of_service) && $date_of_service != $service->getDateOfService()) {
+        $service->updateDateOfService($date_of_service);
+      }
+
+      if (isset($repetitions) && $repetitions != $service->getDateOfService()) {
+        $service->updateDateOfService($date_of_service);
+      }
+      if (!empty($description) && ($description != $service->getDescription())) $service->updateDescription($description);
+      if (!empty($price) && $price != $service->getPrice()) $service->updatePrice($price);
+      if (!empty($discount) && $discount != $service->getDiscount()) $service->updateDiscount($discount);
+      if (isset($paid_for) && $paid_for != $service->getPaidFor()) $service->updatePaidFor($paid_for);
+      if (!empty($recurrence) && $recurrence != $service->getRecurrence()) $service->updateRecurrence($recurrence);
+      if (!empty($attendance) && $attendance != $service->getAttendance()) $service->updateAttendance($attendance);
+      if (!empty($duration) && $duration != $service->getDuration()) $service->updateDuration($duration);
+      if (!empty($new_notes)) {
+        // $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" . $service->getNotes();
+        $updated_notes =  date('y-m-d') . ': '  . $new_notes;
+        $service->updateNotes($updated_notes);
+      }
+    }
+
+    if ($student_id) {
+      return $app->redirect("/owner_student/" . $student_id);
+    } else {
+      return $app->redirect("/owner_main");
+    }
+
 })->before($is_logged_in);
 
 
@@ -67,9 +108,17 @@ $app->post('/student/{student_id}/add_session', function($student_id) use($app) 
     $price = $_POST['price'] ? $_POST['price'] : "";
     $discount = $_POST['discount'] ? $_POST['discount'] : "";
     $paid_for = $_POST['paid_for'] === "1" ? "1" : "0";
-    $date_of_service = $_POST['date_of_service'] ? $_POST['date_of_service'] : "";
+    $start_date = $_POST['start_date'] ? $_POST['start_date'] : '';
+    $start_time = $_POST['start_time'] ? $_POST['start_time'] : '';
     $recurrence = $_POST['recurrence'] ? $_POST['recurrence'] : "";
     $attendance = $_POST['attendance'] ? $_POST['attendance'] : "";
+
+    $date_of_service = '';
+
+    if ($start_date && $start_time) {
+      // concatanate and create date format
+      $date_of_service = date("Y-m-d", strtotime($start_date)) . 'T' . $start_time;
+    }
 
     $is_all_form_filled = $student_id && $account_id && $teacher_id && isset($repetitions) && $description && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
 

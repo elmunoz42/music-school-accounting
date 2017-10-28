@@ -6,32 +6,15 @@ $app->get("/owner_course/{course_id}", function($course_id) use ($app){
 
     if ($course) {
         return $app['twig']->render('owner_course.html.twig', array(
-            'school'=> $school,
             'course' => $course,
-            'courses' => $school->getCourses(),
-            'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
+            'students'=>$course->getStudents(),
+            'all_students'=>$school->getStudents(),
             'lessons' => $course->getLessons()
         ));
     } else {
         // course is not found
         return $app->redirect("/owner_courses");
     }
-})->before($is_logged_in);
-
-
-
-//REDIRECT post to course
-$app->post("/owner_courses/redirect", function() use ($app) {
-    $school=School::find($_SESSION['school_id']);
-    $course = Course::find($_POST['course_select']);
-    $id = $course->getId();
-
-    return $app['twig']->render('owner_course.html.twig', array(
-      'school'=>$school,
-      'course' => $course,
-      'courses' => $school->getCourses(),
-      'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
-      'lessons' => $school->getLessons() ));
 })->before($is_logged_in);
 
 
@@ -50,25 +33,33 @@ $app->post("/add_lesson_to_course", function() use($app) {
     $lesson_id = $lesson->getId();
     $school->addLesson($lesson_id);
     $course->addLesson($lesson_id);
+    return $app->redirect("/owner_course/". $course_id);
 
-    return $app->redirect("/owner_course/" . $course_id);
 })->before($is_logged_in);
 
 
 //JOIN students to course
-$app->post("/owner_course/{id}", function($id) use ($app){
-    $school = School::find($_SESSION['school_id']);
-    $course = Course::find($id);
-    $selected_student = Student::find($_POST['student_id']);
+$app->post("/owner_course/{course_id}", function($course_id) use ($app){
+    $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
 
-    $selected_student->addCourse($id);
+    if ($student_id) {
+        $student = Student::find($student_id);
+        $course = $student->findCourseById($course_id);
 
-    return $app['twig']->render('owner_course.html.twig', array(
-      'school'=>$school,
-      'course' => $course,
-      'courses' => $school->getCourses(),
-      'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
-      'lessons' => $school->getLessons() ));
+        if (!$course) {
+            if ($student->addCourse($course_id)) {
+                //add success message
+            } else {
+                // add error message
+            }
+        } else {
+           // add errpr ,essage
+        }
+    } else {
+        // add error
+    }
+
+    return $app->redirect("/owner_course/" . $course_id);
 })->before($is_logged_in);
 
 

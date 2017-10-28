@@ -7,7 +7,7 @@
         {% for teacher in teachers %}
         <tr>
             <td>
-                <a href="owner_teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
+                <a href="/owner_teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
             </td>
             <td>
                 {{teacher.getInstrument | e }}
