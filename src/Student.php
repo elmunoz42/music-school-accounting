@@ -130,7 +130,13 @@
 
         function findCourseById($course_id)
         {
-            $stmt = $GLOBALS['DB']->prepare("SELECT courses.* FROM students JOIN courses_students ON (students.id = courses_students.student_id) JOIN courses ON (courses_students.course_id = courses.id) WHERE students.id = :student_id AND courses.id = :course_id");
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT courses.* FROM students
+                JOIN courses_students ON (students.id = courses_students.student_id)
+                JOIN courses ON (courses_students.course_id = courses.id)
+                WHERE students.id = :student_id
+                AND courses.id = :course_id
+            ");
 
             $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
             $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
@@ -195,10 +201,16 @@
         function addCourse($course_id)
         {
             $today = date('Y-m-d h:i:s');
-            // $today = '2017-3-6 10:10:10';
 
-            $GLOBALS['DB']->exec("INSERT INTO courses_students (course_id, student_id, date_of_join) VALUES ({$course_id}, {$this->getId()}, '{$today}');");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses_students (course_id, student_id, date_of_join)
+                VALUES (:course_id, :student_id, :date_of_join)
+            ");
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':date_of_join', $today, PDO::PARAM_STR);
 
+            return $stmt->execute();
 
         }
 

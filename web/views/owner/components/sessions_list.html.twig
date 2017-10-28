@@ -12,6 +12,7 @@
         <tr>
             <th>Date of Service</th>
             <th>Teacher</th>
+            <th>Student</th>
             <th>Attendance</th>
             <th>Price</th>
             <th>Discount</th>
@@ -26,6 +27,7 @@
             <tr>
                 <td>{{ service.getDateOfService | e }}</td>
                 <td>{{ service.getTeacher.getName | e }}</td>
+                <td>{{ service.getStudent.getName | e}}</td>
                 <td>{{ service.getAttendance | e }}</td>
                 <td>{{ service.getPrice | e }}</td>
                 <td>{{ service.getDiscount | e }}</td>

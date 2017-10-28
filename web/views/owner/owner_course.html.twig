@@ -8,116 +8,20 @@
 </div>
 <div class="row">
     <div class="col-sm-4">
-    {% if courses is not empty %}
-        <form action="/owner_courses/redirect" method="post">
-            <select name="course_select" onchange="this.form.submit();">
-                <option disabled selected value>Choose a course</option>
-                {% for course_select in courses %}
-                    <option value="{{course_select.getId | e }}"> {{course_select.getTitle | e }}</option>
-                {% endfor %}
-            </select>
-        </form>
         {% if lessons is not empty %}
-        <ul>
-            {% for lesson in lessons  %}
-            <li>
-                <a href="/owner_lesson/{{lesson.getId | e }}">{{lesson.getTitle | e }}</a>
-                <form action="/owner_lesson/{{lesson.getId | e }}/delete" method="post">
-                    <input name="_method" type="hidden" value="delete">
-                    <input type="hidden" name="course_id" value="{{course.getId | e }}">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_lesson_{{lesson.getId | e }}">Update</button>
-                    <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
-                </form>
-            </li>
-            <!-- Update Modal -->
-            <div id="update_lesson_{{lesson.getId | e }}" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-lg">
-                  <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Update Lesson: {{lesson.getTitle | e }}</h4>
-                        </div>
-                        <form action="/owner_lesson/{{lesson.getId | e }}/update" method="post">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="title">Lesson Title</label><br>
-                                            <input class="form-control" type="text" name="title" value="{{lesson.getTitle | e }}"><br>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description">Media URL</label><br>
-                                            <input class="form-control" type="text" name="description" value="{{lesson.getDescription | e }}"><br>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="content">Written Content</label><br>
-                                            <textarea class="form-control" name="content" rows="8" cols="40">{{lesson.getContent | e }}</textarea>
-                                        </div>
-                                        <input type="hidden" name="course_id" value="{{course.getId | e }}"><br>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Save</button>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </ul>
+            {% include './components/lessons_list.html.twig' %}
         {% endif %}
-    {% endif %}
     </div>
-  <!-- left column -->
-  <div class="col-sm-4">
-        <form action="/add_lesson_to_course" method="post">
-            <p>Create a lesson for this course</p>
-            <div class="form-group">
-                <label for="title">Lesson Title</label><br>
-                <input class="form-control" type="text" name="title" value=""><br>
-            </div>
-            <div class="form-group">
-                <label for="description">Media URL</label><br>
-                <input class="form-control" type="text" name="description"><br>
-            </div>
-            <div class="form-group">
-                <label for="content">Written Content</label><br>
-                <textarea class="form-control" name="content" rows="8" cols="40"></textarea>
-            </div>
-            <input type="hidden" name="course_id" value="{{course.getId | e }}"><br>
-            <button type="submit">Add Lesson</button>
-        </form>
-  </div>
+    <div class="col-sm-4">
+        {% include './components/create_lesson.html.twig' %}
+    </div>
 
   <div class="col-sm-4">
-      <form action="/owner_course/{{ course.getId | e  }}" method="post">
-          <label>Enroll Students</label>
-          {% if students is not empty %}
-          <select class="form-control" name="student_id">
-              {% for student in students %}
-              <option value="{{student.getId | e }}">{{student.getName | e }}</option>
-              {% endfor %}
-          </select>
-          <button type="submit" name="button">submit</button>
-          {% endif %}
-      </form>
-      {% if enrolled_students is not empty %}
-      <ul>
-          {% for student in enrolled_students  %}
-          <li><a href="/../owner_student/{{student.getId | e }}">{{student.getName | e }}</a></li>
-          {% endfor %}
-      </ul>
+      <label>Enroll Students</label>
+        {% include './components/enroll_student.html.twig' %}
+      {% if students is not empty %}
+        {% include './components/students_list.html.twig' %}
       {% endif %}
   </div>
 </div>
-
-
-<!-- row -->
-
-
-
-<!-- jumbotron -->
 {% endblock %}

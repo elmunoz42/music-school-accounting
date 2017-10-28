@@ -20,7 +20,7 @@
 
         // 3) create student->findSessionTemplate($teacher_id);
 
-        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function. 
+        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function.
 
         function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id = null)
         {
@@ -337,21 +337,34 @@
             return $courses;
         }
         // NOTE UNTESTED
-        function getStudents()
+        function getStudent()
         {
-            $query = $GLOBALS['DB']->query("SELECT students.* FROM services JOIN services_students ON (services.id = services_students.service_id) JOIN students ON (services_students.student_id = students.id) WHERE services.id = {$this->getId()};");
-            $students = array();
-            if(!empty($query)){
-                foreach($query as $student) {
-                    $student_name = $student['student_name'];
-                    $id = intval($student['id']);
-                    $new_student = new Student($student_name, $id);
-                    $new_student->setNotes($student['notes']);
-                    array_push($students, $new_student);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT students.* FROM services
+                JOIN services_students ON (services.id = services_students.service_id)
+                JOIN students ON (services_students.student_id = students.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Student(
+                        $result['student_name'],
+                        $result['id'],
+                        $result['notes']
+                    );
+                } else {
+                    //result not found
+                    return false;
                 }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $students;
         }
+
         // NOTE UNTESTED
         function getAccounts()
         {

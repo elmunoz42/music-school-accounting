@@ -8,7 +8,7 @@
 {% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
 
 <div class="jumbotron">
-    <h1>Session Update Page</h1>
+    <h1>Session Detail Page</h1>
     <hr>
 </div>
 
@@ -63,13 +63,9 @@
         {% endif %}
         </ul>
         <h4>Students in this session:</h4>
-        {% if service.getStudents is not empty %}
         <ul>
-            {% for student in service.getStudents %}
-            <li> <a href="/owner_student/{{student.getId| e }}">{{ student.getName | e }}</a></li>
-            {% endfor %}
+            <li> <a href="/owner_student/{{service.getStudent.getId| e }}">{{ service.getStudent.getName | e }}</a></li>
         </ul>
-        {% endif %}
         <h3>Session Info:</h3>
         {% if service is not empty %}
 
