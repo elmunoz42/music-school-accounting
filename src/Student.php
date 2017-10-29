@@ -40,9 +40,19 @@
 
         function save()
         {
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO students (student_name, notes)
+                VALUES (:student_name, :notes)
+            ");
+            $stmt->bindParam(':student_name', $this->getName(), PDO::PARAM_STR);
+            $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
 
-          $GLOBALS['DB']->exec("INSERT INTO students (student_name, notes) VALUES ('{$this->getName()}', '{$this->getNotes()}');");
-          $this->id = $GLOBALS['DB']->lastInsertId();
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         static function deleteAll()
@@ -118,23 +128,68 @@
             }
         }
 
+        function findCourseById($course_id)
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT courses.* FROM students
+                JOIN courses_students ON (students.id = courses_students.student_id)
+                JOIN courses ON (courses_students.course_id = courses.id)
+                WHERE students.id = :student_id
+                AND courses.id = :course_id
+            ");
+
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $title =  $result['title'];
+                    $id = $result['id'];
+
+                    return new Course($title, $id);
+                } else {
+                    // course is not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
+        }
+
+
         function getTeachers()
         {
-            $query = $GLOBALS['DB']->query("SELECT teachers.* FROM
-            students JOIN students_teachers ON students.id = students_teachers.student_id
-                     JOIN teachers ON students_teachers.teacher_id = teachers.id
-                     WHERE students.id = {$this->getId()};");
-            $teachers = array();
-            foreach ($query as $teacher) {
-                $teacher_name = $teacher['teacher_name'];
-                $instrument = $teacher['instrument'];
-                $notes= $teacher['notes'];
-                $id = $teacher['id'];
-                $found_teacher = new Teacher($teacher_name, $instrument, $id);
-                $found_teacher->setNotes($notes);
-                array_push($teachers, $found_teacher);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT teachers.* FROM students
+                JOIN students_teachers ON (students.id = students_teachers.student_id)
+                JOIN teachers ON (students_teachers.teacher_id = teachers.id)
+                WHERE students.id = :student_id
+            ");
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $teachers = [];
+                    forEach($results as $result) {
+                        $teacher = new Teacher(
+                            $result['teacher_name'],
+                            $result['instrument'],
+                            $result['id'],
+                            $result['notes']
+                        );
+                        array_push($teachers, $teacher);
+                    }
+                    return $teachers;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            return $teachers;
         }
 
         function addTeacher($teacher_id)
@@ -146,29 +201,17 @@
         function addCourse($course_id)
         {
             $today = date('Y-m-d h:i:s');
-            // $today = '2017-3-6 10:10:10';
 
-            $GLOBALS['DB']->exec("INSERT INTO courses_students (course_id, student_id, date_of_join) VALUES ({$course_id}, {$this->getId()}, '{$today}');");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses_students (course_id, student_id, date_of_join)
+                VALUES (:course_id, :student_id, :date_of_join)
+            ");
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':date_of_join', $today, PDO::PARAM_STR);
 
-            //
-            // $check_duplication = false;
-            // $query = $GLOBALS['DB']->query("SELECT * FROM courses_students WHERE course_id = {$course_id} AND student_id = {$this->id};");
-            // var_dump($query);
-            // $retrieved = $query->fetchAll(PDO::FETCH_ASSOC);
-            //
-            //
-            // foreach($retrieved as $registration){
-            //     $student_id = $registration['student_id'];
-            //     $courseid = $registration['course_id'];
-            //
-            //     if($student_id == $this->id && $courseid  == $course_id){
-            //         $check_duplication = true;
-            //     }
-            // }
-            //
-            // if($check_duplication == false ){
-            //     $GLOBALS['DB']->exec("INSERT INTO courses_students (course_id, student_id, date_of_enrollment) VALUES ({$course_id}, {$this->id}, '{$today}');");
-            // };
+            return $stmt->execute();
+
         }
 
         function getCourses()
@@ -231,7 +274,7 @@
         }
 
         // NOTE UNTESTED
-        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $teacher, $school, $account)
+        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $date_of_service, $recurrence, $attendance, $teacher, $school, $account)
         {
 
         //$date_of_service = "2017-03-12 03:30:00";
@@ -239,17 +282,21 @@
             $dates = array();
             for ($x = 1; $x <= intval($repetitions); $x++) {
 
+                $notes = "Scheduled on " . date('Y-m-d h:i:s', strtotime($date_of_service));
                 $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
-                $new_service->save();
-                $id = $new_service->getId();
-                $school->addService($id);
-                $account->addService($id);
-                $teacher->addService($id);
-                $this->addService($id);
-
-                $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
-
+                if ($new_service->save()) {
+                    $id = $new_service->getId();
+                    $school->addService($id);
+                    $account->addService($id);
+                    $teacher->addService($id);
+                    $this->addService($id);
+                    $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
+                } else {
+                    // error
+                    return false;
+                }
             }
+            return true;
         }
 
         // NOTE UNTESTED
@@ -320,24 +367,50 @@
         // NOTE Koji this our first spec: We want to be able to see the services/sessions a student had in a time period.
         // NOTE This command WORKS!!! as a SQL command in phpMyAdmin: SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = 2 AND MONTH(date_of_service) = 9 AND YEAR(date_of_service) = 2017
         // NOTE UNTESTED
-        function getServicesForMonth($month, $year){
-            $query = $GLOBALS['DB']->query("SELECT services.* FROM students JOIN services_students ON (students.id = services_students.student_id) JOIN services ON (services_students.service_id = services.id) WHERE students.id = {$this->getId()} AND MONTH(date_of_service) = {$month} AND YEAR(date_of_service) = {$year};");
-            $services = array();
-            foreach($query as $service){
-                $description = $service['description'];
-                $duration = $service['duration'];
-                $price = number_format((float) $service['price'], 2);
-                $discount = number_format((float)$service['discount'], 2);
-                $paid_for = (bool) $service['paid_for'];
-                $notes = $service['notes'];
-                $date_of_service = $service['date_of_service'];
-                $recurrence = $service['recurrence'];
-                $attendance = $service['attendance'];
-                $id = (int) $service['id'];
-                $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
-                array_push($services, $new_service);
+        function getServicesForMonth($month = null, $year = null) {
+            //if arguments are empty, set today's month and year
+            $month = $month ? $month : date('n');
+            $year = $year ? $year : date('Y');
+
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT services.* FROM students
+                JOIN services_students ON (students.id = services_students.student_id)
+                JOIN services ON (services_students.service_id = services.id)
+                WHERE students.id = :student_id
+                AND MONTH(services.date_of_service) = :month
+                AND YEAR(services.date_of_service) = :year
+            ");
+
+            $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':month', $month, PDO::PARAM_STR);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+
+            if($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $services = [];
+                    forEach($results as $result) {
+                        $service = new Service(
+                            $result['description'],
+                            $result['duration'],
+                            number_format((float) $result['price'], 2),
+                            number_format((float) $result['discount'], 2),
+                            (bool) $result['paid_for'],
+                            $result['notes'],
+                            $result['date_of_service'],
+                            $result['recurrence'],
+                            $result['attendance'],
+                            (int) $result['id']
+                        );
+                        array_push($services, $service);
+                    }
+                    return $services;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            return $services;
         }
     }
 

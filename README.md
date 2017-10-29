@@ -19,19 +19,19 @@ Music School Administrator Specs:
 |Status|Spec|
 |------|-----|
 |DONE|1a)Can register a student to the school. |
-|TODO|1b)Can delete, update a student to the school. |
+|DONE|1b)Can delete, update a student to the school. |
 |DONE|2a)Can register a teacher to the school. |
-|TODO|2b)Can delete, update a teacher to the school. |
+|DONE|2b)Can delete, update a teacher to the school. |
 |DONE|3a)Can register a course to the school. |
-|TODO|3b)Can delete, update a course.|
+|DONE|3b)Can delete, update a course.|
 |DONE|4a)Can register a lesson to the school. |
-|TODO|4b)Can delete, update a lesson.|
+|DONE|4b)Can delete, update a lesson.|
 |DONE|5a)Can register a service(session) to the school. |
-|Needs More|5b)Can delete, update a service. |
+|DONE|5b)Can delete, update a service. |
 |DONE|5c) Assign multiple lessons to student|
 |DONE|6a)Can register a customer account to the school. |
-|TODO|6b)Can delete, update an account. |
-|Kind of Done|7)Students, Teachers, Courses, Lessons and Customers can be retrieved in relationship with each other.|
+|DONE|6b)Can delete, update an account. |
+|DONE|7)Students, Teachers, Courses, Lessons and Customers can be retrieved in relationship with each other.|
 |DONE|8)Review the sessions that where scheduled to a client last month.|
 
 

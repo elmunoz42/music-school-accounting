@@ -221,45 +221,117 @@ class Account
         }
     }
 
+    static function search($search_input)
+    {
+        $search_input = '%' . $search_input . '%';
+        $stmt = $GLOBALS['DB']->prepare("
+                SELECT accounts.* FROM accounts
+                JOIN accounts_schools
+                ON (accounts.id = accounts_schools.account_id)
+                JOIN schools ON (accounts_schools.school_id = schools.id)
+                WHERE accounts.family_name LIKE :search_input
+                OR accounts.parent_one_name LIKE :search_input
+                OR accounts.parent_two_name LIKE :search_input
+                OR accounts.street_address LIKE :search_input
+                OR accounts.phone_number LIKE :search_input
+                OR accounts.email_address LIKE :search_input
+                AND schools.id = :school_id
+            ");
+
+        $stmt->bindParam(':search_input', $search_input, PDO::PARAM_STR);
+        $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll();
+
+            if ($results) {
+                $accounts = [];
+                forEach($results as $result) {
+                    $account = new Account(
+                        $result['family_name'],
+                        $result['parent_one_name'],
+                        $result['street_address'],
+                        $result['phone_number'],
+                        $result['email_address'],
+                        $result['id'],
+                        $result['parent_two_name'],
+                        $result['notes'],
+                        $result['billing_history'],
+                        $result['outstanding_balance']
+                    );
+                    array_push($accounts, $account);
+                }
+                return $accounts;
+            } else {
+                // any accounts are not belong to the school
+                return false;
+            }
+        } else {
+            // sql failed for some reason
+            return false;
+        }
+    }
+
     function delete()
     {
-        $GLOBALS['DB']->exec("DELETE FROM accounts WHERE id = {$this->getId()};");
+        $stmt = $GLOBALS['DB']->prepare("DELETE FROM accounts WHERE id = :id");
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateFamilyName($update)
+    function updateFamilyName($family_name)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET family_name = '{$update}' WHERE id = {$this->getId()};");
-        $this->setFamilyName($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET family_name = :family_name WHERE id = :id");
+        $stmt->bindParam(':family_name', $family_name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateParentOneName($update)
+    function updateParentOneName($parent_one_name)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET parent_one_name = '{$update}' WHERE id = {$this->getId()};");
-        $this->setParentOneName($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET parent_one_name = :parent_one_name WHERE id = :id");
+        $stmt->bindParam(':parent_one_name', $parent_one_name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateParentTwoName($update)
+    function updateParentTwoName($parent_two_name)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET parent_two_name = '{$update}' WHERE id = {$this->getId()};");
-        $this->setParentTwoName($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET parent_two_name = :parent_two_name WHERE id = :id");
+        $stmt->bindParam(':parent_two_name', $parent_two_name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateSteetAddress($update)
+    function updateSteetAddress($street_address)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET street_address = '{$update}' WHERE id = {$this->getId()};");
-        $this->setStreetAddress($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET street_address = :street_address WHERE id = :id");
+        $stmt->bindParam(':street_address', $street_address, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updatePhoneNumber($update)
+    function updatePhoneNumber($phone_number)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET phone_number = '{$update}' WHERE id = {$this->getId()};");
-        $this->setPhoneNumber($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET phone_number = :phone_number WHERE id = :id");
+        $stmt->bindParam(':phone_number', $phone_number, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    function updateEmailAddress($update)
+    function updateEmailAddress($email_address)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET email_address = '{$update}' WHERE id = {$this->getId()};");
-        $this->setEmailAddress($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET email_address = :email_address WHERE id = :id");
+        $stmt->bindParam(':email_address', $email_address, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     function updateNotes($update)
@@ -389,7 +461,19 @@ class Account
     }
 
 
-
-
+    function deleteStudents($students)
+    {
+        foreach ($students as $student) {
+            $stmt = $GLOBALS['DB']->prepare("DELETE FROM students WHERE id = :id");
+            $stmt->bindParam(':id', $student->getId(), PDO::PARAM_STR);
+            
+            if (!$stmt->execute()) {
+                return false;
+            } else {
+                continue;
+            }
+        }
+        return true;
+    }
 }
 ?>

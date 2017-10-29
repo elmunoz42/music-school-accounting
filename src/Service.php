@@ -20,7 +20,7 @@
 
         // 3) create student->findSessionTemplate($teacher_id);
 
-        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function. 
+        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function.
 
         function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id = null)
         {
@@ -120,18 +120,26 @@
         // Create
         function save()
         {
-            $description = $this->getDescription();
-            $duration = $this->getDuration();
-            $price = $this->getPrice();
-            $discount = $this->getDiscount();
-            $paid_for = $this->getPaidFor();
-            $notes = $this->getNotes();
-            $date_of_service = $this->GetDateOfService();
-            $recurrence = $this->getRecurrence();
-            $attendance = $this->getAttendance();
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO services (description, duration, price, discount, paid_for, notes, date_of_service, recurrence, attendance)
+                VALUES (:description, :duration, :price, :discount, :paid_for, :notes, :date_of_service, :recurrence, :attendance)
+            ");
+            $stmt->bindParam(':description', $this->getDescription(), PDO::PARAM_STR);
+            $stmt->bindParam(':duration', $this->getDuration(), PDO::PARAM_STR);
+            $stmt->bindParam(':price', $this->getPrice(), PDO::PARAM_STR);
+            $stmt->bindParam(':discount', $this->getDiscount(), PDO::PARAM_STR);
+            $stmt->bindParam(':paid_for', $this->getPaidFor(), PDO::PARAM_STR);
+            $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
+            $stmt->bindParam(':date_of_service', $this->getDateOfService(), PDO::PARAM_STR);
+            $stmt->bindParam(':recurrence', $this->getRecurrence(), PDO::PARAM_STR);
+            $stmt->bindParam(':attendance', $this->getAttendance(), PDO::PARAM_STR);
 
-            $GLOBALS['DB']->exec("INSERT INTO services (description, duration, price, discount, paid_for, notes, date_of_service, recurrence, attendance) VALUES ('{$description}', {$duration}, {$price}, {$discount}, {$paid_for}, '{$notes}', '{$date_of_service}', '{$recurrence}', '{$attendance}');");
-            $this->id = $GLOBALS['DB']->lastInsertId();
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         // Retrieve
@@ -284,22 +292,36 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO lessons_services (service_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
         }
-        // NOTE UNTESTED
-        function getTeachers()
+
+        function getTeacher()
         {
-            $query = $GLOBALS['DB']->query("SELECT teachers.* FROM services JOIN services_teachers ON (services.id = services_teachers.service_id) JOIN teachers ON (services_teachers.teacher_id = teachers.id) WHERE services.id = {$this->getId()};");
-            $teachers = array();
-            foreach ($query as $teacher) {
-                $teacher_name = $teacher['teacher_name'];
-                $instrument = $teacher['instrument'];
-                $notes= $teacher['notes'];
-                $id = $teacher['id'];
-                $found_teacher = new Teacher($teacher_name, $instrument, $id);
-                $found_teacher->setNotes($notes);
-                array_push($teachers, $found_teacher);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT teachers.* FROM services
+                JOIN services_teachers ON (services.id = services_teachers.service_id)
+                JOIN teachers ON (services_teachers.teacher_id = teachers.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Teacher(
+                        $result['teacher_name'],
+                        $result['instrument'],
+                        $result['id'],
+                        $result['notes']
+                    );
+                } else {
+                    //result not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $teachers;
         }
+
         // NOTE UNTESTED
         function getCourses()
         {
@@ -315,21 +337,34 @@
             return $courses;
         }
         // NOTE UNTESTED
-        function getStudents()
+        function getStudent()
         {
-            $query = $GLOBALS['DB']->query("SELECT students.* FROM services JOIN services_students ON (services.id = services_students.service_id) JOIN students ON (services_students.student_id = students.id) WHERE services.id = {$this->getId()};");
-            $students = array();
-            if(!empty($query)){
-                foreach($query as $student) {
-                    $student_name = $student['student_name'];
-                    $id = intval($student['id']);
-                    $new_student = new Student($student_name, $id);
-                    $new_student->setNotes($student['notes']);
-                    array_push($students, $new_student);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT students.* FROM services
+                JOIN services_students ON (services.id = services_students.service_id)
+                JOIN students ON (services_students.student_id = students.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Student(
+                        $result['student_name'],
+                        $result['id'],
+                        $result['notes']
+                    );
+                } else {
+                    //result not found
+                    return false;
                 }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $students;
         }
+
         // NOTE UNTESTED
         function getAccounts()
         {

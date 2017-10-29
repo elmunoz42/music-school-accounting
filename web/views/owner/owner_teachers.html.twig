@@ -3,50 +3,23 @@
 {% block title %}Teachers{% endblock %}
 
 {% block content %}
-
-<div class="jumbotron">
-    <h1>Teachers</h1>
-    <hr>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <form  id="addteacher" action="/owner_teachers" method="post">
-            <div class="panel panel-info">
-                <h3  id="addnewteacher" class="panel-heading" >Add New Teacher</h3>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="teacher_name">Name</label><br>
-                        <input class="form-control" type="text" name="teacher_name" required><br>
-                        <label for="teacher_instrument">Instrument</label><br>
-                        <input class="form-control" type="text" name="teacher_instrument" required><br>
-                        <button class="btn btn-info btn-sm" type="submit">Submit</button><br>
-                    </div>
+    <div class="jumbotron">
+        <h1>Teachers</h1>
+        <hr>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+          <!--ONLY: OWNER add teacher form -->
+          {% include './components/add_teacher.html.twig' %}
+        </div>
+        <div class="col-md-6">
+          <!-- show teachers list -->
+            {% if teachers is not empty %}
+                <div id="teachersalign"class="col-md-6">
+                    <h3>Current Teachers</h3>
+                    {% include './components/teachers_list.html.twig' %}
                 </div>
-            </div>
-        </form>
+            {% endif %}
+        </div>
     </div>
-
-    {% if teachers is not empty %}
-    <div id="teachersalign"class="col-md-6">
-        <h3>Current Teachers</h3>
-        <table class="table table-hover">
-            <thead>
-                <th>Name</th>
-                <th>Instrument</th>
-            </thead>
-            <tbody>
-                {% for teacher in teachers %}
-                <tr>
-                    <td><a href="owner_teachers/{{teacher.getId}}">{{teacher.getName}}</a></td>
-                    <td> {{teacher.getInstrument}} </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-</div>
-
-
 {% endblock %}

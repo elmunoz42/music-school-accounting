@@ -1,182 +1,79 @@
+{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
+
 
 {% extends "base_private.html.twig" %}
-
 {% block title %}Student{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-    <h1>{{ student.getName }}</h1>
-    <hr>
-</div>
-
-<div class="row">
-    <div class="col-md-4" id="teacher-info">
-        <h3>Sessions:</h3>
+    <div class="jumbotron">
+        <h1>{{ student.getName  | e }}</h1>
         <hr>
-        <h4>Assigned Teachers</h4>
-        {% if assigned_teachers is not empty %}
-        <ul>
-            {% for teacher in assigned_teachers %}
-            <li> <a href="/owner_teachers/{{teacher.getId}}">{{ teacher.getName }}</a></li>
-            {% endfor %}
-        </ul>
-        <hr>
-        <h4>This Month's Sessions:</h4>
-        {% if student is not empty %}
-                <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
-
-                    {% if student.getServicesForMonth(this_month, this_months_year) is not empty %}
-                    {% for service in student.getServicesForMonth(this_month, this_months_year) %}
-                    <div class="well">
-                      <a href="/owner_sessions/{{ service.getId }}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                </div>
-        {% endif %}
-        <hr>
-        <h4>Last Month's Sessions:</h4>
-        {% if student is not empty %}
-                <div class="panel panel-info">
-                    <h4 class="panel-heading"><a href="/owner_students/{{student.getId}}">{{student.getName}}</a></h4>
-
-                    {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
-                    {% for service in student.getServicesForMonth(last_month, last_months_year) %}
-                    <div class="well">
-                      <a href="/owner_sessions/{{ service.getId }}">- {{ service.getDateOfService }} - {{ service.getAttendance }} <br>
-                      {{ service.getDescription }} with {{service.getTeachers[0].getName }}</a>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                </div>
-        {% endif %}
-        <hr>
-        <h4> <a href="/owner_sessions_for_student/{{ student.getId }}">View All Sessions</a></h4>
-        <hr>
-        <h4>Schedule Sessions</h4>
-        <div class="well">
-            <form class="form-group" action="/owner_sessions_for_student" method="post">
-                <input type="hidden" name="student_id" value="{{ student.getId }}">
-                <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId }}">
-                <select class="form-control" name="teacher_id">
-                    {% for teacher in assigned_teachers %}
-                        <option value="{{ teacher.getId }}">{{teacher.getName}}</option>
-                    {% endfor %}
-                </select>
-                <label for="repetitions">Repetitions:</label>
-                <input type="number" name="repetitions" value=""><br>
-                <label for="description">Description:</label>
-                <input type="text" name="description" value="music lesson"><br>
-                <label for="price">Price:</label>
-                <input type="number" name="price" value="40"><br>
-                <label for="discount">Discount:</label>
-                <input type="number" name="discount" value="1"><br>
-                <label for="paid_for">Paid for?</label>
-                <input type="number" name="paid_for" value="0"><br>
-                <label for="date_of_service">Starting Date:</label>
-                <input type="datetime-local" name="date_of_service" value=""><br>
-                <label for="recurrence">Recurrence:</label>
-                <input type="text" name="recurrence" value="Weekday|Time"><br>
-                <label for="attendance">Attendance:</label>
-                <input type="text" name="attendance" value="Scheduled"><br>
-                <label for="duration">Duration:</label>
-                <input type="number" name="duration" value="40"><br>
-                <button type="submit" name="submit">Submit</button>
-            </form>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            {% include './components/sessions_list.html.twig' %}
         </div>
-        {% endif %}
-    </div>
 
-    <div id="currentclass" class="col-md-4">
-        <h3>Courses:</h3>
-        <hr>
-        <form action="/owner_students/{{ student.getId }}" method="post">
-            <label>Enroll in a Course</label>
-            {% if courses is not empty %}
-            <select class="form-control" name="course_id">
-                {% for course in courses %}
-                <option value="{{course.getId}}">{{course.getTitle}}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" name="button">submit</button>
+        <div class="col-md-6" id="teacher-info">
+            <h3>Sessions:</h3>
+            <hr>
+            <h4>Assigned Teachers</h4>
+            {% if teachers is not empty %}
+                {% include './components/teachers_list.html.twig' %}
             {% endif %}
-        </form>
+            <hr>
+        </div>
 
-        <hr>
+        <div class="col-md-6">
+            {% if enrolled_courses is not empty %}
+                <h4>Schedule Sessions</h4>
+                {% include './components/create_sessions.html.twig' %}
+            {% endif %}
+        </div>
 
-        {% if enrolled_courses is not empty %}
-        <table class="table table-hover">
-            <thead>
-                <th>Course Enrollment</th>
-                <th>Date of Enrollment</th>
-            </thead>
-            <tbody>
-                {% for course in enrolled_courses %}
-                <tr>
-                    <td><a href="/owner_courses/{{ course.getId }}">{{ course.getTitle }}</a></td>
-                    <td>{{ student.getDateOfEnrollment(course.getId) }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
+        <div id="currentclass" class="col-md-6">
+            <h3>Courses:</h3>
+            <hr>
+            {% include './components/enroll_course.html.twig' %}
+            <hr>
+        </div>
 
-        <hr>
+        <div class="col-md-6">
+            {% if enrolled_courses is not empty %}
+                {% include './components/course_enrollment_list.html.twig' %}
+            {% endif %}
+        </div>
 
-        <h3>Add Notes:</h3>
-        <hr>
-        <form action="/owner_students/{{ student.getId }}/add_notes" method="post">
-            <input name="_method" type="hidden" value="patch" required>
-            <div class="form-group">
-                <label class="control-label" for="new_notes">Notes</label>
-                <textarea class="form-control" cols="30" id="message" name="new_notes" rows="10"></textarea>
-            </div>
+        <div class="col-md-6">
+            <h3>Add Notes:</h3>
+            <hr>
+            {% include './components/add_note_student.html.twig' %}
+        </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-info btn-sm" name="button">Submit</button>
-            </div>
-        </form>
-        <form action="/owner_students/student_termination/{{ student.getId }}" method="post">
-            <input name="_method" type="hidden" value="delete">
-            <button type="submit" class="btn btn-danger btn-sm" name="button">Delete Student</button>
-        </form>
-        <form action="/update_student/{{ student.getId() }}" method="post">
-          <div class="form-group">
-            <label for="student_name">Name</label>
-            <input type="text" id="student_name" class="form-control" name="student_name" placeholder="{{student.getName}}">
-            <button class="btn btn-success" type="submit" name="submit">Update</button>
-          </div>
-        </form>
+        <div id="currentclass" class="col-md-4">
+            <h3>Notes:</h3>
+            <hr>
+            {% if notes_array is not empty %}
+                {% include './components/note_history.html.twig' %}
+            {% endif %}
+        </div>
     </div>
-    <!-- middle column -->
-    <div id="currentclass" class="col-md-4">
-      <h3>Notes:</h3>
-      <hr>
-      {% if notes_array is not empty %}
-      <div class="notes">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Student's Note History:</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for note in notes_array %}
-            <tr>
-              <td><strong>{{ note }}</strong></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-    </div>
-    <!-- right column -->
-</div>
-<!-- row -->
+    <script src="/../js/owner_student.js"></script>
+    <script>
+        $('.datepicker').datepicker(
+          { dateFormat: "yy-mm-dd" }
+        );
 
-    {% endblock %}
+        $('#start_date').datepicker(
+          { dataFormat: "yy-mm-dd" }
+        );
+        
+        $('#create_start_time').combodate({
+          customClass: 'form-control col-xs-6'
+        });
+        $('.update_start_time').combodate({
+          customClass: 'form-control col-xs-6'
+        });
+
+    </script>
+{% endblock %}

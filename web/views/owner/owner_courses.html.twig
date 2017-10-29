@@ -3,43 +3,20 @@
 {% block title %}CRM Music School{% endblock %}
 
 {% block content %}
+    <div class="jumbotron">
+        <h1>Courses</h1>
+        <hr>
+    </div>
 
-<div class="jumbotron">
-    <h1>Courses</h1>
-    <hr>
-</div>
+    <div class="row">
+        <div class="col-md-6">
+            {% include './components/add_course.html.twig' %}
+        </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form action="/owner_courses" method="post">
-            <div class="panel panel-info" id="add_course">
-                <h3 for="course_title" class="panel-heading">Add New Course</h3><br>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="new_course">Course Name</label>
-                    <input class="form-control" type="text" name="course_title" required><br>
-                    <button class="btn btn-info" type="submit">Submit</button><br>
-                    </div>
-                </div>
+        {% if courses is not empty %}
+            <div class="col-md-4" id="courses-table">
+                {% include './components/courses_list.html.twig' %}
             </div>
-        </form>
+        {% endif %}
     </div>
-    {% if courses is not empty %}
-    <div class="col-md-4" id="courses-table">
-        <h3>Current Courses</h3>
-        <table class="table table-hover">
-            <thead>
-                <th>Course Name</th>
-            </thead>
-            <tbody>
-                {% for course in courses %}
-                <tr>
-                    <td><a href="owner_courses/{{course.getId}}">{{course.getTitle}}</a></td>
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endif %}
 {% endblock %}
