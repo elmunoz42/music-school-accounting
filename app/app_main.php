@@ -1,7 +1,6 @@
 <?php
 $app->get("/owner_main", function() use ($app) {
     $owner = Owner::findOwnerById($_SESSION['user_id']);
-
     if($owner) {
       //TODO FUTURE: if several school exists, show list and choose
 
@@ -27,7 +26,7 @@ $app->get("/owner_main", function() use ($app) {
           return $app->redirect("/create_school");
       }
     } else {
-      //error
+        return $app->redirect("/owner_login");
     }
 })
 ->before($is_logged_in)
