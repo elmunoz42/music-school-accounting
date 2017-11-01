@@ -7,26 +7,43 @@ $app->get("/owner_teachers", function() use ($app) {
     return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
 })
 ->before($is_logged_in)
-->before($student_only);
+->before($student_only)
+->after($save_location_uri);
 
 //CREATE teacher
 $app->post("/owner_teachers", function() use ($app) {
-    $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
-    $new_teacher_instrument = $_POST['teacher_instrument'] ? $_POST['teacher_instrument'] : '';
-    // NOTE Carlos changed $_POST['teacher_name'] : '' to $_POST['teacher_instrument'] : ''
 
-    if ($new_teacher_name && $new_teacher_instrument) {
+    // get previous location uri
+    $location_uri = $_SESSION['location_uri'];
+
+    //get user input
+    $teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
+    $teacher_instrument = $_POST['teacher_instrument'] ? $_POST['teacher_instrument'] : '';
+
+
+    if ($teacher_name && $teacher_instrument) {
+
         $school = School::find($_SESSION['school_id']);
-        if ($school) {
-            $new_teacher = new Teacher($new_teacher_name, $new_teacher_instrument);
-            $new_teacher->setNotes(date('l jS \of F Y h:i:s A') . " of first entry.");
 
-            if ($new_teacher->save()) {
-                if ($school->addTeacher($new_teacher->getId())) {
+        if ($school) {
+            $teacher = new Teacher($teacher_name, $teacher_instrument);
+            $teacher->setNotes(date('l jS \of F Y h:i:s A') . " of first entry.");
+
+            if ($teacher->save()) {
+
+                if ($school->addTeacher($teacher->getId())) {
+
+                } else {
+                  //error message
+                }
+
+                if ( $teacher->addUser($_SESSION['new_account_id']) ) {
                     // success message
                 } else {
-                    //error message
+                    // error message
                 }
+                unset($_SESSION['new_account_id']);
+
             } else {
                 // error message
             }
@@ -36,6 +53,7 @@ $app->post("/owner_teachers", function() use ($app) {
     } else {
         // error message
     }
+
     return $app->redirect("/owner_teachers");
 })
 ->before($is_logged_in)
