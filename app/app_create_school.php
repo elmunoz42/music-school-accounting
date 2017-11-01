@@ -1,7 +1,8 @@
 <?php
 
 $app->get("/create_school", function() use ($app) {
-        return $app['twig']->render('create_school.html.twig');
+
+    return $app['twig']->render('create_school.html.twig', array('role' => $_SESSION['role']));
 })
 ->before($is_logged_in)
 ->before($owner_only)
