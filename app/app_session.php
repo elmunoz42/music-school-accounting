@@ -9,7 +9,10 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
         $notes_array = explode("|", $service->getNotes());
         return $app['twig']->render(
             'owner_session.html.twig', array(
-                'school'=>$school, 'service'=>$service, 'notes_array'=>$notes_array
+                'role' => $_SESSION['role'],
+                'school'=>$school,
+                'service'=>$service,
+                'notes_array'=>$notes_array
             )
         );
     } else {

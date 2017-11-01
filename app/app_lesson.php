@@ -13,6 +13,7 @@ $app->post("/owner_lesson/{id}", function($id) use ($app) {
     $course->addLesson($lesson_id);
 
     return $app['twig']->render('owner_course.html.twig', array(
+      'role' => $_SESSION['role'],
       'school'=>$school,
       'course' => $course,
       'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
@@ -29,6 +30,7 @@ $app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
 
     if ($lesson) {
       return $app['twig']->render('owner_lesson.html.twig', array(
+          'role' => $_SESSION['role'],
           'school'=>$school,
           'lesson'=>$lesson
       ));

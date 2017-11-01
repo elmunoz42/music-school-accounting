@@ -4,7 +4,7 @@
 $app->get("/owner_teachers", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
+    return $app['twig']->render('owner_teachers.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'teachers' => $school->getTeachers()));
 })
 ->before($is_logged_in)
 ->before($client_only)

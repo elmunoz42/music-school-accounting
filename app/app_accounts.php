@@ -67,7 +67,7 @@ $app->post("/owner_accounts/search", function() use ($app) {
         $accounts = Account::search($search_input);
 
         if ($accounts) {
-            return $app['twig']->render('owner_accounts_search.html.twig', array('accounts' => $accounts));
+            return $app['twig']->render('owner_accounts_search.html.twig', array('role' => $_SESSION['role'], 'accounts' => $accounts));
         } else {
             // no results
             // add error message

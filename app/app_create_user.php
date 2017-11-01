@@ -1,19 +1,19 @@
 <?php
 
 $app->get("/create_owner", function() use ($app) {
-    return $app['twig']->render('create_owner.html.twig');
+    return $app['twig']->render('create_owner.html.twig', array('role' => $_SESSION['role']));
 })
 ->after($save_location_uri);
 
 $app->get("/create_user", function() use ($app) {
-    return $app['twig']->render('create_user.html.twig');
+    return $app['twig']->render('create_user.html.twig', array('role' => $_SESSION['role']));
 })
 ->before($isLoggedIn)
 ->before($owner_only)
 ->after($save_location_uri);
 
 $app->get("/create_account_role/{account_role}", function($account_role) use ($app) {
-    return $app['twig']->render('create_account_role.html.twig', array('account_role' => $account_role));
+    return $app['twig']->render('create_account_role.html.twig', array('role' => $_SESSION['role'], 'account_role' => $account_role));
 })
 ->before($isLoggedIn)
 ->before($owner_only)
@@ -105,6 +105,7 @@ $app->post("/create_owner", function() use ($app) {
               return $app['twig']->render(
                   'create_owner.html.twig',
                   array(
+                      'role' => $_SESSION['role'],
                       'errors' => $errors
                   )
               );

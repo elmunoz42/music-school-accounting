@@ -8,8 +8,8 @@ $app->get("/owner_course/{course_id}", function($course_id) use ($app){
         return $app['twig']->render('owner_course.html.twig', array(
             'role' => $_SESSION['role'],
             'course' => $course,
-            'students'=>$course->getStudents(),
-            'all_students'=>$school->getStudents(),
+            'students'=> $course->getStudents(),
+            'all_students' =>$school->getStudents(),
             'lessons' => $course->getLessons()
         ));
     } else {

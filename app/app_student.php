@@ -36,6 +36,7 @@ $app->get("/owner_student/{student_id}", function($student_id) use ($app) {
 
 
       return $app['twig']->render('owner_student.html.twig', array(
+        'role' => $_SESSION['role'],
         'student' => $student,
         'services' => $services,
         'teachers' => $assigned_teachers,

@@ -4,7 +4,14 @@
 $app->get("/owner_students", function() use ($app) {
     $school=School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('owner_students.html.twig', array('school' => $school, 'students' => $school->getStudents(), 'teachers' => $school->getTeachers()));
+    return $app['twig']->render('owner_students.html.twig',
+        array(
+            'role' => $_SESSION['role'],
+            'school' => $school,
+            'students' => $school->getStudents(),
+            'teachers' => $school->getTeachers()
+          )
+    );
 })
 ->before($is_logged_in)
 ->before($teacher_only)
@@ -20,7 +27,7 @@ $app->post("/owner_students", function() use ($app) {
     $new_student->save();
     $school->addStudent($new_student->getId());
 
-    return $app['twig']->render('owner_students.html.twig', array('school' => $school, 'students' => $school->getStudents(), 'teachers' => $school->getTeachers()));
+    return $app->redirect("/owner_students");
 })
 ->before($is_logged_in)
 ->before($client_only);

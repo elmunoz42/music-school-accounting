@@ -3,7 +3,7 @@
 $app->get("/owner_courses", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('owner_courses.html.twig', array('school' => $school, 'courses' => $school->getCourses()));
+    return $app['twig']->render('owner_courses.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'courses' => $school->getCourses()));
 })
 ->before($is_logged_in)
 ->after($save_location_uri);

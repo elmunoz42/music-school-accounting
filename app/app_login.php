@@ -54,20 +54,27 @@ $app->post("/owner_login", function() use ($app) {
                     $role = $_SESSION['role'];
 
                     switch($role) {
-                      case 'owner':
-                      return $app->redirect('owner_main');
-                      break;
-                      case 'teacher':
-                      $teacher = Teacher::findTeacherByUserId($user_id);
-                      return $app->redirect('owner_teacher/' . $teacher->getId());
-                      break;
-                      case 'client':
-                      $account = Account::findAccountByUserId($user_id);
-                      return $app->redirect('owner_account/' . $account->getId());
-                      break;
-                      default:
-                      // unexpected case
-                      return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
+                        case 'owner':
+                            return $app->redirect('owner_main');
+                            break;
+                        case 'teacher':
+                            $teacher = Teacher::findTeacherByUserId($user_id);
+                            $_SESSION['role_id'] = $teacher->getId();
+                            return $app->redirect('owner_teacher/' . $teacher->getId());
+                            break;
+                        case 'client':
+                            $account = Account::findAccountByUserId($user_id);
+                            $_SESSION['role_id'] = $account->getId();
+                            return $app->redirect('owner_account/' . $account->getId());
+                            break;
+                        default:
+                            // unexpected case
+                            return $app['twig']->render('owner_login.html.twig',
+                            array(
+                                'role' => $_SESSION['role'],
+                                'errors'=> $errors
+                            )
+                        );
                     }
                 } else {
                     $errors[] = "Unexcepted error happened";
@@ -79,5 +86,5 @@ $app->post("/owner_login", function() use ($app) {
             $errors[] = "Email or Password didn't match with existing account";
         }
     }
-    return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
+    return $app['twig']->render('owner_login.html.twig', array('role' => $_SESSION['role'], 'errors'=> $errors));
 });
