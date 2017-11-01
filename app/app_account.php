@@ -5,6 +5,13 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $account = Account::find($account_id);
 
+
+    // if client try to access to different clients info, redirect
+    if ( ($_SESSION['role'] == 'client') && ($_SESSION['role_id'] != $account_id)) {
+        return $app->redirect("/owner_account/" . $_SESSION['role_id']);
+    }
+    
+
     if ($account) {
         $students = $account->getStudents();
         $teachers = $account->getTeachers();
