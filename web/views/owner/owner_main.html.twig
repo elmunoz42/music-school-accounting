@@ -4,7 +4,11 @@
 
 {% block content %}
 {% if role == "owner" %}
-    hello
+    hello owner
+{% elseif role == "teacher" %}
+    hello teacher
+{% elseif role == "client" %}
+    hello client
 {% endif %}
     <div class="jumbotron">
         <h1>Home</h1>
@@ -15,9 +19,12 @@
             {% include './components/teachers_summary.html.twig' %}
         </div>
 
+        {% if (role == "owner" or role == "teacher") %}
         <div class="col-md-3">
-            {% include './components/teachers_summary.html.twig' %}
+            {% include './components/students_summary.html.twig' %}
         </div>
+        {% endif %}
+
 
         <div class="col-md-3">
             {% include './components/services_summary.html.twig' %}

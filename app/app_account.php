@@ -30,7 +30,10 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
         // account is not found
         return $app->redirect("/owner_accounts");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only)
+->after($save_location_uri);
 
 
 
@@ -48,7 +51,9 @@ $app->patch("/owner_account/{account_id}/add_note", function($account_id) use ($
       // add error
     }
     return $app->redirect("/owner_account/" . $account_id);
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);
 
 
 //UPDATE account
@@ -69,7 +74,9 @@ $app->post("/owner_account/{account_id}/update", function($account_id) use ($app
         // add error message
         return $app->redirect("/owner_accounts");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);
 
 
 
@@ -92,7 +99,9 @@ $app->delete("/owner_account/{account_id}/delete", function($account_id) use ($a
         // add error message
         return $app->redirect("/owner_accounts");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
 // JOIN add student to account
@@ -122,4 +131,6 @@ $app->post('/owner_add_student_to_account', function() use($app) {
         // error message
         return $app->redirect("/owner_account/" . $account_id);
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);
