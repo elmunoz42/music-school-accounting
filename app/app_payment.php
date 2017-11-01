@@ -9,4 +9,7 @@ $app->get("/payments", function() use($app) {
 
     return $app['twig']->render('client_payment', array('school_name'=> $school->getName(), 'client' => $new_account));
 
-});
+})
+->before($is_logged_in)
+->before($owner_only)
+->after($save_location_uri);

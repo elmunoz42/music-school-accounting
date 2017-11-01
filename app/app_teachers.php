@@ -7,7 +7,7 @@ $app->get("/owner_teachers", function() use ($app) {
     return $app['twig']->render('owner_teachers.html.twig', array('school' => $school, 'teachers' => $school->getTeachers()));
 })
 ->before($is_logged_in)
-->before($student_only)
+->before($client_only)
 ->after($save_location_uri);
 
 //CREATE teacher

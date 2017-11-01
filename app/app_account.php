@@ -15,6 +15,7 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
         $last_months_year = intval(date('Y',strtotime('last month')));
 
         return $app['twig']->render('owner_account.html.twig', array(
+            'role' => $_SESSION['role'],
             'school'=>$school,
             'account'=>$account,
             'accounts'=>$school->getAccounts(),

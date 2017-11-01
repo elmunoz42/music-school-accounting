@@ -17,7 +17,9 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
         // session is not found
         return $app->redirect("/owner_main");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->after($save_location_uri);
 
 
 // Update session NOTE: NEEDS TO BE CREATED
@@ -75,8 +77,9 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
       return $app->redirect("/owner_main");
     }
 
-})->before($is_logged_in);
-
+})
+->before($is_logged_in)
+->before($teacher_only);
 
 
 // AJAX: Update paid_for status
@@ -93,7 +96,9 @@ $app->post('/owner_session_update_paid_for', function() use($app) {
         $service->updatePaidFor("1");
     }
     return $app->json($paid_status);
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
 
@@ -156,4 +161,6 @@ $app->post('/student/{student_id}/add_session', function($student_id) use($app) 
     }
 
     return $app->redirect("/owner_student/" . $student_id);
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);

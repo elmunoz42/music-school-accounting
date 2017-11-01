@@ -21,7 +21,7 @@ $app->get("/create_account_role/{account_role}", function($account_role) use ($a
 
 
 
-//CREATE user
+//CREATE owner  //TODO eventually this function and related page should be removed or add more security
 $app->post("/create_owner", function() use ($app) {
     // TODO VERIFY
     if ( !empty($_POST['first_name']) && !empty($_POST['last_name']) && !empty($_POST['email_address']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) ) {
@@ -58,8 +58,7 @@ $app->post("/create_owner", function() use ($app) {
             );
         }
     }
-  });
-
+});
 
   $app->post("/create_user", function() use ($app) {
       // TODO VERIFY
@@ -111,7 +110,9 @@ $app->post("/create_owner", function() use ($app) {
               );
           }
       }
-    });
+  })
+  ->before($is_logged_in)
+  ->before($owner_only);
 
 
   // $app->post('/contact', function() use ($app) {

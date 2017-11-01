@@ -11,7 +11,6 @@ class Account
     private $billing_history;
     private $outstanding_balance;
     private $id;
-    //NOTE create STATUS key.
 
     function __construct($family_name, $parent_one_name, $street_address, $phone_number, $email_address, $id = null, $parent_two_name = null, $notes = null, $billing_history = null, $outstanding_balance = null)
     {
@@ -135,8 +134,26 @@ class Account
     // }
     function save()
     {
-      $GLOBALS['DB']->exec("INSERT INTO accounts (family_name, parent_one_name, parent_two_name, street_address, phone_number, email_address, notes, billing_history, outstanding_balance) VALUES ('{$this->getFamilyName()}', '{$this->getParentOneName()}', '{$this->getParentTwoName()}', '{$this->getStreetAddress()}', '{$this->getPhoneNumber()}', '{$this->getEmailAddress()}', '{$this->getNotes()}', '{$this->getBillingHistory()}', {$this->getOutstandingBalance()});");
-      $this->id = $GLOBALS['DB']->lastInsertId();
+      $stmt = $GLOBALS['DB']->prepare("
+          INSERT INTO accounts (family_name, parent_one_name, parent_two_name, street_address, phone_number, email_address, notes, billing_history, outstanding_balance)
+          VALUES (:family_name, :parent_one_name, :parent_two_name, :street_address, :phone_number, :email_address, :notes, :billing_history, :outstanding_balance)
+      ");
+      $stmt->bindParam(':family_name', $this->getFamilyName(), PDO::PARAM_STR);
+      $stmt->bindParam(':parent_one_name', $this->getParentOneName(), PDO::PARAM_STR);
+      $stmt->bindParam(':parent_two_name', $this->getParentTwoName(), PDO::PARAM_STR);
+      $stmt->bindParam(':street_address', $this->getStreetAddress(), PDO::PARAM_STR);
+      $stmt->bindParam(':phone_number', $this->getPhoneNumber(), PDO::PARAM_STR);
+      $stmt->bindParam(':email_address', $this->getEmailAddress(), PDO::PARAM_STR);
+      $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
+      $stmt->bindParam(':billing_history', $this->getBillingHistory(), PDO::PARAM_STR);
+      $stmt->bindParam(':outstanding_balance', $this->getOutstandingBalance(), PDO::PARAM_STR);
+
+      if ($stmt->execute()) {
+          $this->id = $GLOBALS['DB']->lastInsertId();
+          return true;
+      } else {
+          return false;
+      }
     }
 
     static function getAll()
@@ -378,6 +395,19 @@ class Account
     {
         $GLOBALS['DB']->exec("INSERT INTO accounts_services (account_id, service_id) VALUES ({$this->getId()}, {$service_id})");
     }
+
+    function addUser($user_id)
+    {
+        $stmt = $GLOBALS['DB']->prepare("
+            INSERT INTO users_accounts (user_id, account_id)
+            VALUES (:user_id, :account_id)
+        ");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+        $stmt->bindParam(':account_id', $this->getId(), PDO::PARAM_STR);
+
+        return $stmt->execute();
+    }
+
     // NOTE UNTESTED
     function getTeachers()
     {
@@ -466,7 +496,7 @@ class Account
         foreach ($students as $student) {
             $stmt = $GLOBALS['DB']->prepare("DELETE FROM students WHERE id = :id");
             $stmt->bindParam(':id', $student->getId(), PDO::PARAM_STR);
-            
+
             if (!$stmt->execute()) {
                 return false;
             } else {
@@ -474,6 +504,45 @@ class Account
             }
         }
         return true;
+    }
+
+    function findAccountByUserId($user_id)
+    {
+        //TODO: check if this function works after relationship table is created
+        $stmt = $GLOBALS['DB']->prepare("
+            SELECT accounts.* FROM accounts
+            JOIN users_accounts ON (accounts.id = users_accounts.account_id)
+            JOIN owners ON (users_accounts.user_id = owners.id)
+            WHERE owners.id = :user_id
+        ");
+
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                $account = new Account(
+                    $result['family_name'],
+                    $result['parent_one_name'],
+                    $result['street_address'],
+                    $result['phone_number'],
+                    $result['email_address'],
+                    $result['id'],
+                    $result['parent_two_name'],
+                    $result['notes'],
+                    $result['billing_history'],
+                    $result['outstanding_balance']
+                );
+                return $account;
+            } else {
+                // account is not found
+                return false;
+            }
+        } else {
+            // sql failed for some reason
+            return false;
+        }
     }
 }
 ?>

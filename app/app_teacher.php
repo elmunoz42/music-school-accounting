@@ -10,12 +10,24 @@ $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
         $notes_array = explode("|", $teacher->getNotes());
         $students_teachers = $teacher->getStudents();
 
-        return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents(), 'courses' => $courses));
+        return $app['twig']->render('owner_teacher.html.twig',
+            array(
+                'role' => $_SESSION['role'],
+                'school' => $school,
+                'teacher' => $teacher,
+                'students_teachers' => $students_teachers,
+                'notes_array' => $notes_array,
+                'students' => $school->getStudents(),
+                'courses' => $courses
+            )
+        );
     } else {
       // teacher is not found
       return $app->redirect("/owner_teachers");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->after($save_location_uri);
 
 
 //JOIN teacher with student
@@ -39,7 +51,9 @@ $app->post("/owner_teacher/{teacher_id}/assign", function($teacher_id) use ($app
         }
         return $app->redirect("/owner_teacher/" . $teacher_id);
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($teacher_only);
 
 
 //UPDATE teacher notes
@@ -51,7 +65,10 @@ $app->patch("/owner_teacher/{teacher_id}/add_notes", function($teacher_id) use (
     $teacher->updateNotes($updated_notes);
 
     return $app->redirect("/owner_teacher/" . $teacher_id);
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($teacher_only);
+
 
 //DELETE JOIN remove teacher from school
 $app->delete("/owner_teacher/teacher_termination/{teacher_id}", function($teacher_id) use ($app) {
@@ -67,10 +84,12 @@ $app->delete("/owner_teacher/teacher_termination/{teacher_id}", function($teache
         // add error message
         return $app->redirect("/owner_teachers");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
-
+// update teacher info
 $app->post("/owner_teacher/{teacher_id}/update", function($teacher_id) use ($app) {
     $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
     $new_instrument = $_POST['instrument'] ? $_POST['instrument'] : '';
@@ -90,4 +109,6 @@ $app->post("/owner_teacher/{teacher_id}/update", function($teacher_id) use ($app
         // add error message
     }
     return $app->redirect("/owner_teachers");
-});
+})
+->before($is_logged_in)
+->before($teacher_only);

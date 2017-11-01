@@ -4,8 +4,11 @@
 $app->get("/owner_accounts", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('owner_accounts.html.twig', array('school' => $school, 'accounts' => $school->getAccounts()));
-})->before($is_logged_in);
+    return $app['twig']->render('owner_accounts.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'accounts' => $school->getAccounts()));
+})
+->before($is_logged_in)
+->before($client_only)
+->after($save_location_uri);
 
 // CREATE account
 $app->post("/owner_accounts", function() use ($app) {
@@ -74,10 +77,15 @@ $app->post("/owner_accounts/search", function() use ($app) {
       // add error message
     }
     return  $app->redirect("/owner_accounts");
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
 $app->get("/owner_accounts/search", function() use ($app) {
     // this route is not exist. therefore redirect to owner_accounts
     return  $app->redirect("/owner_accounts");
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only)
+->after($save_location_uri);
