@@ -13,7 +13,7 @@ $app->post("/owner_accounts", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
     // get user input from POST
-    $family_name = $_POST['family_name'] ? $_POST['teacher_name'] : '';
+    $family_name = $_POST['family_name'] ? $_POST['family_name'] : '';
     $parent_one_name = $_POST['parent_one_name'] ? $_POST['parent_one_name'] : '';
     $street_address = $_POST['street_address'] ? $_POST['street_address'] : '';
     $phone_number = $_POST['phone_number'] ? $_POST['phone_number'] : '';
