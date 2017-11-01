@@ -40,37 +40,39 @@ $app->post("/owner_login", function() use ($app) {
 
     if (empty($errors)) {
         $owner = Owner::findOwnerByEmailAddress($email_address);
-
         if ($owner) {
             if (password_verify($password, $owner->getPassword())) {
 
 
                 $schools = School::findSchoolsByOwnerId($owner->getId());
 
-                $_SESSION['school_id'] = $schools[0]->getId();
-                $_SESSION['user_id'] = $owner->getId();
-                $_SESSION['role'] = $owner->getRole();
+                if ($schools) {
+                    $_SESSION['school_id'] = $schools[0]->getId();
+                    $_SESSION['user_id'] = $owner->getId();
+                    $_SESSION['role'] = $owner->getRole();
 
-                $user_id = $_SESSION['user_id'];
-                $role = $_SESSION['role'];
+                    $user_id = $_SESSION['user_id'];
+                    $role = $_SESSION['role'];
 
-                switch($role) {
-                    case 'owner':
-                        return $app->redirect('owner_main');
-                        break;
-                    case 'teacher':
-                        $teacher = Teacher::findTeacherByUserId($user_id);
-                        return $app->redirect('owner_teacher/' . $teacher->getId());
-                        break;
-                    case 'client':
-                        $account = Account::findAccountByUserId($user_id);
-                        return $app->redirect('owner_account/' . $account->getId());
-                        break;
-                    default:
-                        // unexpected case
-                        return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
+                    switch($role) {
+                      case 'owner':
+                      return $app->redirect('owner_main');
+                      break;
+                      case 'teacher':
+                      $teacher = Teacher::findTeacherByUserId($user_id);
+                      return $app->redirect('owner_teacher/' . $teacher->getId());
+                      break;
+                      case 'client':
+                      $account = Account::findAccountByUserId($user_id);
+                      return $app->redirect('owner_account/' . $account->getId());
+                      break;
+                      default:
+                      // unexpected case
+                      return $app['twig']->render('owner_login.html.twig', array('errors'=> $errors));
+                    }
+                } else {
+                    $errors[] = "Unexcepted error happened";
                 }
-
             } else {
                 $errors[] = "Email or Password didn't match with existing account";
             }
