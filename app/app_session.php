@@ -25,7 +25,7 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
 ->after($save_location_uri);
 
 
-// Update session NOTE: NEEDS TO BE CREATED
+// Update session
 $app->patch('/owner_session/{service_id}/update', function($service_id) use($app) {
 
     $service = Service::find($service_id);
@@ -103,11 +103,10 @@ $app->post('/owner_session_update_paid_for', function() use($app) {
 
 
 
-// JOIN Add (Schedule) Services to student - from student page
-$app->post('/student/{student_id}/add_session', function($student_id) use($app) {
+// JOIN Add Session
+$app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) {
     $student_id = $_POST['student_id'] ? $_POST['student_id'] : "";
-    $account_id = $_POST['account_id'] ? $_POST['account_id'] : "";
-    $teacher_id = $_POST['teacher_id'] ? $_POST['teacher_id'] : "";
+
     $repetitions = $_POST['repetitions'] ? $_POST['repetitions'] : "0";
     $description = $_POST['description'] ? $_POST['description'] : "";
     $duration = $_POST['duration'] ? $_POST['duration'] : "";
@@ -117,7 +116,7 @@ $app->post('/student/{student_id}/add_session', function($student_id) use($app) 
     $start_date = $_POST['start_date'] ? $_POST['start_date'] : '';
     $start_time = $_POST['start_time'] ? $_POST['start_time'] : '';
     $recurrence = $_POST['recurrence'] ? $_POST['recurrence'] : "";
-    $attendance = $_POST['attendance'] ? $_POST['attendance'] : "";
+    $attendance = "Scheduled";
 
     $date_of_service = '';
 
@@ -131,7 +130,7 @@ $app->post('/student/{student_id}/add_session', function($student_id) use($app) 
     if ($is_all_form_filled) {
         $school = School::find($_SESSION['school_id']);
         $student = Student::find($student_id);
-        $account = Account::find($account_id);
+        $account = $student->getAccounts()[0];
         $teacher = Teacher::find($teacher_id);
 
         $this_month = intval(date('m',strtotime('this month')));

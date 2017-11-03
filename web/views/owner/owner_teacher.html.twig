@@ -17,11 +17,17 @@
             </div>
         {% endif %}
 
-
         <div class="col-md-4">
             {% include './components/teacher_info.html.twig' %}
         </div>
 
+        <!-- NOTE Only Teacher and Owner can Schedule Sessions -->
+        {% if (role == 'teacher' or role == 'owner') %}
+        <div class="col-md-6">
+                <h4>Schedule Sessions</h4>
+                {% include './components/create_sessions.html.twig' %}
+        </div>
+        {% endif %}
 
         <!-- NOTE Only Teacher or Owner can Assign student -->
         {% if (role == 'teacher' or role == 'owner') %}
