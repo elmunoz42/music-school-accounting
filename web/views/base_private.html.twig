@@ -12,8 +12,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="/js/moment.min.js"></script>
-
-    </script>
     <script src="/js/combodate.js" type="text/javascript"></script>
     <title>Music School - {% block title %}{% endblock %}</title>
 </head>
@@ -46,14 +44,24 @@
         {% block content %}
 
         {% endblock %}
-    </div>
-    <div id="top"></div>
-    <div id="topright"></div>
-    <div id="right"></div>
-    <div id="bottomright"></div>
-    <div id="bottom"></div>
-    <div id="bottomleft"></div>
-    <div id="left"></div>
-    <div id="topleft"></div>
+
+
+    <script src="/../js/owner_student.js"></script>
+    <script>
+        $('.datepicker').datepicker(
+          { dateFormat: "yy-mm-dd" }
+        );
+
+        $('#start_date').datepicker(
+          { dataFormat: "yy-mm-dd" }
+        );
+
+        $('#create_start_time').combodate({
+          customClass: 'form-control col-xs-6'
+        });
+        $('.update_start_time').combodate({
+          customClass: 'form-control col-xs-6'
+        });
+    </script>
 </body>
 </html>
