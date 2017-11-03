@@ -13,16 +13,23 @@
             {% include './components/teacher_info.html.twig' %}
         </div>
 
-        <div class="col-md-4">
-            {% include './components/student_info.html.twig' %}
-            {% include './components/assign_student.html.twig' %}
-        </div>
 
-        <div class="col-md-4">
-            {% include './components/add_note_teacher.html.twig' %}
-        </div>
+        <!-- NOTE Only Teacher or Owner can Assign student -->
+        {% if (role == 'teacher' or role == 'owner') %}
+            <div class="col-md-4">
+                {% include './components/student_info.html.twig' %}
+                {% include './components/assign_student.html.twig' %}
+            </div>
+        {% endif %}
+
+
+        <!-- NOTE Only Teacher or Owner can add Notes -->
+        {% if (role == 'teacher' or role == 'owner') %}
+            <div class="col-md-4">
+                {% include './components/add_note_teacher.html.twig' %}
+            </div>
+        {% endif %}
     </div>
-
     <hr>
     {% if notes_array is not empty %}
         {% include './components/note_history.html.twig' %}

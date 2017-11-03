@@ -7,43 +7,56 @@
         <tr>
             <td>
                 <a href="/owner_student/{{student.getId | e }}">{{student.getName | e }}</a>
-                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_student_{{student.getId | e }}">Update</button>
-                <form action="/owner_student/student_termination/{{ student.getId  | e }}" method="post">
-                    <input name="_method" type="hidden" value="delete">
-                    <button type="submit" class="btn btn-danger btn-sm" name="button">Delete Student</button>
-                </form>
-
             </td>
-        </tr>
 
-        <!-- Update Modal -->
-        <div id="update_student_{{student.getId | e }}" class="modal fade" role="dialog">
-            <div class="modal-dialog modal-lg">
-              <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Update Student: {{student.getName | e }}</h4>
-                    </div>
-                    <form action="/owner_student/{{student.getId | e }}/update" method="post">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="student_name">Name</label>
-                                        <input type="text" id="student_name" class="form-control" name="student_name" value="{{student.getName | e }}">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="submit" class="btn btn-success">Save</button>
-                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <!-- NOTE Only Client and Owner can update student -->
+            {% if (role == 'client' or role == 'owner') %}
+                <td>
+                    <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_student_{{student.getId | e }}">Update</button>
+                </td>
+            {% endif %}
+
+            <!-- NOTE Only Owner can delete student -->
+            {% if (role == 'owner') %}
+                <td>
+                    <form action="/owner_student/student_termination/{{ student.getId  | e }}" method="post">
+                        <input name="_method" type="hidden" value="delete">
+                        <button type="submit" class="btn btn-danger btn-sm" name="button">Delete Student</button>
+                    </form>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+
+<!-- Update Modal -->
+{% for student in students %}
+    <div id="update_student_{{student.getId | e }}" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update Student: {{student.getName | e }}</h4>
+                </div>
+                <form action="/owner_student/{{student.getId | e }}/update" method="post">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="student_name">Name</label>
+                                    <input type="text" id="student_name" class="form-control" name="student_name" value="{{student.getName | e }}">
                                 </div>
                             </div>
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-success">Save</button>
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
-        {% endfor %}
-    </tbody>
-</table>
+    </div>
+{% endfor %}
