@@ -1,4 +1,5 @@
 {% extends "base_private.html.twig" %}
+{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
 
 {% block title %}Teacher{% endblock %}
 
@@ -9,6 +10,14 @@
     </div>
 
     <div class="row">
+        <!-- NOTE Only Teacher or Owner can Assign student -->
+        {% if (role == 'teacher' or role == 'owner') %}
+            <div class="col-xs-12">
+                {% include './components/sessions_list.html.twig' %}
+            </div>
+        {% endif %}
+
+
         <div class="col-md-4">
             {% include './components/teacher_info.html.twig' %}
         </div>

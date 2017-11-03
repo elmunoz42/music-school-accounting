@@ -2,6 +2,25 @@
 
 //READ teacher
 $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
+
+    $month = date("m");
+    $year = date("Y");
+
+    // if month & year parameters are passed, update $month and $year
+    if (!empty($_GET['month'])) {
+        $month = filter_input(INPUT_GET, 'month', FILTER_VALIDATE_INT);
+        if ($month === false) {
+            $month = date("m");
+        }
+    }
+
+    if (!empty($_GET['year'])) {
+        $year = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT);
+        if ($year === false) {
+            $year = date("Y");
+        }
+    }
+
     $school = School::find($_SESSION['school_id']);
     $teacher = Teacher::find($teacher_id);
 
@@ -9,6 +28,8 @@ $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
         $courses = $teacher->getCourses();
         $notes_array = explode("|", $teacher->getNotes());
         $students_teachers = $teacher->getStudents();
+        $datestamp = mktime(0, 0, 0, $month, 1, $year);
+        $services = $teacher->getServicesForMonth($month, $year);
 
         return $app['twig']->render('owner_teacher.html.twig',
             array(
@@ -18,7 +39,9 @@ $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
                 'students_teachers' => $students_teachers,
                 'notes_array' => $notes_array,
                 'students' => $school->getStudents(),
-                'courses' => $courses
+                'courses' => $courses,
+                'services' => $services,
+                'datestamp' => $datestamp
             )
         );
     } else {
