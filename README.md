@@ -59,8 +59,8 @@ Teacher user Stories:
 |DONE | ... I can create courses | | |
 |DONE | ... I can create lessons assigned to a course | | |
 |DONE | ... I can assign a student to a course | | |
-|TODO | ... I can see all the sessions/services related to me in a given month, week or day, I can also see the notes| | |
-|TODO | ... I can update attendance, notes, duration and recurrence for a given session/service (one at a time)| | |
+|DONE | ... I can see all the sessions/services related to me in a given month, week or day, I can also see the notes| | |
+|DONE | ... I can update attendance, notes, duration and recurrence for a given session/service (one at a time)| | |
 
 Account (client) user Stories:
 
