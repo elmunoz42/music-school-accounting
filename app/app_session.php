@@ -37,7 +37,6 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
     $repetitions = $_POST['repetitions'] ? $_POST['repetitions'] : '';
     $price = $_POST['price'] ? $_POST['price'] : '';
     $discount = $_POST['discount'] ? $_POST['discount'] : '';
-    $paid_for = $_POST['paid_for'] ? $_POST['paid_for'] : '0';
     $start_date = $_POST['start_date'] ? $_POST['start_date'] : '';
     $start_time = $_POST['start_time'] ? $_POST['start_time'] : '';
     $recurrence = $_POST['recurrence'] ? $_POST['recurrence'] : '';
@@ -63,7 +62,6 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
       if (!empty($description) && ($description != $service->getDescription())) $service->updateDescription($description);
       if (!empty($price) && $price != $service->getPrice()) $service->updatePrice($price);
       if (!empty($discount) && $discount != $service->getDiscount()) $service->updateDiscount($discount);
-      if (isset($paid_for) && $paid_for != $service->getPaidFor()) $service->updatePaidFor($paid_for);
       if (!empty($recurrence) && $recurrence != $service->getRecurrence()) $service->updateRecurrence($recurrence);
       if (!empty($attendance) && $attendance != $service->getAttendance()) $service->updateAttendance($attendance);
       if (!empty($duration) && $duration != $service->getDuration()) $service->updateDuration($duration);
@@ -115,7 +113,7 @@ $app->post('/student/{student_id}/add_session', function($student_id) use($app) 
     $duration = $_POST['duration'] ? $_POST['duration'] : "";
     $price = $_POST['price'] ? $_POST['price'] : "";
     $discount = $_POST['discount'] ? $_POST['discount'] : "";
-    $paid_for = $_POST['paid_for'] === "1" ? "1" : "0";
+    $paid_for =  "0";
     $start_date = $_POST['start_date'] ? $_POST['start_date'] : '';
     $start_time = $_POST['start_time'] ? $_POST['start_time'] : '';
     $recurrence = $_POST['recurrence'] ? $_POST['recurrence'] : "";
@@ -166,4 +164,4 @@ $app->post('/student/{student_id}/add_session', function($student_id) use($app) 
     return $app->redirect("/owner_student/" . $student_id);
 })
 ->before($is_logged_in)
-->before($client_only);
+->before($teacher_only);
