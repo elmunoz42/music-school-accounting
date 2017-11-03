@@ -21,6 +21,8 @@
             {% include './components/teacher_info.html.twig' %}
         </div>
 
+        {% include './components/enroll_teacher_to_course.html.twig' %}
+
         <!-- NOTE Only Teacher and Owner can Schedule Sessions -->
         {% if (role == 'teacher' or role == 'owner') %}
         <div class="col-md-6">

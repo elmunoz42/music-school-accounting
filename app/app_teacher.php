@@ -25,6 +25,7 @@ $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
     $teacher = Teacher::find($teacher_id);
 
     if ($teacher) {
+        $all_courses = $school->getCourses();
         $courses = $teacher->getCourses();
         $notes_array = explode("|", $teacher->getNotes());
         $students_teachers = $teacher->getStudents();
@@ -39,7 +40,8 @@ $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
                 'students_teachers' => $students_teachers,
                 'notes_array' => $notes_array,
                 'students' => $school->getStudents(),
-                'courses' => $courses,
+                'all_courses' => $all_courses,
+                'courses' => $teacher->getCourses(),
                 'services' => $services,
                 'datestamp' => $datestamp
             )
@@ -135,3 +137,28 @@ $app->post("/owner_teacher/{teacher_id}/update", function($teacher_id) use ($app
 })
 ->before($is_logged_in)
 ->before($teacher_only);
+
+
+//JOIN teacher to course
+$app->post("/owner_teacher/{teacher_id}/enroll", function($teacher_id) use ($app) {
+    $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
+
+    if ($course_id) {
+        $teacher = Teacher::find($teacher_id);
+        $course = $teacher->findCourseById($course_id);
+
+        if (!$course) {
+            if ($teacher->addCourse($course_id)) {
+                //add success message
+            } else {
+                // add error message
+            }
+        } else {
+            // already enrolled
+            // add error message
+        }
+    }
+    return $app->redirect("/owner_teacher/" . $teacher_id);
+})
+->before($is_logged_in)
+->before($only_teacher);
