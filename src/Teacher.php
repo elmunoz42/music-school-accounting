@@ -370,7 +370,35 @@
             }
         }
 
+
+        function findCourseById($course_id)
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT courses.* FROM teachers
+                JOIN courses_teachers ON (teachers.id = courses_teachers.teacher_id)
+                JOIN courses ON (courses_teachers.course_id = courses.id)
+                WHERE teachers.id = :teacher_id
+                AND courses.id = :course_id
+            ");
+
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $title =  $result['title'];
+                    $id = $result['id'];
+
+                    return new Course($title, $id);
+                } else {
+                    // course is not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
+        }
     }
-
-
- ?>

@@ -452,6 +452,32 @@ class Account
         }
         return $students;
     }
+
+    function findStudentById($student_id) {
+        $stmt = $GLOBALS['DB']->prepare("SELECT students.* FROM accounts JOIN accounts_students ON (accounts.id = accounts_students.account_id) JOIN students ON (accounts_students.student_id = students.id) WHERE accounts.id = :account_id AND students.id = :student_id");
+
+        $stmt->bindParam(':account_id', $this->getId(), PDO::PARAM_STR);
+        $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                $student_name =  $result['student_name'];
+                $id = $result['id'];
+                $notes = $result['notes'];
+
+                return new Student($student_name, $id, $notes);
+            } else {
+                // student is not found
+                return false;
+            }
+        } else {
+            // sql failed for some reason
+            return false;
+        }
+    }
+
     // NOTE UNTESTED
     function getLessons()
     {
