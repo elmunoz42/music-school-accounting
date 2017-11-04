@@ -10,9 +10,13 @@
         <hr>
     </div>
     <div class="row">
-        <div class="col-xs-12">
-            {% include './components/sessions_list.html.twig' %}
-        </div>
+        <!-- NOTE Only Client or Owner can Assign student -->
+        {% if (role == 'client' or role == 'owner') %}
+            <div class="col-xs-12">
+                {% include './components/sessions_list.html.twig' %}
+            </div>
+        {% endif %}
+
 
         <div class="col-md-6" id="teacher-info">
             <h3>Sessions:</h3>
@@ -24,14 +28,8 @@
             <hr>
         </div>
 
-        <div class="col-md-6">
-            {% if enrolled_courses is not empty %}
-                <h4>Schedule Sessions</h4>
-                {% include './components/create_sessions.html.twig' %}
-            {% endif %}
-        </div>
-
-        <div id="currentclass" class="col-md-6">
+        <!-- NOTE Do we need to assign student to course?? it makes complicated... -->
+        <!-- <div id="currentclass" class="col-md-6">
             <h3>Courses:</h3>
             <hr>
             {% include './components/enroll_course.html.twig' %}
@@ -42,13 +40,17 @@
             {% if enrolled_courses is not empty %}
                 {% include './components/course_enrollment_list.html.twig' %}
             {% endif %}
-        </div>
+        </div> -->
 
-        <div class="col-md-6">
-            <h3>Add Notes:</h3>
-            <hr>
-            {% include './components/add_note_student.html.twig' %}
-        </div>
+        <!-- NOTE Only Client or Owner can add Notes -->
+        {% if (role == 'client' or role == 'owner') %}
+            <div class="col-md-6">
+                <h3>Add Notes:</h3>
+                <hr>
+                {% include './components/add_note_student.html.twig' %}
+            </div>
+        {% endif %}
+
 
         <div id="currentclass" class="col-md-4">
             <h3>Notes:</h3>
@@ -57,23 +59,6 @@
                 {% include './components/note_history.html.twig' %}
             {% endif %}
         </div>
+
     </div>
-    <script src="/../js/owner_student.js"></script>
-    <script>
-        $('.datepicker').datepicker(
-          { dateFormat: "yy-mm-dd" }
-        );
-
-        $('#start_date').datepicker(
-          { dataFormat: "yy-mm-dd" }
-        );
-        
-        $('#create_start_time').combodate({
-          customClass: 'form-control col-xs-6'
-        });
-        $('.update_start_time').combodate({
-          customClass: 'form-control col-xs-6'
-        });
-
-    </script>
 {% endblock %}

@@ -33,6 +33,8 @@
     require_once __DIR__.'/./db_setup.php';
     require_once __DIR__.'/./session.php';
     require_once __DIR__.'/./verify.php';
+    require_once __DIR__.'/./after.php';
+
 
 
     // load routing

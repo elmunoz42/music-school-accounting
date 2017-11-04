@@ -1,13 +1,15 @@
 <?php
 
 $app->get("/create_school", function() use ($app) {
-        return $app['twig']->render('create_school.html.twig');
+
+    return $app['twig']->render('create_school.html.twig', array('role' => $_SESSION['role']));
 })
 ->before($is_logged_in)
-->before($owner_only);
+->before($owner_only)
+->after($save_location_uri);
 
 $app->post("/create_school", function() use ($app) {
-        $owner_id = $_SESSION['owner_id'];
+        $owner_id = $_SESSION['user_id'];
         $school_name = $_POST['school_name'];
         $manager_name = $_POST['manager_name'];
         $phone_number = $_POST['phone_number'];
@@ -29,4 +31,5 @@ $app->post("/create_school", function() use ($app) {
         }
 })
 ->before($is_logged_in)
-->before($owner_only);
+->before($owner_only)
+->after($save_location_uri);

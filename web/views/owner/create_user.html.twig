@@ -1,0 +1,21 @@
+{% extends "base_private.html.twig" %}
+{% block title %}Create User Account{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1>Create Account</h1>
+        <hr>
+    </div>
+    <form action="/create_user" method="post">
+        <input type="text" name="first_name" value="" placeholder="First Name">
+        <input type="text" name="last_name" value="" placeholder="Last Name">
+        <input type="email" name="email_address" value="" placeholder="Email">
+        <select class="" name="role">
+          <option value="teacher">Teacher</option>
+          <option value="client">Client</option>
+        </select>
+        <input type="password" name="password" value="" placeholder="password">
+        <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+        <button type="submit" name="submit">Create Owner</button>
+    </form>
+{% endblock %}

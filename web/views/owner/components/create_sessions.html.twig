@@ -1,8 +1,8 @@
 <!-- fix create -->
 
-<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#create_session_{{student.getId | e }}">New Session</button>
+<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#create_session_{{teacher.getId | e }}">New Session</button>
     <!-- Update Modal -->
-    <div id="create_session_{{student.getId | e }}" class="modal modal fade" role="dialog">
+    <div id="create_session_{{teacher.getId | e }}" class="modal modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
           <!-- Modal content-->
             <div class="modal-content">
@@ -11,25 +11,23 @@
                     <h4 class="modal-title">Create Session:</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="/student/{{ student.getId | e }}/add_session" method="post">
-                        <input type="hidden" name="student_id" value="{{ student.getId  | e }}">
-                        <input type="hidden" name="account_id" value="{{ student.getAccounts[0].getId  | e }}">
+                    <form action="/teacher/{{ teacher.getId | e }}/add_session" method="post">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                  <label for="teacher">Teacher:</label>
-                                  <select id="teacher" class="form-control" name="teacher_id">
-                                    {% for teacher in teachers %}
-                                        <option value="{{ teacher.getId  | e }}">{{teacher.getName | e }}</option>
+                                  <label for="student">Select Student:</label>
+                                  <select id="student" class="form-control" name="student_id">
+                                    {% for student in teacher.getStudents %}
+                                        <option value="{{ student.getId  | e }}">{{student.getName | e }}</option>
                                     {% endfor %}
                                   </select>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                  <label for="description">Description:</label>
+                                  <label for="description">Course</label>
                                   <select id="description" class="form-control" name="description">
-                                      {% for course in enrolled_courses %}
+                                      {% for course in teacher.getCourses %}
                                           <option value="{{course.getTitle | e}}">{{course.getTitle | e}}</option>
                                       {% endfor %}
                                   </select>
@@ -54,13 +52,6 @@
                                   </div>
                             </div>
                             <div class="col-sm-5">
-                                <div class="form-group">
-                                    <label for="paid_for">Paid for?</label>
-                                    <select id="paid_for" class="form-control" name="paid_for">
-                                        <option value="0">Not Paid</option>
-                                        <option value="1">Paid</option>
-                                    </select>
-                                </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
@@ -84,18 +75,6 @@
                                 <div class="form-group">
                                     <label for="recurrence">Recurrence:</label>
                                     <input id="recurrence" class="form-control" type="text" name="recurrence" value="Weekday|Time"><br>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="attendance">Attendance:</label>
-                                    <select id="attendance" class="form-control" name="attendance" type="text">
-                                        {% for attendance_value in attendance_values %}
-                                            {% for key, value in attendance_value %}
-                                                <option value="{{key | e}}">{{value | e}}</option>
-                                            {% endfor %}
-                                        {% endfor %}
-                                    </select>
                                 </div>
                             </div>
                             <div class="col-sm-4">

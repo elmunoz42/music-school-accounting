@@ -6,26 +6,41 @@ $is_logged_in = function ($request, $app) {
   }
 };
 
-// if user is not owner, redirect
+// if user is not owner, redirect to previous page
 $owner_only = function ($request, $app) {
   if ($_SESSION['role'] !== 'owner') {
       // add error
-      return $app->redirect("/owner_main");
+      if ($_SESSION['location_uri']) {
+
+          return $app->redirect($_SESSION['location_uri']);
+      } else {
+          return $app->redirect('/');
+      }
   }
 };
 
-// if user is neither owner nor teacher, redirect
+// if user is neither owner nor teacher, redirect to previous page
 $teacher_only = function ($request, $app) {
   if ($_SESSION['role'] !== 'teacher' && $_SESSION['role'] != 'owner') {
       // add error
-      return $app->redirect("/owner_main");
+      if ($_SESSION['location_uri']) {
+
+          return $app->redirect($_SESSION['location_uri']);
+      } else {
+          return $app->redirect('/');
+      }
   }
 };
 
-// if user is neither owner nor client, redirect
+// if user is neither owner nor client, redirect to previous page
 $client_only = function ($request, $app) {
   if ($_SESSION['role'] !== 'client' && $_SESSION['role'] != 'owner') {
       // add error
-      return $app->redirect("/owner_main");
+      if ($_SESSION['location_uri']) {
+
+          return $app->redirect($_SESSION['location_uri']);
+      } else {
+          return $app->redirect('/');
+      }
   }
 };

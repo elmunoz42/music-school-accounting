@@ -5,6 +5,13 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $account = Account::find($account_id);
 
+
+    // if client try to access to different clients info, redirect
+    if ( ($_SESSION['role'] == 'client') && ($_SESSION['role_id'] != $account_id)) {
+        return $app->redirect("/owner_account/" . $_SESSION['role_id']);
+    }
+    
+
     if ($account) {
         $students = $account->getStudents();
         $teachers = $account->getTeachers();
@@ -15,6 +22,7 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
         $last_months_year = intval(date('Y',strtotime('last month')));
 
         return $app['twig']->render('owner_account.html.twig', array(
+            'role' => $_SESSION['role'],
             'school'=>$school,
             'account'=>$account,
             'accounts'=>$school->getAccounts(),
@@ -30,7 +38,10 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
         // account is not found
         return $app->redirect("/owner_accounts");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only)
+->after($save_location_uri);
 
 
 
@@ -48,7 +59,9 @@ $app->patch("/owner_account/{account_id}/add_note", function($account_id) use ($
       // add error
     }
     return $app->redirect("/owner_account/" . $account_id);
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);
 
 
 //UPDATE account
@@ -69,7 +82,9 @@ $app->post("/owner_account/{account_id}/update", function($account_id) use ($app
         // add error message
         return $app->redirect("/owner_accounts");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);
 
 
 
@@ -92,7 +107,9 @@ $app->delete("/owner_account/{account_id}/delete", function($account_id) use ($a
         // add error message
         return $app->redirect("/owner_accounts");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
 // JOIN add student to account
@@ -122,4 +139,6 @@ $app->post('/owner_add_student_to_account', function() use($app) {
         // error message
         return $app->redirect("/owner_account/" . $account_id);
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($client_only);

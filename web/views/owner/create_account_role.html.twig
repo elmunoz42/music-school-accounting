@@ -1,0 +1,23 @@
+{% extends "base_public.html.twig" %}
+{% block title %}Create Owner Account{% endblock %}
+
+{% block content %}
+    {% if (account_role is defined and account_role == 'owner')  %}
+        <h2>Create School</h2>
+        {% include './components/add_school.html.twig' %}
+
+    {% elseif (account_role is defined and account_role == 'teacher') %}
+    <!-- NOTE: CREATE TEACHER -->
+
+        <h2>Create Teacher</h2>
+        {% include './components/add_teacher.html.twig' %}
+
+
+    {% elseif (account_role is defined and account_role == 'client') %}
+    <!-- NOTE: CREATE Client -->
+
+        <h2>Create Client</h2>
+        {% include './components/add_account.html.twig' %}
+    {% endif %}
+
+{% endblock %}

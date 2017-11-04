@@ -174,6 +174,19 @@
             $GLOBALS['DB']->exec("INSERT INTO services_teachers (teacher_id, service_id) VALUES ({$this->getId()}, {$service_id})");
         }
 
+        function addUser($user_id)
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO users_teachers (user_id, teacher_id)
+                VALUES (:user_id, :teacher_id)
+            ");
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
+        }
+
+
         // NOTE UNTESTED
         function getStudents()
         {
@@ -220,6 +233,39 @@
                 return false;
             }
         }
+
+        function findTeacherByUserId($user_id)
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT teachers.* FROM teachers
+                JOIN users_teachers ON (teachers.id = users_teachers.teacher_id)
+                JOIN owners ON (users_teachers.user_id = owners.id)
+                WHERE owners.id = :user_id
+            ");
+
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $eacher_name =  $result['teacher_name'];
+                    $instrument = $result['instrument'];
+                    $id = $result['id'];
+                    $notes = $result['notes'];
+
+                    return new Teacher($teacher_name, $instrument, $id, $notes);
+                } else {
+                    // teacher is not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
+        }
+
+
 
         // NOTE UNTESTED
         function getCourses()
@@ -324,7 +370,35 @@
             }
         }
 
+
+        function findCourseById($course_id)
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT courses.* FROM teachers
+                JOIN courses_teachers ON (teachers.id = courses_teachers.teacher_id)
+                JOIN courses ON (courses_teachers.course_id = courses.id)
+                WHERE teachers.id = :teacher_id
+                AND courses.id = :course_id
+            ");
+
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $title =  $result['title'];
+                    $id = $result['id'];
+
+                    return new Course($title, $id);
+                } else {
+                    // course is not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
+        }
     }
-
-
- ?>

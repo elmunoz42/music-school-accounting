@@ -1,10 +1,3 @@
-{% extends "base_public.html.twig" %}
-{% block title %}Create Owner Account{% endblock %}
-
-{% block content %}
-    {% if (role is defined and role == 'owner')  %}
-
-    <h2>Create School</h2>
     <form action="/create_school" method="post">
         <div class="form-group">
             <input class="form-control" type="text" name="school_name" placeholder="School Name">
@@ -20,5 +13,3 @@
             <button type="submit" class="btn btn-success">Submit</button>
         </div>
     </form>
-    {% endif %}
-{% endblock %}

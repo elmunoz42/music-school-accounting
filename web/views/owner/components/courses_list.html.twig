@@ -9,12 +9,24 @@
             <tr>
                 <td>
                     <a href="owner_course/{{course.getId | e}}">{{course.getTitle | e}}</a>
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_course_{{course.getId | e}}">Update</button>
-                    <form action="/owner_course/{{ course.getId  | e}}/delete" method="post">
-                        <input name="_method" type="hidden" value="delete">
-                        <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
-                    </form>
                 </td>
+
+                <!-- NOTE Only Teacher or Owner can update courses -->
+                {% if (role == 'teacher' or role == 'owner') %}
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#update_course_{{course.getId | e}}">Update</button>
+                    </td>
+                {% endif %}
+
+                <!-- NOTE Only Owner can update courses -->
+                {% if role == 'owner' %}
+                    <td>
+                        <form action="/owner_course/{{ course.getId  | e}}/delete" method="post">
+                            <input name="_method" type="hidden" value="delete">
+                            <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
+                        </form>
+                    </td>
+                {% endif %}
 
                 <!-- Update Modal -->
                 <div id="update_course_{{course.getId | e}}" class="modal fade" role="dialog">

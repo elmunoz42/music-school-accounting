@@ -13,11 +13,14 @@ $app->post("/owner_lesson/{id}", function($id) use ($app) {
     $course->addLesson($lesson_id);
 
     return $app['twig']->render('owner_course.html.twig', array(
+      'role' => $_SESSION['role'],
       'school'=>$school,
       'course' => $course,
       'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
       'lessons' => $school->getLessons() ));
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($teacher_only);
 
 
 //READ lesson
@@ -27,6 +30,7 @@ $app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
 
     if ($lesson) {
       return $app['twig']->render('owner_lesson.html.twig', array(
+          'role' => $_SESSION['role'],
           'school'=>$school,
           'lesson'=>$lesson
       ));
@@ -34,7 +38,10 @@ $app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
         // lesson is not found
         return $app->redirect("/owner_courses");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->after($save_location_uri);
+
 
 //DELETE Lesson
 $app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app) {
@@ -51,7 +58,9 @@ $app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app)
             return $app->redirect("/owner_course/" . $course_id);
         }
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
 //UPDATE Lesson
@@ -70,4 +79,6 @@ $app->post("/owner_lesson/{lesson_id}/update", function($lesson_id) use ($app) {
         // add error message
         return $app->redirect("/owner_course/" . $course_id);
     }
-});
+})
+->before($is_logged_in)
+->before($teacher_only);

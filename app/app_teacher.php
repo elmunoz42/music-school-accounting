@@ -2,20 +2,57 @@
 
 //READ teacher
 $app->get("/owner_teacher/{teacher_id}", function($teacher_id) use ($app) {
+
+    $month = date("m");
+    $year = date("Y");
+
+    // if month & year parameters are passed, update $month and $year
+    if (!empty($_GET['month'])) {
+        $month = filter_input(INPUT_GET, 'month', FILTER_VALIDATE_INT);
+        if ($month === false) {
+            $month = date("m");
+        }
+    }
+
+    if (!empty($_GET['year'])) {
+        $year = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT);
+        if ($year === false) {
+            $year = date("Y");
+        }
+    }
+
     $school = School::find($_SESSION['school_id']);
     $teacher = Teacher::find($teacher_id);
 
     if ($teacher) {
+        $all_courses = $school->getCourses();
         $courses = $teacher->getCourses();
         $notes_array = explode("|", $teacher->getNotes());
         $students_teachers = $teacher->getStudents();
+        $datestamp = mktime(0, 0, 0, $month, 1, $year);
+        $services = $teacher->getServicesForMonth($month, $year);
 
-        return $app['twig']->render('owner_teacher.html.twig', array('school' => $school, 'teacher' => $teacher, 'students_teachers' => $students_teachers, 'notes_array' => $notes_array, 'students' => $school->getStudents(), 'courses' => $courses));
+        return $app['twig']->render('owner_teacher.html.twig',
+            array(
+                'role' => $_SESSION['role'],
+                'school' => $school,
+                'teacher' => $teacher,
+                'students_teachers' => $students_teachers,
+                'notes_array' => $notes_array,
+                'students' => $school->getStudents(),
+                'all_courses' => $all_courses,
+                'courses' => $teacher->getCourses(),
+                'services' => $services,
+                'datestamp' => $datestamp
+            )
+        );
     } else {
       // teacher is not found
       return $app->redirect("/owner_teachers");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->after($save_location_uri);
 
 
 //JOIN teacher with student
@@ -39,7 +76,9 @@ $app->post("/owner_teacher/{teacher_id}/assign", function($teacher_id) use ($app
         }
         return $app->redirect("/owner_teacher/" . $teacher_id);
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($teacher_only);
 
 
 //UPDATE teacher notes
@@ -51,7 +90,10 @@ $app->patch("/owner_teacher/{teacher_id}/add_notes", function($teacher_id) use (
     $teacher->updateNotes($updated_notes);
 
     return $app->redirect("/owner_teacher/" . $teacher_id);
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($teacher_only);
+
 
 //DELETE JOIN remove teacher from school
 $app->delete("/owner_teacher/teacher_termination/{teacher_id}", function($teacher_id) use ($app) {
@@ -67,10 +109,12 @@ $app->delete("/owner_teacher/teacher_termination/{teacher_id}", function($teache
         // add error message
         return $app->redirect("/owner_teachers");
     }
-})->before($is_logged_in);
+})
+->before($is_logged_in)
+->before($owner_only);
 
 
-
+// update teacher info
 $app->post("/owner_teacher/{teacher_id}/update", function($teacher_id) use ($app) {
     $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
     $new_instrument = $_POST['instrument'] ? $_POST['instrument'] : '';
@@ -90,4 +134,31 @@ $app->post("/owner_teacher/{teacher_id}/update", function($teacher_id) use ($app
         // add error message
     }
     return $app->redirect("/owner_teachers");
-});
+})
+->before($is_logged_in)
+->before($teacher_only);
+
+
+//JOIN teacher to course
+$app->post("/owner_teacher/{teacher_id}/enroll", function($teacher_id) use ($app) {
+    $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
+
+    if ($course_id) {
+        $teacher = Teacher::find($teacher_id);
+        $course = $teacher->findCourseById($course_id);
+
+        if (!$course) {
+            if ($teacher->addCourse($course_id)) {
+                //add success message
+            } else {
+                // add error message
+            }
+        } else {
+            // already enrolled
+            // add error message
+        }
+    }
+    return $app->redirect("/owner_teacher/" . $teacher_id);
+})
+->before($is_logged_in)
+->before($only_teacher);

@@ -12,6 +12,9 @@
             <td>
                 {{teacher.getInstrument | e }}
             </td>
+
+            <!-- NOTE ONLY Owner can Update and Delete -->
+            {% if (role == 'owner') %}
             <td>
               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_teacher_{{teacher.getId | e }}">Update</button>
               <form action="/owner_teacher/teacher_termination/{{ teacher.getId  | e }}" method="post">
@@ -19,7 +22,10 @@
                   <button type="submit" class="btn btn-danger btn-sm"  name="button">delete</button>
               </form>
             </td>
+            {% endif %}
         </tr>
+
+
 
         <!-- Update Modal -->
         <div id="update_teacher_{{teacher.getId | e }}" class="modal fade" role="dialog">
