@@ -415,6 +415,12 @@ img.intro {
   color: white;
 }
 
+
+/* BOOTSTRAP */
 .navbar {
     margin-bottom: 0px;
+}
+
+.panel-heading {
+    margin-top: 0px;
 }

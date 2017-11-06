@@ -325,7 +325,6 @@
                 }
             }
             return $students;
-            var_dump($students);
         }
 
         function getAccounts()
@@ -432,7 +431,6 @@
                 AND MONTH(date_of_service) = :month
                 AND YEAR(date_of_service) = :year
             ";
-            var_dump($options['paid_for']);
 
             // if options are passed, add sql
             if ($teacher_id) { $sql .= "AND teachers.id = :teacher_id "; }
