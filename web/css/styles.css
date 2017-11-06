@@ -414,3 +414,7 @@ img.intro {
   background-color: silver;
   color: white;
 }
+
+.navbar {
+    margin-bottom: 0px;
+}

@@ -1,14 +1,9 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = student.getName | e %}
+{% block title %}Student{% endblock %}
 {% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
 
-
-{% extends "base_private.html.twig" %}
-{% block title %}Student{% endblock %}
-
 {% block content %}
-    <div class="jumbotron">
-        <h1>{{ student.getName  | e }}</h1>
-        <hr>
-    </div>
     <div class="row">
         <!-- NOTE Only Client or Owner can Assign student -->
         {% if (role == 'client' or role == 'owner') %}

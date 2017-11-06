@@ -87,14 +87,11 @@ $app->get("/all_sessions", function() use ($app) {
       $options['paidFor'] = $_GET['paidFor'];
   }
 
-  var_dump($options);
-  // exit;
   $owner = Owner::findOwnerById($_SESSION['user_id']);
   $datestamp = mktime(0, 0, 0, $options['month'], 1, $options['year']);
 
 
   if ($owner) {
-      //TODO FUTURE: if several school exists, show list and choose
 
       switch($_SESSION['role']) {
           case 'teacher':

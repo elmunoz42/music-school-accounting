@@ -1,11 +1,9 @@
 {% extends "base_private.html.twig" %}
 {% block title %}Create User Account{% endblock %}
+{% set pageTitle = "Create Account" %}
+
 
 {% block content %}
-    <div class="jumbotron">
-        <h1>Create Account</h1>
-        <hr>
-    </div>
     <form action="/create_user" method="post">
         <input type="text" name="first_name" value="" placeholder="First Name">
         <input type="text" name="last_name" value="" placeholder="Last Name">

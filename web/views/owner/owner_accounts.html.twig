@@ -1,25 +1,19 @@
 {% extends "base_private.html.twig" %}
-
+{% set pageTitle = "Clients" %}
 {% block title %}Accounts{% endblock %}
 
 {% block content %}
-
-<div class="jumbotron green">
-    <h1>Clients</h1>
-    <hr>
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-        {% include './components/search_clients.html.twig' %}
-    </div>
-
     <div class="row">
         <div class="col-md-6">
-            {% if accounts is not empty %}
-                {% include './components/clients_list.html.twig' %}
-            {% endif %}
+            {% include './components/search_clients.html.twig' %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                {% if accounts is not empty %}
+                    {% include './components/clients_list.html.twig' %}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

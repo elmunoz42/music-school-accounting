@@ -13,7 +13,7 @@
     {% endif %}
 
     <!-- NOTE if Teacher sees his/her Sessions List, then show this link -->
-    {% if ((role == 'teacher' or role == 'client') and (teacher is defined)) %}
+    {% if ((role == 'teacher' or role == 'owner') and (teacher is defined)) %}
         <div class="col-xs-6">
             <a href="/owner_teacher/{{teacher.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
         </div>

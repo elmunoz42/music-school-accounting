@@ -1,100 +1,92 @@
 
 {% extends "base_private.html.twig" %}
-
+{% set pageTitle = "Session Detail" %}
 {% block title %}Service{% endblock %}
-
-{% block content %}
-
 {% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
 
-<div class="jumbotron">
-    <h1>Session Detail Page</h1>
-    <hr>
-</div>
+{% block content %}
+    <div class="row">
 
-<div class="row">
-
-    <div class="col-md-8" id="session-update">
-        {% if service is not empty %}
-        <h3>Update Session Information/Attendance</h3>
-        <div class="well">
-          <form action="/owner_session/{{ service.getId | e }}" method="post">
-              <input name="_method" type="hidden" value="patch" required>
-              <div class="form-group">
-                <label for="date_of_service">Starting Date:</label>
-                <input type="datetime-local" name="date_of_service" value="{{ service.getDateOfService | e }}"><br>
-                <label for="recurrence">Recurrence:</label>
-                <input type="text" name="recurrence" value="{{ service.getRecurrence | e }}"><br>
-                <label for="attendance">Attendance:</label>
-                <select class="form-control" name="attendance">
-                    {% for attendance_value in attendance_values %}
-                        {% for key, value in attendance_value %}
-                            {% if service.getAttendance != key %}
-                            <option value="{{key}}">{{value}}</option>
-                            {% else %}
-                            <option value="{{key}}" selected>{{value}}</option>
-                            {% endif %}
+        <div class="col-md-8" id="session-update">
+            {% if service is not empty %}
+            <h3>Update Session Information/Attendance</h3>
+            <div class="well">
+              <form action="/owner_session/{{ service.getId | e }}" method="post">
+                  <input name="_method" type="hidden" value="patch" required>
+                  <div class="form-group">
+                    <label for="date_of_service">Starting Date:</label>
+                    <input type="datetime-local" name="date_of_service" value="{{ service.getDateOfService | e }}"><br>
+                    <label for="recurrence">Recurrence:</label>
+                    <input type="text" name="recurrence" value="{{ service.getRecurrence | e }}"><br>
+                    <label for="attendance">Attendance:</label>
+                    <select class="form-control" name="attendance">
+                        {% for attendance_value in attendance_values %}
+                            {% for key, value in attendance_value %}
+                                {% if service.getAttendance != key %}
+                                <option value="{{key}}">{{value}}</option>
+                                {% else %}
+                                <option value="{{key}}" selected>{{value}}</option>
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </select>
-                <label for="duration">Duration:</label>
-                <input type="number" name="duration" value="40"><br>
-                <label class="control-label" for="new_notes">Notes</label>
-                <textarea class="form-control" cols="30" id="message" name="new_notes" rows="10"></textarea>
-              </div>
-              <div class="form-group">
-                  <button type="submit" class="btn btn-info btn-sm" name="button">Submit</button>
-              </div>
-          </form>
+                    </select>
+                    <label for="duration">Duration:</label>
+                    <input type="number" name="duration" value="40"><br>
+                    <label class="control-label" for="new_notes">Notes</label>
+                    <textarea class="form-control" cols="30" id="message" name="new_notes" rows="10"></textarea>
+                  </div>
+                  <div class="form-group">
+                      <button type="submit" class="btn btn-info btn-sm" name="button">Submit</button>
+                  </div>
+              </form>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
-    <!-- left column -->
-    <div class="col-md-4">
-        <h3>Session Date: {{ service.getDateOfService | e }}</h3>
-        <hr>
-        <h4>Teachers in this session:</h4>
-        {% if service.getTeacher is not empty %}
-        <ul>
-            {% for teacher in service.getTeacher %}
-            <li> <a href="/owner_teacher/{{teacher.getId| e }}">{{ teacher.getName | e }}</a></li>
-            {% endfor %}
-
-        {% endif %}
-        </ul>
-        <h4>Students in this session:</h4>
-        <ul>
-            <li> <a href="/owner_student/{{service.getStudent.getId| e }}">{{ service.getStudent.getName | e }}</a></li>
-        </ul>
-        <h3>Session Info:</h3>
-        {% if service is not empty %}
-
-          <p>Attendance: {{ service.getAttendance | e }} </p><br>
-          <p>Recurrence: {{ service.getRecurrence | e }}</p><br>
-          <p>Payment Status: {{ service.getPaidFor | e }}</p><br>
-          {% if notes_array is not empty %}
-          <div>
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Session Note History:</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for note in notes_array %}
-                <tr>
-                  <td><strong>{{ note | e }}</strong></td>
-                </tr>
+        <!-- left column -->
+        <div class="col-md-4">
+            <h3>Session Date: {{ service.getDateOfService | e }}</h3>
+            <hr>
+            <h4>Teachers in this session:</h4>
+            {% if service.getTeacher is not empty %}
+            <ul>
+                {% for teacher in service.getTeacher %}
+                <li> <a href="/owner_teacher/{{teacher.getId| e }}">{{ teacher.getName | e }}</a></li>
                 {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        {% endif %}
-      {% endif %}
-        <hr>
-    </div>
-    <!-- right column -->
-</div>
-<!-- row -->
 
-    {% endblock %}
+            {% endif %}
+            </ul>
+            <h4>Students in this session:</h4>
+            <ul>
+                <li> <a href="/owner_student/{{service.getStudent.getId| e }}">{{ service.getStudent.getName | e }}</a></li>
+            </ul>
+            <h3>Session Info:</h3>
+            {% if service is not empty %}
+
+              <p>Attendance: {{ service.getAttendance | e }} </p><br>
+              <p>Recurrence: {{ service.getRecurrence | e }}</p><br>
+              <p>Payment Status: {{ service.getPaidFor | e }}</p><br>
+              {% if notes_array is not empty %}
+              <div>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Session Note History:</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for note in notes_array %}
+                    <tr>
+                      <td><strong>{{ note | e }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endif %}
+          {% endif %}
+            <hr>
+        </div>
+        <!-- right column -->
+    </div>
+    <!-- row -->
+{% endblock %}
