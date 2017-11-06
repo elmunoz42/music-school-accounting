@@ -408,26 +408,51 @@
             }
         }
 
-        function getServicesForMonth($month = null, $year = null) {
-            //if arguments are empty, set today's month and year
-            $month = $month ? $month : date('n');
-            $year = $year ? $year : date('Y');
+        function getServicesForMonth($options = []) {
 
-            $stmt = $GLOBALS['DB']->prepare("
+            $month = $options['month'] ? $options['month'] : date('n');
+            $year = $options['year'] ? $options['year'] : date('Y');
+            $teacher_id = $options['teacher_id'] ? $options['teacher_id'] : null;
+            $student_id = $options['student_id'] ? $options['student_id'] : null;
+            $account_id = $options['account_id'] ? $options['account_id'] : null;
+            $paid_for = isset($options['paid_for']) ? $options['paid_for'] : null;
+            $attendance = $options['attendance'] ? $options['attendance'] : null;
+
+            $sql = "
                 SELECT services.* FROM schools
                 JOIN schools_services ON (schools.id = schools_services.school_id)
                 JOIN services ON (schools_services.service_id = services.id)
                 JOIN services_teachers ON (services.id = services_teachers.service_id)
                 JOIN teachers ON (services_teachers.teacher_id = teachers.id)
+                JOIN accounts_services ON (services.id = accounts_services.service_id)
+                JOIN accounts ON (accounts_services.account_id = accounts.id)
+                JOIN services_students ON (services.id = services_students.service_id)
+                JOIN students ON (services_students.student_id = students.id)
                 WHERE schools.id = :school_id
                 AND MONTH(date_of_service) = :month
                 AND YEAR(date_of_service) = :year
-                ORDER BY services.date_of_service ASC
-            ");
+            ";
+            var_dump($options['paid_for']);
 
+            // if options are passed, add sql
+            if ($teacher_id) { $sql .= "AND teachers.id = :teacher_id "; }
+            if ($student_id) { $sql .= "AND students.id = :student_id "; }
+            if ($account_id) { $sql .= "AND accounts.id = :account_id "; }
+            if (isset($paid_for)) { $sql .= "AND services.paid_for = :paid_for "; }
+            if ($attendance) { $sql .= "AND services.attendance = :attendance "; }
+            $sql .= "ORDER BY services.date_of_service ASC";
+
+            $stmt = $GLOBALS['DB']->prepare($sql);
             $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
             $stmt->bindParam(':month', $month, PDO::PARAM_STR);
             $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+
+            //otpional bindParam
+            if ($teacher_id) { $stmt->bindParam(':teacher_id', $teacher_id, PDO::PARAM_STR); }
+            if ($student_id) { $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR); }
+            if ($account_id) { $stmt->bindParam(':account_id', $account_id, PDO::PARAM_STR); }
+            if (isset($paid_for)) { $stmt->bindParam(':paid_for', $paid_for, PDO::PARAM_STR); }
+            if ($attendance) { $stmt->bindParam(':attendance', $attendance, PDO::PARAM_STR); }
 
             if($stmt->execute()) {
                 $results = $stmt->fetchAll();
