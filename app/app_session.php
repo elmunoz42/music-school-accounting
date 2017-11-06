@@ -119,13 +119,13 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
     $attendance = "Scheduled";
 
     $date_of_service = '';
-
     if ($start_date && $start_time) {
       // concatanate and create date format
       $date_of_service = date("Y-m-d", strtotime($start_date)) . 'T' . $start_time;
     }
 
-    $is_all_form_filled = $student_id && $account_id && $teacher_id && isset($repetitions) && $description && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
+
+    $is_all_form_filled = $student_id && $teacher_id && isset($repetitions) && $description && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
 
     if ($is_all_form_filled) {
         $school = School::find($_SESSION['school_id']);
