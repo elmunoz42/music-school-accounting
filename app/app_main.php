@@ -67,24 +67,24 @@ $app->get("/all_sessions", function() use ($app) {
       }
   }
 
-  if (!empty($_GET['teacher'])) {
-    $options['teacher'] = $_GET['teacher'];
+  if (!empty($_GET['teacher_id'])) {
+    $options['teacher_id'] = $_GET['teacher_id'];
   }
 
-  if (!empty($_GET['student'])) {
-      $options['student'] = $_GET['student'];
+  if (!empty($_GET['student_id'])) {
+      $options['student_id'] = $_GET['student_id'];
   }
 
-  if (!empty($_GET['account'])) {
-      $options['account'] = $_GET['account'];
+  if (!empty($_GET['account_id'])) {
+      $options['account_id'] = $_GET['account_id'];
   }
 
   if (!empty($_GET['attendance'])) {
       $options['attendance'] = $_GET['attendance'];
   }
 
-  if (!empty($_GET['paidFor'])) {
-      $options['paidFor'] = $_GET['paidFor'];
+  if (!empty($_GET['paid_for'])) {
+      $options['paid_for'] = $_GET['paid_for'];
   }
 
   $owner = Owner::findOwnerById($_SESSION['user_id']);
@@ -123,8 +123,6 @@ $app->get("/all_sessions", function() use ($app) {
                 'datestamp' => $datestamp
               )
           );
-      } else {
-          return $app->redirect("/create_school");
       }
     } else {
         return $app->redirect("/owner_login");
