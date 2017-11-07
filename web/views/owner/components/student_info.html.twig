@@ -9,7 +9,7 @@
         <tbody>
             {% for student in students_teachers %}
             <tr>
-                <td><a href="/owner_student/{{ student.getId  | e }}">{{ student.getName  | e }}</a></td>
+                <td><a href="/student/{{ student.getId  | e }}">{{ student.getName  | e }}</a></td>
             </tr>
             {% endfor %}
         </tbody>

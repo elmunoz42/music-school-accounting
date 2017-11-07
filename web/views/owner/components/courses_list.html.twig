@@ -8,7 +8,7 @@
             {% for course in courses %}
             <tr>
                 <td>
-                    <a href="owner_course/{{course.getId | e}}">{{course.getTitle | e}}</a>
+                    <a href="course/{{course.getId | e}}">{{course.getTitle | e}}</a>
                 </td>
 
                 <!-- NOTE Only Teacher or Owner can update courses -->
@@ -21,7 +21,7 @@
                 <!-- NOTE Only Owner can update courses -->
                 {% if role == 'owner' %}
                     <td>
-                        <form action="/owner_course/{{ course.getId  | e}}/delete" method="post">
+                        <form action="/course/{{ course.getId  | e}}/delete" method="post">
                             <input name="_method" type="hidden" value="delete">
                             <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
                         </form>
@@ -37,7 +37,7 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">Update Course: {{course.getTitle | e}}</h4>
                             </div>
-                            <form action="/owner_course/{{course.getId | e}}/update" method="post">
+                            <form action="/course/{{course.getId | e}}/update" method="post">
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <div class="modal-body">

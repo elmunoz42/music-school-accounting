@@ -7,7 +7,7 @@
         {% for teacher in teachers %}
         <tr>
             <td>
-                <a href="/owner_teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
+                <a href="/teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
             </td>
             <td>
                 {{teacher.getInstrument | e }}
@@ -17,7 +17,7 @@
             {% if (role == 'owner') %}
             <td>
               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_teacher_{{teacher.getId | e }}">Update</button>
-              <form action="/owner_teacher/teacher_termination/{{ teacher.getId  | e }}" method="post">
+              <form action="/teacher/teacher_termination/{{ teacher.getId  | e }}" method="post">
                   <input name="_method" type="hidden" value="delete">
                   <button type="submit" class="btn btn-danger btn-sm"  name="button">delete</button>
               </form>
@@ -36,7 +36,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Update Teacher: {{teacher.getName | e }}</h4>
                     </div>
-                    <form action="/owner_teacher/{{teacher.getId | e }}/update" method="post">
+                    <form action="/teacher/{{teacher.getId | e }}/update" method="post">
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="modal-body">

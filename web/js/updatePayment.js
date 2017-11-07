@@ -9,7 +9,7 @@ $(".updatePaidFor").on("click", function() {
       paidStatus = "false";
     }
     $.ajax({
-      url : "/owner_session_update_paid_for",
+      url : "/session_update_paid_for",
       type : "POST",
       data : {
         service_id : serviceId,

@@ -1,5 +1,5 @@
 <?php
-$app->get("/owner_main", function() use ($app) {
+$app->get("/main", function() use ($app) {
 
 
     $owner = Owner::findOwnerById($_SESSION['user_id']);
@@ -9,10 +9,10 @@ $app->get("/owner_main", function() use ($app) {
 
         switch($_SESSION['role']) {
             case 'teacher':
-                return $app->redirect('/owner_teacher/' . $_SESSION['role_id']);
+                return $app->redirect('/teacher/' . $_SESSION['role_id']);
                 break;
             case 'client':
-                return $app->redirect('/owner_account/' . $_SESSION['role_id']);
+                return $app->redirect('/account/' . $_SESSION['role_id']);
                 break;
             default:
                 //do nothing
@@ -24,7 +24,7 @@ $app->get("/owner_main", function() use ($app) {
             $school = $schools[0];
             $_SESSION['school_id'] = intval($school->getId());
 
-            return $app['twig']->render('owner_main.html.twig',
+            return $app['twig']->render('main.html.twig',
                 array(
                   'role' => $_SESSION['role'],
                   'school'=> $school,
@@ -40,7 +40,7 @@ $app->get("/owner_main", function() use ($app) {
             return $app->redirect("/create_school");
         }
       } else {
-          return $app->redirect("/owner_login");
+          return $app->redirect("/login");
       }
 })
 ->before($is_logged_in)
@@ -95,10 +95,10 @@ $app->get("/all_sessions", function() use ($app) {
 
       switch($_SESSION['role']) {
           case 'teacher':
-              return $app->redirect('/owner_teacher/' . $_SESSION['role_id']);
+              return $app->redirect('/teacher/' . $_SESSION['role_id']);
               break;
           case 'client':
-              return $app->redirect('/owner_account/' . $_SESSION['role_id']);
+              return $app->redirect('/account/' . $_SESSION['role_id']);
               break;
           default:
               //do nothing
@@ -125,6 +125,6 @@ $app->get("/all_sessions", function() use ($app) {
           );
       }
     } else {
-        return $app->redirect("/owner_login");
+        return $app->redirect("/login");
     }
 });

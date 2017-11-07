@@ -5,7 +5,7 @@
         <h4 class="stats-numbers">Total: {{ students|length  | e }}</h4>
         <ul>
             {% for student in students %}
-            <li><a href="owner_student/{{student.getId | e }}">{{student.getName | e }}</a></li>
+            <li><a href="student/{{student.getId | e }}">{{student.getName | e }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}

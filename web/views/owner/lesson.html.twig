@@ -9,7 +9,7 @@
 
             {% if lesson.getCourses is not empty %}
             {% for course in lesson.getCourses %}
-            <h1><a href="../owner_course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></h1>
+            <h1><a href="../course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></h1>
             {% endfor %}
             {% endif %}
             <h1>Lesson: {{lesson.getTitle | e }}</h1>

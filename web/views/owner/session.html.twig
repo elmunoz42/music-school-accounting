@@ -11,7 +11,7 @@
             {% if service is not empty %}
             <h3>Update Session Information/Attendance</h3>
             <div class="well">
-              <form action="/owner_session/{{ service.getId | e }}" method="post">
+              <form action="/session/{{ service.getId | e }}" method="post">
                   <input name="_method" type="hidden" value="patch" required>
                   <div class="form-group">
                     <label for="date_of_service">Starting Date:</label>
@@ -50,14 +50,14 @@
             {% if service.getTeacher is not empty %}
             <ul>
                 {% for teacher in service.getTeacher %}
-                <li> <a href="/owner_teacher/{{teacher.getId| e }}">{{ teacher.getName | e }}</a></li>
+                <li> <a href="/teacher/{{teacher.getId| e }}">{{ teacher.getName | e }}</a></li>
                 {% endfor %}
 
             {% endif %}
             </ul>
             <h4>Students in this session:</h4>
             <ul>
-                <li> <a href="/owner_student/{{service.getStudent.getId| e }}">{{ service.getStudent.getName | e }}</a></li>
+                <li> <a href="/student/{{service.getStudent.getId| e }}">{{ service.getStudent.getName | e }}</a></li>
             </ul>
             <h3>Session Info:</h3>
             {% if service is not empty %}

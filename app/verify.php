@@ -2,7 +2,7 @@
 // if user is not logged in, redirect
 $is_logged_in = function ($request, $app) {
   if (!isLoggedIn()) {
-      return $app->redirect("/owner_login");
+      return $app->redirect("/login");
   }
 };
 

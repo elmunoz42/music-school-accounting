@@ -133,7 +133,7 @@
                             <h4 class="modal-title">Update Service:</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="/owner_session/{{service.getId | e }}/update" method="post">
+                            <form action="/session/{{service.getId | e }}/update" method="post">
                                 <input name="_method" type="hidden" value="patch" required>
                                 <input type="hidden" name="student_id" value="{{ service.getStudent.getId  | e }}">
                                 <input type="hidden" name="account_id" value="{{ service.getAccounts[0].getId  | e }}">

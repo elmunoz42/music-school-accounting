@@ -26,7 +26,7 @@ $app->post("/create_school", function() use ($app) {
         if($new_school->save()) {
             if($new_school->addOwner($owner_id)) {
                 $_SESSION['school_id'] = $new_school->getId();
-                return $app->redirect("/owner_main");
+                return $app->redirect("/main");
             };
         }
 })

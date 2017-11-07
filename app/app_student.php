@@ -1,7 +1,32 @@
 <?php
 
 //READ student NOTE use for family and teacher
-$app->get("/owner_student/{student_id}", function($student_id) use ($app) {
+$app->get("/student/{student_id}", function($student_id) use ($app) {
+
+    if ($_SESSION['role'] == 'teacher') {
+        $teacher = Teacher::find($_SESSION['role_id']);
+
+        if ($teacher) {
+            if (!$teacher->findStudentById($student_id)){
+                // if student is not assigend to this teacher, redirect
+                // add error
+                return $app->redirect($_SESSION['location_uri']);
+            }
+        }
+    }
+
+    if ($_SESSION['role'] == 'client') {
+        $client = Account::find($_SESSION['role_id']);
+
+        if ($client) {
+            if (!$client->findStudentById($student_id)) {
+                // if student is not assigend to this account, redirect
+                // add error
+                return $app->redirect($_SESSION['location_uri']);
+            }
+        }
+    }
+
 
     $month = date("m");
     $year = date("Y");
@@ -35,7 +60,7 @@ $app->get("/owner_student/{student_id}", function($student_id) use ($app) {
       $services = $student->getServicesForMonth($month, $year);
 
 
-      return $app['twig']->render('owner_student.html.twig', array(
+      return $app['twig']->render('student.html.twig', array(
         'role' => $_SESSION['role'],
         'student' => $student,
         'services' => $services,
@@ -46,16 +71,16 @@ $app->get("/owner_student/{student_id}", function($student_id) use ($app) {
       ));
     } else {
         // student is not found
-        return $app->redirect("/owner_students");
+        return $app->redirect("/students");
     }
 })
 ->before($is_logged_in)
-->before($client_only)
+// ->before($client_only)
 ->after($save_location_uri);
 
 
 //JOIN student to course
-$app->post("/owner_student/{student_id}/enroll", function($student_id) use ($app) {
+$app->post("/student/{student_id}/enroll", function($student_id) use ($app) {
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
 
     if ($course_id) {
@@ -73,14 +98,14 @@ $app->post("/owner_student/{student_id}/enroll", function($student_id) use ($app
             // add error message
         }
     }
-    return $app->redirect("/owner_student/" . $student_id);
+    return $app->redirect("/student/" . $student_id);
 })
 ->before($is_logged_in)
 ->before($client_only);
 
 
 //UPDATE student notes
-$app->patch("/owner_student/{student_id}/add_notes", function($student_id) use ($app) {
+$app->patch("/student/{student_id}/add_notes", function($student_id) use ($app) {
     $selected_student = Student::find($student_id);
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
 
@@ -91,14 +116,14 @@ $app->patch("/owner_student/{student_id}/add_notes", function($student_id) use (
     } else {
       // add error
     }
-    return $app->redirect("/owner_student/" . $student_id);
+    return $app->redirect("/student/" . $student_id);
 })
 ->before($is_logged_in)
 ->before($client_only);
 
 
 //DELETE student from school
-$app->delete("/owner_student/student_termination/{id}", function($id) use ($app) {
+$app->delete("/student/student_termination/{id}", function($id) use ($app) {
     $school=School::find($_SESSION['school_id']);
     $school->removeStudent($id);
 
@@ -106,14 +131,14 @@ $app->delete("/owner_student/student_termination/{id}", function($id) use ($app)
     // $student = Student::find($id);
     // $student->delete();
 
-    return $app->redirect("/owner_students");
+    return $app->redirect("/students");
 })
 ->before($is_logged_in)
 ->before($owner_only);
 
 
 // UPDATE student
-$app->post("/owner_student/{student_id}/update", function($student_id) use ($app) {
+$app->post("/student/{student_id}/update", function($student_id) use ($app) {
     $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
     if ($new_student_name) {
         $student = Student::find($student_id);
@@ -129,7 +154,7 @@ $app->post("/owner_student/{student_id}/update", function($student_id) use ($app
     } else {
         // add error message
     }
-    return $app->redirect("/owner_students");
+    return $app->redirect("/students");
 })
 ->before($is_logged_in)
 ->before($client_only);

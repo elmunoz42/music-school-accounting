@@ -1,7 +1,7 @@
 <?php
 
 //CREATE a Lesson NOTE GO BACK TO COURSES THOUGH
-$app->post("/owner_lesson/{id}", function($id) use ($app) {
+$app->post("/lesson/{id}", function($id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $course = Course::find($id);
     $title = $_POST['title'];
@@ -12,7 +12,7 @@ $app->post("/owner_lesson/{id}", function($id) use ($app) {
     $lesson_id = $lesson->getId();
     $course->addLesson($lesson_id);
 
-    return $app['twig']->render('owner_course.html.twig', array(
+    return $app['twig']->render('course.html.twig', array(
       'role' => $_SESSION['role'],
       'school'=>$school,
       'course' => $course,
@@ -24,19 +24,19 @@ $app->post("/owner_lesson/{id}", function($id) use ($app) {
 
 
 //READ lesson
-$app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
+$app->get("/lesson/{lesson_id}", function($lesson_id) use ($app){
     $school = School::find($_SESSION['school_id']);
     $lesson = Lesson::find($lesson_id);
 
     if ($lesson) {
-      return $app['twig']->render('owner_lesson.html.twig', array(
+      return $app['twig']->render('lesson.html.twig', array(
           'role' => $_SESSION['role'],
           'school'=>$school,
           'lesson'=>$lesson
       ));
     } else {
         // lesson is not found
-        return $app->redirect("/owner_courses");
+        return $app->redirect("/courses");
     }
 })
 ->before($is_logged_in)
@@ -44,7 +44,7 @@ $app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
 
 
 //DELETE Lesson
-$app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app) {
+$app->delete("/lesson/{lesson_id}/delete", function($lesson_id) use ($app) {
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
 
     if ($course_id) {
@@ -52,10 +52,10 @@ $app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app)
 
         if ($lesson->delete()) {
             // add success message
-            return $app->redirect("/owner_course/" . $course_id);
+            return $app->redirect("/course/" . $course_id);
         } else {
             // add error message
-            return $app->redirect("/owner_course/" . $course_id);
+            return $app->redirect("/course/" . $course_id);
         }
     }
 })
@@ -64,7 +64,7 @@ $app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app)
 
 
 //UPDATE Lesson
-$app->post("/owner_lesson/{lesson_id}/update", function($lesson_id) use ($app) {
+$app->post("/lesson/{lesson_id}/update", function($lesson_id) use ($app) {
     $lesson = Lesson::find($lesson_id);
 
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
@@ -74,10 +74,10 @@ $app->post("/owner_lesson/{lesson_id}/update", function($lesson_id) use ($app) {
 
     if ($lesson->updateTitle($title) && $lesson->updateDescription($description) && $lesson->updateContent($content)) {
         // add success message
-        return $app->redirect("/owner_course/" . $course_id);
+        return $app->redirect("/course/" . $course_id);
     } else {
         // add error message
-        return $app->redirect("/owner_course/" . $course_id);
+        return $app->redirect("/course/" . $course_id);
     }
 })
 ->before($is_logged_in)

@@ -1,14 +1,14 @@
 <?php
 
 // GET session
-$app->get('/owner_session/{service_id}', function($service_id) use($app) {
+$app->get('/session/{service_id}', function($service_id) use($app) {
     $school = School::find($_SESSION['school_id']);
     $service = Service::find($service_id);
 
     if ($service) {
         $notes_array = explode("|", $service->getNotes());
         return $app['twig']->render(
-            'owner_session.html.twig', array(
+            'session.html.twig', array(
                 'role' => $_SESSION['role'],
                 'school'=>$school,
                 'service'=>$service,
@@ -18,7 +18,7 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
     } else {
         // NOTE: which page the user should be redirected to??
         // session is not found
-        return $app->redirect("/owner_main");
+        return $app->redirect("/main");
     }
 })
 ->before($is_logged_in)
@@ -26,7 +26,7 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
 
 
 // Update session
-$app->patch('/owner_session/{service_id}/update', function($service_id) use($app) {
+$app->patch('/session/{service_id}/update', function($service_id) use($app) {
 
     $service = Service::find($service_id);
     $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
@@ -73,9 +73,9 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
     }
 
     if ($student_id) {
-      return $app->redirect("/owner_student/" . $student_id);
+      return $app->redirect("/student/" . $student_id);
     } else {
-      return $app->redirect("/owner_main");
+      return $app->redirect("/main");
     }
 
 })
@@ -84,7 +84,7 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
 
 
 // AJAX: Update paid_for status
-$app->post('/owner_session_update_paid_for', function() use($app) {
+$app->post('/session_update_paid_for', function() use($app) {
     $paid_status = $_POST['paid_status'];
     $service_id = (int)$_POST['service_id'];
     $service = Service::find($service_id);
@@ -160,7 +160,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
       // add error message
     }
 
-    return $app->redirect("/owner_student/" . $student_id);
+    return $app->redirect("/student/" . $student_id);
 })
 ->before($is_logged_in)
 ->before($teacher_only);

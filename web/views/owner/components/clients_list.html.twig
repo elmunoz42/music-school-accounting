@@ -7,9 +7,9 @@
     {% for account in accounts %}
         <tr>
             <td>
-                <a href="owner_account/{{account.getId | e }}">{{ account.getFamilyName | e }}</a>
+                <a href="account/{{account.getId | e }}">{{ account.getFamilyName | e }}</a>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update_account_{{account.getId | e }}">Update</button>
-                <form action="/owner_account/{{ account.getId | e }}/delete" method="post">
+                <form action="/account/{{ account.getId | e }}/delete" method="post">
                     <input name="_method" type="hidden" value="delete">
                     <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
                 </form>
@@ -24,7 +24,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Update Account: {{account.getFamilyName | e}}</h4>
                     </div>
-                    <form action="/owner_account/{{account.getId | e }}/update" method="post">
+                    <form action="/account/{{account.getId | e }}/update" method="post">
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="modal-body">

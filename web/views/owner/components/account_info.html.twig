@@ -11,7 +11,7 @@
             <li>Email Address: {{account.getEmailAddress | e}}</li>
             {% if account.getStudents is not empty %}
                 {% for student in account.getStudents %}
-                    <li>Student Name:<a href="/owner_student/{{student.getId | e}}"></a> {{student.getName | e}}</li>
+                    <li>Student Name:<a href="/student/{{student.getId | e}}"></a> {{student.getName | e}}</li>
                 {% endfor %}
             {% endif %}
         </ul>

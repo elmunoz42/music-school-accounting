@@ -1,17 +1,17 @@
 <?php
 
 //READ teachers
-$app->get("/owner_teachers", function() use ($app) {
+$app->get("/teachers", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('owner_teachers.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'teachers' => $school->getTeachers()));
+    return $app['twig']->render('teachers.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'teachers' => $school->getTeachers()));
 })
 ->before($is_logged_in)
 ->before($client_only)
 ->after($save_location_uri);
 
 //CREATE teacher
-$app->post("/owner_teachers", function() use ($app) {
+$app->post("/teachers", function() use ($app) {
 
     // get previous location uri
     $location_uri = $_SESSION['location_uri'];
@@ -54,7 +54,7 @@ $app->post("/owner_teachers", function() use ($app) {
         // error message
     }
 
-    return $app->redirect("/owner_teachers");
+    return $app->redirect("/teachers");
 })
 ->before($is_logged_in)
 ->before($owner_only);

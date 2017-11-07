@@ -1,17 +1,17 @@
 <?php
 
 //READ accounts
-$app->get("/owner_accounts", function() use ($app) {
+$app->get("/accounts", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('owner_accounts.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'accounts' => $school->getAccounts()));
+    return $app['twig']->render('accounts.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'accounts' => $school->getAccounts()));
 })
 ->before($is_logged_in)
 ->before($client_only)
 ->after($save_location_uri);
 
 // CREATE account
-$app->post("/owner_accounts", function() use ($app) {
+$app->post("/accounts", function() use ($app) {
 
     $school = School::find($_SESSION['school_id']);
 
@@ -53,21 +53,21 @@ $app->post("/owner_accounts", function() use ($app) {
     }
 
     unset($_SESSION['new_account_id']);
-    return  $app->redirect("/owner_accounts");
+    return  $app->redirect("/accounts");
 })
 ->before($is_logged_in)
 ->before($owner_only);
 
 
 //search client
-$app->post("/owner_accounts/search", function() use ($app) {
+$app->post("/accounts/search", function() use ($app) {
     $search_input = $_POST['search_input'] ? $_POST['search_input'] : '';
 
     if ($search_input) {
         $accounts = Account::search($search_input);
 
         if ($accounts) {
-            return $app['twig']->render('owner_accounts_search.html.twig', array('role' => $_SESSION['role'], 'accounts' => $accounts));
+            return $app['twig']->render('accounts_search.html.twig', array('role' => $_SESSION['role'], 'accounts' => $accounts));
         } else {
             // no results
             // add error message
@@ -76,15 +76,15 @@ $app->post("/owner_accounts/search", function() use ($app) {
       // input is empty
       // add error message
     }
-    return  $app->redirect("/owner_accounts");
+    return  $app->redirect("/accounts");
 })
 ->before($is_logged_in)
 ->before($owner_only);
 
 
-$app->get("/owner_accounts/search", function() use ($app) {
-    // this route is not exist. therefore redirect to owner_accounts
-    return  $app->redirect("/owner_accounts");
+$app->get("/accounts/search", function() use ($app) {
+    // this route is not exist. therefore redirect to accounts
+    return  $app->redirect("/accounts");
 })
 ->before($is_logged_in)
 ->before($owner_only)

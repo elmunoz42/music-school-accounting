@@ -1,16 +1,16 @@
 <?php
 
 // READ account
-$app->get('/owner_account/{account_id}', function($account_id) use ($app) {
+$app->get('/account/{account_id}', function($account_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $account = Account::find($account_id);
 
 
     // if client try to access to different clients info, redirect
     if ( ($_SESSION['role'] == 'client') && ($_SESSION['role_id'] != $account_id)) {
-        return $app->redirect("/owner_account/" . $_SESSION['role_id']);
+        return $app->redirect("/account/" . $_SESSION['role_id']);
     }
-    
+
 
     if ($account) {
         $students = $account->getStudents();
@@ -21,7 +21,7 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
         $last_month = intval(date('m',strtotime('last month')));
         $last_months_year = intval(date('Y',strtotime('last month')));
 
-        return $app['twig']->render('owner_account.html.twig', array(
+        return $app['twig']->render('account.html.twig', array(
             'role' => $_SESSION['role'],
             'school'=>$school,
             'account'=>$account,
@@ -36,7 +36,7 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
         ));
     } else {
         // account is not found
-        return $app->redirect("/owner_accounts");
+        return $app->redirect("/accounts");
     }
 })
 ->before($is_logged_in)
@@ -46,7 +46,7 @@ $app->get('/owner_account/{account_id}', function($account_id) use ($app) {
 
 
 //UPDATE account notes
-$app->patch("/owner_account/{account_id}/add_note", function($account_id) use ($app) {
+$app->patch("/account/{account_id}/add_note", function($account_id) use ($app) {
     $selected_account = Account::find($account_id);
 
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
@@ -58,14 +58,14 @@ $app->patch("/owner_account/{account_id}/add_note", function($account_id) use ($
     } else {
       // add error
     }
-    return $app->redirect("/owner_account/" . $account_id);
+    return $app->redirect("/account/" . $account_id);
 })
 ->before($is_logged_in)
 ->before($client_only);
 
 
 //UPDATE account
-$app->post("/owner_account/{account_id}/update", function($account_id) use ($app) {
+$app->post("/account/{account_id}/update", function($account_id) use ($app) {
     $account = Account::find($account_id);
 
     $family_name = $_POST['family_name'] ? $_POST['family_name'] : '';
@@ -77,10 +77,10 @@ $app->post("/owner_account/{account_id}/update", function($account_id) use ($app
 
     if ($account->updateFamilyName($family_name) && $account->updateParentOneName($parent_one_name) && $account->updateParentTwoName($parent_two_name) && $account->updateSteetAddress($street_address) && $account->updatePhoneNumber($phone_number) && $account->updateEmailAddress($email_address)) {
         // add success message
-        return $app->redirect("/owner_accounts");
+        return $app->redirect("/accounts");
     } else {
         // add error message
-        return $app->redirect("/owner_accounts");
+        return $app->redirect("/accounts");
     }
 })
 ->before($is_logged_in)
@@ -89,7 +89,7 @@ $app->post("/owner_account/{account_id}/update", function($account_id) use ($app
 
 
 //DELETE account
-$app->delete("/owner_account/{account_id}/delete", function($account_id) use ($app) {
+$app->delete("/account/{account_id}/delete", function($account_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $account = Account::find($account_id);
     $students = $account->getStudents();
@@ -98,14 +98,14 @@ $app->delete("/owner_account/{account_id}/delete", function($account_id) use ($a
 
         if ($account->delete()) {
             // add success message
-            return $app->redirect("/owner_accounts");
+            return $app->redirect("/accounts");
         } else {
             // add error message
-            return $app->redirect("/owner_accounts");
+            return $app->redirect("/accounts");
         }
     } else {
         // add error message
-        return $app->redirect("/owner_accounts");
+        return $app->redirect("/accounts");
     }
 })
 ->before($is_logged_in)
@@ -113,7 +113,7 @@ $app->delete("/owner_account/{account_id}/delete", function($account_id) use ($a
 
 
 // JOIN add student to account
-$app->post('/owner_add_student_to_account', function() use($app) {
+$app->post('/add_student_to_account', function() use($app) {
     $account_id = $_POST['account_id'] ? $_POST['account_id'] : '';
     $student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
 
@@ -130,14 +130,14 @@ $app->post('/owner_add_student_to_account', function() use($app) {
 
             $selected_account->addStudent($student_id);
 
-            return $app->redirect("/owner_account/" . $account_id);
+            return $app->redirect("/account/" . $account_id);
         } else {
           // error message
-          return $app->redirect("/owner_account/" . $account_id);
+          return $app->redirect("/account/" . $account_id);
         }
     } else {
         // error message
-        return $app->redirect("/owner_account/" . $account_id);
+        return $app->redirect("/account/" . $account_id);
     }
 })
 ->before($is_logged_in)
