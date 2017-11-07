@@ -14,7 +14,7 @@ $app->get("/login", function() use ($app) {
                 return $app->redirect('/teacher/' . $user_id);
                 break;
             case 'client':
-                return $app->redirect('/teacher/' . $user_id);
+                return $app->redirect('/client/' . $user_id);
                 break;
             default:
                 // unexpected case
@@ -63,9 +63,9 @@ $app->post("/login", function() use ($app) {
                             return $app->redirect('/teacher/' . $teacher->getId());
                             break;
                         case 'client':
-                            $account = Account::findAccountByUserId($user_id);
-                            $_SESSION['role_id'] = $account->getId();
-                            return $app->redirect('owner_account/' . $account->getId());
+                            $client = Client::findClientByUserId($user_id);
+                            $_SESSION['role_id'] = $client->getId();
+                            return $app->redirect('client/' . $client->getId());
                             break;
                         default:
                             // unexpected case

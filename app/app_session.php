@@ -130,7 +130,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
     if ($is_all_form_filled) {
         $school = School::find($_SESSION['school_id']);
         $student = Student::find($student_id);
-        $account = $student->getAccounts()[0];
+        $client = $student->getClient()[0];
         $teacher = Teacher::find($teacher_id);
 
         $this_month = intval(date('m',strtotime('this month')));
@@ -150,7 +150,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
             $attendance,
             $teacher,
             $school,
-            $account
+            $client
         )) {
             // add success message
         } else {

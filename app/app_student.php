@@ -16,11 +16,11 @@ $app->get("/student/{student_id}", function($student_id) use ($app) {
     }
 
     if ($_SESSION['role'] == 'client') {
-        $client = Account::find($_SESSION['role_id']);
+        $client = Client::find($_SESSION['role_id']);
 
         if ($client) {
             if (!$client->findStudentById($student_id)) {
-                // if student is not assigend to this account, redirect
+                // if student is not assigend to this client, redirect
                 // add error
                 return $app->redirect($_SESSION['location_uri']);
             }

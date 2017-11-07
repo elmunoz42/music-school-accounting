@@ -3,7 +3,6 @@ $app->get("/main", function() use ($app) {
 
 
     $owner = Owner::findOwnerById($_SESSION['user_id']);
-
     if ($owner) {
         //TODO FUTURE: if several school exists, show list and choose
 
@@ -12,7 +11,7 @@ $app->get("/main", function() use ($app) {
                 return $app->redirect('/teacher/' . $_SESSION['role_id']);
                 break;
             case 'client':
-                return $app->redirect('/account/' . $_SESSION['role_id']);
+                return $app->redirect('/client/' . $_SESSION['role_id']);
                 break;
             default:
                 //do nothing
@@ -31,7 +30,7 @@ $app->get("/main", function() use ($app) {
                   'teachers' => $school->getTeachers(),
                   'students' => $school->getStudents(),
                   'courses' => $school->getCourses(),
-                  'accounts' => $school->getAccounts(),
+                  'clients' => $school->getClients(),
                   'services' => $school->getServicesForMonth(),
                   'lessons' => $school->getLessons()
                 )
@@ -75,8 +74,8 @@ $app->get("/all_sessions", function() use ($app) {
       $options['student_id'] = $_GET['student_id'];
   }
 
-  if (!empty($_GET['account_id'])) {
-      $options['account_id'] = $_GET['account_id'];
+  if (!empty($_GET['client_id'])) {
+      $options['client_id'] = $_GET['client_id'];
   }
 
   if (!empty($_GET['attendance'])) {
@@ -98,7 +97,7 @@ $app->get("/all_sessions", function() use ($app) {
               return $app->redirect('/teacher/' . $_SESSION['role_id']);
               break;
           case 'client':
-              return $app->redirect('/account/' . $_SESSION['role_id']);
+              return $app->redirect('/client/' . $_SESSION['role_id']);
               break;
           default:
               //do nothing
@@ -117,7 +116,7 @@ $app->get("/all_sessions", function() use ($app) {
                 'teachers' => $school->getTeachers(),
                 'students' => $school->getStudents(),
                 'courses' => $school->getCourses(),
-                'accounts' => $school->getAccounts(),
+                'clients' => $school->getClients(),
                 'services' => $school->getServicesForMonth($options),
                 'lessons' => $school->getLessons(),
                 'datestamp' => $datestamp

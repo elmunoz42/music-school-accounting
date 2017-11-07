@@ -1,15 +1,15 @@
 {% extends "base_private.html.twig" %}
-{% set pageTitle = account.getFamilyName | e %}
-{% block title %}Account{% endblock %}
+{% set pageTitle = client.getFamilyName | e %}
+{% block title %}Client{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-4">
-            {% include './components/account_info.html.twig' %}
+            {% include './components/client_info.html.twig' %}
             {% include './components/add_student.html.twig' %}
         </div>
         <div class="col-md-4">
-            <h3>Students in this Account</h3>
+            <h3>Students in this Client</h3>
             <hr>
             {% include './components/students_list.html.twig' %}
             {% include './components/add_note_client.html.twig' %}

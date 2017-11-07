@@ -87,7 +87,7 @@
                             <form action="/session/{{service.getId | e }}/update" method="post">
                                 <input name="_method" type="hidden" value="patch" required>
                                 <input type="hidden" name="student_id" value="{{ service.getStudent.getId  | e }}">
-                                <input type="hidden" name="account_id" value="{{ service.getAccounts[0].getId  | e }}">
+                                <input type="hidden" name="client_id" value="{{ service.getClients[0].getId  | e }}">
                                 <div class="row">
                                     <div class="col-sm-4">
                                           <div class="form-group">

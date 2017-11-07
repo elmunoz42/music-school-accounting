@@ -23,7 +23,7 @@
     require_once __DIR__."/../src/Course.php";
     require_once __DIR__."/../src/Lesson.php";
     require_once __DIR__."/../src/School.php";
-    require_once __DIR__."/../src/Account.php";
+    require_once __DIR__."/../src/Client.php";
     require_once __DIR__."/../src/Image.php";
     require_once __DIR__."/../src/Service.php";
     require_once __DIR__."/../src/Owner.php";
@@ -38,8 +38,8 @@
 
 
     // load routing
-    require_once __DIR__."/./app_account.php";
-    require_once __DIR__."/./app_accounts.php";
+    require_once __DIR__."/./app_client.php";
+    require_once __DIR__."/./app_clients.php";
     require_once __DIR__."/./app_course.php";
     require_once __DIR__."/./app_courses.php";
     require_once __DIR__."/./app_create_school.php";

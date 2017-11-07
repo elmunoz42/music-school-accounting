@@ -43,10 +43,10 @@
               </select>
             </th>
             <th>
-              <select id="accountFilter" class="form-control" name="account_id">
+              <select id="clientFilter" class="form-control" name="client_id">
                 <option value="" selected>Client</option>
-                {% for account in accounts %}
-                    <option value="{{account.getId}}">{{account.getFamilyName}}</option>
+                {% for client in clients %}
+                    <option value="{{client.getId}}">{{client.getFamilyName}}</option>
                 {% endfor %}
               </select>
             </th>
@@ -90,7 +90,7 @@
                     <tr>
                         <td>{{ service.getDateOfService | e }}</td>
                         <td>{{ service.getTeacher.getName | e }}</td>
-                        <td>{{ service.getAccounts[0].getFamilyName}}</td>
+                        <td>{{ service.getClients[0].getFamilyName}}</td>
                         <td>{{ service.getStudent.getName | e}}</td>
                         <td>{{ service.getAttendance | e }}</td>
                         <td>{{ service.getPrice | e }}</td>
@@ -136,7 +136,7 @@
                             <form action="/session/{{service.getId | e }}/update" method="post">
                                 <input name="_method" type="hidden" value="patch" required>
                                 <input type="hidden" name="student_id" value="{{ service.getStudent.getId  | e }}">
-                                <input type="hidden" name="account_id" value="{{ service.getAccounts[0].getId  | e }}">
+                                <input type="hidden" name="client_id" value="{{ service.getClients[0].getId  | e }}">
                                 <div class="row">
                                     <div class="col-sm-4">
                                           <div class="form-group">
@@ -218,7 +218,7 @@
 
         var monthFilter = $('#monthFilter').val();
         var yearFilter = $('#yearFilter').val();
-        var accountFilter = $('#accountFilter').val();
+        var clientFilter = $('#clientFilter').val();
         var teacherFilter = $('#teacherFilter').val();
         var studentFilter = $('#studentFilter').val();
         var attendanceFilter = $('#attendanceFilter').val();
@@ -226,7 +226,7 @@
 
         param += monthFilter ? "month=" + monthFilter + "&" : '';
         param += yearFilter ? "year=" + yearFilter + "&" : '';
-        param += accountFilter ? "account_id=" + accountFilter + "&" : '';
+        param += clientFilter ? "client_id=" + clientFilter + "&" : '';
         param += teacherFilter ? "teacher_id=" + teacherFilter + "&" : '';
         param += studentFilter ? "student_id=" + studentFilter + "&" : '';
         param += attendanceFilter ? "attendance=" + attendanceFilter + "&" : '';

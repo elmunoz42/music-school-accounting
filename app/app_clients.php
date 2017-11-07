@@ -1,17 +1,17 @@
 <?php
 
-//READ accounts
-$app->get("/accounts", function() use ($app) {
+//READ clients
+$app->get("/clients", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
 
-    return $app['twig']->render('accounts.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'accounts' => $school->getAccounts()));
+    return $app['twig']->render('clients.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'clients' => $school->getClients()));
 })
 ->before($is_logged_in)
 ->before($client_only)
 ->after($save_location_uri);
 
-// CREATE account
-$app->post("/accounts", function() use ($app) {
+// CREATE client
+$app->post("/clients", function() use ($app) {
 
     $school = School::find($_SESSION['school_id']);
 
@@ -26,24 +26,24 @@ $app->post("/accounts", function() use ($app) {
     $billing_history = $_POST['billing_history'] ? $_POST['billing_history'] : '';
     $outstanding_balance = $_POST['outstanding_balance'] ? intval($_POST['outstanding_balance']) : '';
 
-    // create new account
-    $new_account = new Account($family_name, $parent_one_name, $street_address, $phone_number, $email_address);
+    // create new client
+    $new_client = new Client($family_name, $parent_one_name, $street_address, $phone_number, $email_address);
 
-    $notes_array = explode("|", $new_account->getNotes());
-    $new_account->setParentTwoName($parent_two_name);
-    $new_account->setNotes($notes);
-    $new_account->setBillingHistory($billing_history);
-    $new_account->setOutstandingBalance($outstanding_balance);
+    $notes_array = explode("|", $new_client->getNotes());
+    $new_client->setParentTwoName($parent_two_name);
+    $new_client->setNotes($notes);
+    $new_client->setBillingHistory($billing_history);
+    $new_client->setOutstandingBalance($outstanding_balance);
 
-    if ($new_account->save()) {
+    if ($new_client->save()) {
         //add relationship
-        if ($school->addAccount($new_account->getId())) {
+        if ($school->addClient($new_client->getId())) {
           // success message
         } else {
           // error message
         }
 
-        if ($new_account->addUser($_SESSION['new_account_id'])) {
+        if ($new_client->addUser($_SESSION['new_account_id'])) {
           // success message
         } else {
           // error message
@@ -53,21 +53,21 @@ $app->post("/accounts", function() use ($app) {
     }
 
     unset($_SESSION['new_account_id']);
-    return  $app->redirect("/accounts");
+    return  $app->redirect("/clients");
 })
 ->before($is_logged_in)
 ->before($owner_only);
 
 
 //search client
-$app->post("/accounts/search", function() use ($app) {
+$app->post("/clients/search", function() use ($app) {
     $search_input = $_POST['search_input'] ? $_POST['search_input'] : '';
 
     if ($search_input) {
-        $accounts = Account::search($search_input);
+        $clients = Client::search($search_input);
 
-        if ($accounts) {
-            return $app['twig']->render('accounts_search.html.twig', array('role' => $_SESSION['role'], 'accounts' => $accounts));
+        if ($clients) {
+            return $app['twig']->render('clients_search.html.twig', array('role' => $_SESSION['role'], 'clients' => $clients));
         } else {
             // no results
             // add error message
@@ -76,15 +76,15 @@ $app->post("/accounts/search", function() use ($app) {
       // input is empty
       // add error message
     }
-    return  $app->redirect("/accounts");
+    return  $app->redirect("/clients");
 })
 ->before($is_logged_in)
 ->before($owner_only);
 
 
-$app->get("/accounts/search", function() use ($app) {
-    // this route is not exist. therefore redirect to accounts
-    return  $app->redirect("/accounts");
+$app->get("/clients/search", function() use ($app) {
+    // this route is not exist. therefore redirect to clients
+    return  $app->redirect("/clients");
 })
 ->before($is_logged_in)
 ->before($owner_only)
