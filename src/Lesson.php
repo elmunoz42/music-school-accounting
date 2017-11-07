@@ -154,9 +154,9 @@
             $GLOBALS['DB']->exec("INSERT INTO lessons_students (lesson_id, student_id) VALUES ({$this->getId()}, {$student_id});");
         }
         // NOTE UNTESTED
-        function addAccount($account_id)
+        function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO accounts_lessons (lesson_id, account_id) VALUES ({$this->getId()}, {$account_id});");
+            $GLOBALS['DB']->exec("INSERT INTO clients_lessons (lesson_id, client_id) VALUES ({$this->getId()}, {$client_id});");
         }
 
         // Join statements QUERY
@@ -207,30 +207,30 @@
             return $students;
         }
         // NOTE UNTESTED
-        function getAccounts()
+        function getClients()
         {
-            $query = $GLOBALS['DB']->query("SELECT accounts.* FROM lessons JOIN accounts_lessons ON (lessons.id = accounts_lessons.lesson_id) JOIN accounts ON (accounts_lessons.account_id = accounts.id) WHERE lessons.id = {$this->getId()};");
-            $accounts = array();
-            foreach ($query as $account)
+            $query = $GLOBALS['DB']->query("SELECT clients.* FROM lessons JOIN clients_lessons ON (lessons.id = clients_lessons.lesson_id) JOIN clients ON (clients_lessons.client_id = clients.id) WHERE lessons.id = {$this->getId()};");
+            $clients = array();
+            foreach ($query as $client)
             {
-                $id = $account['id'];
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = intval($account['outstanding_balance']);
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                array_push($accounts, $new_account);
+                $id = $client['id'];
+                $family_name = $client['family_name'];
+                $parent_one_name = $client['parent_one_name'];
+                $parent_two_name = $client['parent_two_name'];
+                $street_address = $client['street_address'];
+                $phone_number = $client['phone_number'];
+                $email_address = $client['email_address'];
+                $notes = $client['notes'];
+                $billing_history = $client['billing_history'];
+                $outstanding_balance = intval($client['outstanding_balance']);
+                $new_client = new Client($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
+                $new_client->setParentTwoName($parent_two_name);
+                $new_client->setNotes($notes);
+                $new_client->setBillingHistory($billing_history);
+                $new_client->setOutstandingBalance($outstanding_balance);
+                array_push($clients, $new_client);
             }
-            return $accounts;
+            return $clients;
         }
 
     }

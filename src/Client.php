@@ -1,5 +1,5 @@
 <?php
-class Account
+class Client
 {
     private $family_name;
     private $parent_one_name;
@@ -129,13 +129,13 @@ class Account
 
     // function save()
     // {
-    //   $GLOBALS['DB']->exec("INSERT INTO accounts (family_name, parent_one_name, parent_two_name, street_address, phone_number, email_address, notes, billing_history, outstanding_balance) VALUES ('{$this->getFamilyName()}', '{$this->getParentOneName()}', '{$this->getParentTwoName()}', '{$this->getStreetAddress()}', '{$this->getPhoneNumber()}', '{$this->getEmailAddress()}', '{$this->getNotes()}', '{$this->getBillingHistory()}', {$this->getOutstandingBalance()});");
+    //   $GLOBALS['DB']->exec("INSERT INTO clients (family_name, parent_one_name, parent_two_name, street_address, phone_number, email_address, notes, billing_history, outstanding_balance) VALUES ('{$this->getFamilyName()}', '{$this->getParentOneName()}', '{$this->getParentTwoName()}', '{$this->getStreetAddress()}', '{$this->getPhoneNumber()}', '{$this->getEmailAddress()}', '{$this->getNotes()}', '{$this->getBillingHistory()}', {$this->getOutstandingBalance()});");
     //   $this->id = $GLOBALS['DB']->lastInsertId();
     // }
     function save()
     {
       $stmt = $GLOBALS['DB']->prepare("
-          INSERT INTO accounts (family_name, parent_one_name, parent_two_name, street_address, phone_number, email_address, notes, billing_history, outstanding_balance)
+          INSERT INTO clients (family_name, parent_one_name, parent_two_name, street_address, phone_number, email_address, notes, billing_history, outstanding_balance)
           VALUES (:family_name, :parent_one_name, :parent_two_name, :street_address, :phone_number, :email_address, :notes, :billing_history, :outstanding_balance)
       ");
       $stmt->bindParam(':family_name', $this->getFamilyName(), PDO::PARAM_STR);
@@ -158,43 +158,43 @@ class Account
 
     static function getAll()
     {
-        $returned_accounts = $GLOBALS['DB']->query("SELECT * FROM accounts;");
-        $accounts = array();
+        $returned_clients = $GLOBALS['DB']->query("SELECT * FROM clients;");
+        $clients = array();
 
-        if (!empty($returned_accounts)) {
-            foreach($returned_accounts as $account){
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = intval($account['outstanding_balance']);
-                $id = $account['id'];
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                array_push($accounts, $new_account);
+        if (!empty($returned_clients)) {
+            foreach($returned_clients as $client){
+                $family_name = $client['family_name'];
+                $parent_one_name = $client['parent_one_name'];
+                $parent_two_name = $client['parent_two_name'];
+                $street_address = $client['street_address'];
+                $phone_number = $client['phone_number'];
+                $email_address = $client['email_address'];
+                $notes = $client['notes'];
+                $billing_history = $client['billing_history'];
+                $outstanding_balance = intval($client['outstanding_balance']);
+                $id = $client['id'];
+                $new_client = new Client($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
+                $new_client->setParentTwoName($parent_two_name);
+                $new_client->setNotes($notes);
+                $new_client->setBillingHistory($billing_history);
+                $new_client->setOutstandingBalance($outstanding_balance);
+                array_push($clients, $new_client);
             }
         }
 
-        return $accounts;
+        return $clients;
     }
 
     static function deleteAll()
     {
-        $GLOBALS['DB']->exec("DELETE FROM accounts;");
+        $GLOBALS['DB']->exec("DELETE FROM clients;");
     }
 
-    static function find($account_id)
+    static function find($client_id)
     {
-        $stmt = $GLOBALS['DB']->prepare("SELECT accounts.* FROM accounts JOIN accounts_schools ON (accounts.id = accounts_schools.account_id) JOIN schools ON (accounts_schools.school_id = schools.id) WHERE accounts.id = :account_id AND schools.id = :school_id");
+        $stmt = $GLOBALS['DB']->prepare("SELECT clients.* FROM clients JOIN clients_schools ON (clients.id = clients_schools.client_id) JOIN schools ON (clients_schools.school_id = schools.id) WHERE clients.id = :client_id AND schools.id = :school_id");
 
-        $stmt->bindParam(':account_id', $account_id, PDO::PARAM_STR);
+        $stmt->bindParam(':client_id', $client_id, PDO::PARAM_STR);
         $stmt->bindParam(':school_id', $_SESSION['school_id'], PDO::PARAM_STR);
 
         if ($stmt->execute()) {
@@ -216,7 +216,7 @@ class Account
                 $billing_history = $result['billing_history'];
                 $outstanding_balance = $result['outstanding_balance'];
 
-                return new Account(
+                return new Client(
                     $family_name,
                     $parent_one_name,
                     $street_address,
@@ -229,7 +229,7 @@ class Account
                     $outstanding_balance
               );
             } else {
-                // account is not belong to the school
+                // client is not belong to the school
                 return false;
             }
         } else {
@@ -242,16 +242,16 @@ class Account
     {
         $search_input = '%' . $search_input . '%';
         $stmt = $GLOBALS['DB']->prepare("
-                SELECT accounts.* FROM accounts
-                JOIN accounts_schools
-                ON (accounts.id = accounts_schools.account_id)
-                JOIN schools ON (accounts_schools.school_id = schools.id)
-                WHERE accounts.family_name LIKE :search_input
-                OR accounts.parent_one_name LIKE :search_input
-                OR accounts.parent_two_name LIKE :search_input
-                OR accounts.street_address LIKE :search_input
-                OR accounts.phone_number LIKE :search_input
-                OR accounts.email_address LIKE :search_input
+                SELECT clients.* FROM clients
+                JOIN clients_schools
+                ON (clients.id = clients_schools.client_id)
+                JOIN schools ON (clients_schools.school_id = schools.id)
+                WHERE clients.family_name LIKE :search_input
+                OR clients.parent_one_name LIKE :search_input
+                OR clients.parent_two_name LIKE :search_input
+                OR clients.street_address LIKE :search_input
+                OR clients.phone_number LIKE :search_input
+                OR clients.email_address LIKE :search_input
                 AND schools.id = :school_id
             ");
 
@@ -262,9 +262,9 @@ class Account
             $results = $stmt->fetchAll();
 
             if ($results) {
-                $accounts = [];
+                $clients = [];
                 forEach($results as $result) {
-                    $account = new Account(
+                    $client = new Client(
                         $result['family_name'],
                         $result['parent_one_name'],
                         $result['street_address'],
@@ -276,11 +276,11 @@ class Account
                         $result['billing_history'],
                         $result['outstanding_balance']
                     );
-                    array_push($accounts, $account);
+                    array_push($clients, $client);
                 }
-                return $accounts;
+                return $clients;
             } else {
-                // any accounts are not belong to the school
+                // any clients are not belong to the school
                 return false;
             }
         } else {
@@ -291,7 +291,7 @@ class Account
 
     function delete()
     {
-        $stmt = $GLOBALS['DB']->prepare("DELETE FROM accounts WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("DELETE FROM clients WHERE id = :id");
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
         return $stmt->execute();
@@ -299,7 +299,7 @@ class Account
 
     function updateFamilyName($family_name)
     {
-        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET family_name = :family_name WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET family_name = :family_name WHERE id = :id");
         $stmt->bindParam(':family_name', $family_name, PDO::PARAM_STR);
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
@@ -308,7 +308,7 @@ class Account
 
     function updateParentOneName($parent_one_name)
     {
-        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET parent_one_name = :parent_one_name WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET parent_one_name = :parent_one_name WHERE id = :id");
         $stmt->bindParam(':parent_one_name', $parent_one_name, PDO::PARAM_STR);
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
@@ -317,7 +317,7 @@ class Account
 
     function updateParentTwoName($parent_two_name)
     {
-        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET parent_two_name = :parent_two_name WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET parent_two_name = :parent_two_name WHERE id = :id");
         $stmt->bindParam(':parent_two_name', $parent_two_name, PDO::PARAM_STR);
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
@@ -326,7 +326,7 @@ class Account
 
     function updateSteetAddress($street_address)
     {
-        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET street_address = :street_address WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET street_address = :street_address WHERE id = :id");
         $stmt->bindParam(':street_address', $street_address, PDO::PARAM_STR);
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
@@ -335,7 +335,7 @@ class Account
 
     function updatePhoneNumber($phone_number)
     {
-        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET phone_number = :phone_number WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET phone_number = :phone_number WHERE id = :id");
         $stmt->bindParam(':phone_number', $phone_number, PDO::PARAM_STR);
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
@@ -344,7 +344,7 @@ class Account
 
     function updateEmailAddress($email_address)
     {
-        $stmt = $GLOBALS['DB']->prepare("UPDATE accounts SET email_address = :email_address WHERE id = :id");
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET email_address = :email_address WHERE id = :id");
         $stmt->bindParam(':email_address', $email_address, PDO::PARAM_STR);
         $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
 
@@ -353,19 +353,19 @@ class Account
 
     function updateNotes($update)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET notes = '{$update}' WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("UPDATE clients SET notes = '{$update}' WHERE id = {$this->getId()};");
         $this->setNotes($update);
     }
 
     function updateBillingHistory($update)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET billing_history = '{$update}' WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("UPDATE clients SET billing_history = '{$update}' WHERE id = {$this->getId()};");
         $this->setBillingHistory($update);
     }
 
     function updateOutstandingBalance($update)
     {
-        $GLOBALS['DB']->exec("UPDATE accounts SET outstanding_balance = {$update} WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("UPDATE clients SET outstanding_balance = {$update} WHERE id = {$this->getId()};");
         $this->setOutstandingBalance($update);
     }
 
@@ -373,37 +373,37 @@ class Account
     // Join functions
     function addTeacher($teacher_id)
     {
-        $GLOBALS['DB']->exec("INSERT INTO accounts_teachers (account_id, teacher_id) VALUES ({$this->getId()}, {$teacher_id});");
+        $GLOBALS['DB']->exec("INSERT INTO clients_teachers (client_id, teacher_id) VALUES ({$this->getId()}, {$teacher_id});");
     }
     // NOTE UNTESTED
     function addCourse($course_id)
     {
-        $GLOBALS['DB']->exec("INSERT INTO courses_accounts (account_id, course_id) VALUES ({$this->getId()}, {$course_id});");
+        $GLOBALS['DB']->exec("INSERT INTO courses_clients (client_id, course_id) VALUES ({$this->getId()}, {$course_id});");
     }
     // NOTE UNTESTED
     function addStudent($student_id)
     {
-        $GLOBALS['DB']->exec("INSERT INTO accounts_students (account_id, student_id) VALUES ({$this->getId()}, {$student_id});");
+        $GLOBALS['DB']->exec("INSERT INTO clients_students (client_id, student_id) VALUES ({$this->getId()}, {$student_id});");
     }
     // NOTE UNTESTED
     function addLesson($lesson_id)
     {
-        $GLOBALS['DB']->exec("INSERT INTO lessons_accounts (account_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
+        $GLOBALS['DB']->exec("INSERT INTO lessons_clients (client_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
     }
     // NOTE UNTESTED
     function addService($service_id)
     {
-        $GLOBALS['DB']->exec("INSERT INTO accounts_services (account_id, service_id) VALUES ({$this->getId()}, {$service_id})");
+        $GLOBALS['DB']->exec("INSERT INTO clients_services (client_id, service_id) VALUES ({$this->getId()}, {$service_id})");
     }
 
     function addUser($user_id)
     {
         $stmt = $GLOBALS['DB']->prepare("
-            INSERT INTO users_accounts (user_id, account_id)
-            VALUES (:user_id, :account_id)
+            INSERT INTO users_clients (user_id, client_id)
+            VALUES (:user_id, :client_id)
         ");
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-        $stmt->bindParam(':account_id', $this->getId(), PDO::PARAM_STR);
+        $stmt->bindParam(':client_id', $this->getId(), PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -411,7 +411,7 @@ class Account
     // NOTE UNTESTED
     function getTeachers()
     {
-        $query = $GLOBALS['DB']->query("SELECT teachers.* FROM accounts JOIN accounts_teachers ON (accounts.id = accounts_teachers.account_id) JOIN teachers ON (accounts_teachers.teacher_id = teachers.id) WHERE accounts.id = {$this->getId()};");
+        $query = $GLOBALS['DB']->query("SELECT teachers.* FROM clients JOIN clients_teachers ON (clients.id = clients_teachers.client_id) JOIN teachers ON (clients_teachers.teacher_id = teachers.id) WHERE clients.id = {$this->getId()};");
         $teachers = array();
         foreach ($query as $teacher) {
             $teacher_name = $teacher['teacher_name'];
@@ -427,7 +427,7 @@ class Account
     // NOTE UNTESTED
     function getCourses()
     {
-        $query = $GLOBALS['DB']->query("SELECT courses.* FROM accounts JOIN accounts_courses ON (accounts.id = accounts_courses.account_id) JOIN courses ON (accounts_courses.course_id = courses.id) WHERE accounts.id = {$this->getId()};");
+        $query = $GLOBALS['DB']->query("SELECT courses.* FROM clients JOIN clients_courses ON (clients.id = clients_courses.client_id) JOIN courses ON (clients_courses.course_id = courses.id) WHERE clients.id = {$this->getId()};");
         $courses = array();
         foreach ($query as $course )
         {
@@ -441,7 +441,7 @@ class Account
     // NOTE UNTESTED
     function getStudents()
     {
-        $query = $GLOBALS['DB']->query("SELECT students.* FROM accounts JOIN accounts_students ON (accounts.id = accounts_students.account_id) JOIN students ON (accounts_students.student_id = students.id) WHERE accounts.id = {$this->getId()};");
+        $query = $GLOBALS['DB']->query("SELECT students.* FROM clients JOIN clients_students ON (clients.id = clients_students.client_id) JOIN students ON (clients_students.student_id = students.id) WHERE clients.id = {$this->getId()};");
         $students = array();
         foreach($query as $student) {
                 $student_name = $student['student_name'];
@@ -454,9 +454,9 @@ class Account
     }
 
     function findStudentById($student_id) {
-        $stmt = $GLOBALS['DB']->prepare("SELECT students.* FROM accounts JOIN accounts_students ON (accounts.id = accounts_students.account_id) JOIN students ON (accounts_students.student_id = students.id) WHERE accounts.id = :account_id AND students.id = :student_id");
+        $stmt = $GLOBALS['DB']->prepare("SELECT students.* FROM clients JOIN clients_students ON (clients.id = clients_students.client_id) JOIN students ON (clients_students.student_id = students.id) WHERE clients.id = :client_id AND students.id = :student_id");
 
-        $stmt->bindParam(':account_id', $this->getId(), PDO::PARAM_STR);
+        $stmt->bindParam(':client_id', $this->getId(), PDO::PARAM_STR);
         $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
@@ -481,7 +481,7 @@ class Account
     // NOTE UNTESTED
     function getLessons()
     {
-        $query = $GLOBALS['DB']->query("SELECT lessons.* FROM accounts JOIN accounts_lessons ON (accounts.id = accounts_lessons.account_id) JOIN lessons ON (accounts_lessons.lesson_id = lessons.id) WHERE accounts.id = {$this->getId()};");
+        $query = $GLOBALS['DB']->query("SELECT lessons.* FROM clients JOIN clients_lessons ON (clients.id = clients_lessons.client_id) JOIN lessons ON (clients_lessons.lesson_id = lessons.id) WHERE clients.id = {$this->getId()};");
         $lessons = array();
         foreach ($query as $lesson )
         {
@@ -497,7 +497,7 @@ class Account
     // NOTE unstested
     function getServices()
     {
-        $query = $GLOBALS['DB']->query("SELECT accounts.* FROM services JOIN accounts_services ON (services.id = accounts_services.service_id) JOIN accounts ON (accounts_services.account_id = accounts.id) WHERE services.id = {$this->getId()};");
+        $query = $GLOBALS['DB']->query("SELECT clients.* FROM services JOIN clients_services ON (services.id = clients_services.service_id) JOIN clients ON (clients_services.client_id = clients.id) WHERE services.id = {$this->getId()};");
         $services = array();
         foreach($query as $service){
             $description = $service['description'];
@@ -532,13 +532,13 @@ class Account
         return true;
     }
 
-    function findAccountByUserId($user_id)
+    function findClientByUserId($user_id)
     {
         //TODO: check if this function works after relationship table is created
         $stmt = $GLOBALS['DB']->prepare("
-            SELECT accounts.* FROM accounts
-            JOIN users_accounts ON (accounts.id = users_accounts.account_id)
-            JOIN owners ON (users_accounts.user_id = owners.id)
+            SELECT clients.* FROM clients
+            JOIN users_clients ON (clients.id = users_clients.client_id)
+            JOIN owners ON (users_clients.user_id = owners.id)
             WHERE owners.id = :user_id
         ");
 
@@ -548,7 +548,7 @@ class Account
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
-                $account = new Account(
+                $client = new Client(
                     $result['family_name'],
                     $result['parent_one_name'],
                     $result['street_address'],
@@ -560,9 +560,9 @@ class Account
                     $result['billing_history'],
                     $result['outstanding_balance']
                 );
-                return $account;
+                return $client;
             } else {
-                // account is not found
+                // client is not found
                 return false;
             }
         } else {

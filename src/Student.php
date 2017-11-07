@@ -241,9 +241,9 @@
 
         //Join Statements NOTE UNTESTED
         // NOTE UNTESTED
-        function addAccount($account_id)
+        function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO accounts_students (student_id, account_id) VALUES ({$this->getId()}, {$account_id});");
+            $GLOBALS['DB']->exec("INSERT INTO clients_students (student_id, client_id) VALUES ({$this->getId()}, {$client_id});");
         }
         // NOTE UNTESTED
         function addLesson($lesson_id)
@@ -262,19 +262,19 @@
         // NOTE maybe there should be a different Join table for student_services_templates.
 
         // NOTE UNTESTED
-        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $duration,  $student_notes, $teacher, $school, $account)
+        function addPrivateSession($description, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $duration,  $student_notes, $teacher, $school, $client)
         {
             $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
             $new_service->save();
             $id = $new_service->getId();
             $school->addService($id);
-            $account->addService($id);
+            $client->addService($id);
             $teacher->addService($id);
             $this->addService($id);
         }
 
         // NOTE UNTESTED
-        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $date_of_service, $recurrence, $attendance, $teacher, $school, $account)
+        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $date_of_service, $recurrence, $attendance, $teacher, $school, $client)
         {
 
         //$date_of_service = "2017-03-12 03:30:00";
@@ -287,7 +287,7 @@
                 if ($new_service->save()) {
                     $id = $new_service->getId();
                     $school->addService($id);
-                    $account->addService($id);
+                    $client->addService($id);
                     $teacher->addService($id);
                     $this->addService($id);
                     $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
@@ -300,30 +300,30 @@
         }
 
         // NOTE UNTESTED
-        function getAccounts()
+        function getClients()
         {
-            $query = $GLOBALS['DB']->query("SELECT accounts.* FROM students JOIN accounts_students ON (students.id = accounts_students.student_id) JOIN accounts ON (accounts_students.account_id = accounts.id) WHERE students.id = {$this->getId()};");
-            $accounts = array();
-            foreach ($query as $account)
+            $query = $GLOBALS['DB']->query("SELECT clients.* FROM students JOIN clients_students ON (students.id = clients_students.student_id) JOIN clients ON (clients_students.client_id = clients.id) WHERE students.id = {$this->getId()};");
+            $clients = array();
+            foreach ($query as $client)
             {
-                $id = $account['id'];
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = intval($account['outstanding_balance']);
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                array_push($accounts, $new_account);
+                $id = $client['id'];
+                $family_name = $client['family_name'];
+                $parent_one_name = $client['parent_one_name'];
+                $parent_two_name = $client['parent_two_name'];
+                $street_address = $client['street_address'];
+                $phone_number = $client['phone_number'];
+                $email_address = $client['email_address'];
+                $notes = $client['notes'];
+                $billing_history = $client['billing_history'];
+                $outstanding_balance = intval($client['outstanding_balance']);
+                $new_client = new Client($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
+                $new_client->setParentTwoName($parent_two_name);
+                $new_client->setNotes($notes);
+                $new_client->setBillingHistory($billing_history);
+                $new_client->setOutstandingBalance($outstanding_balance);
+                array_push($clients, $new_client);
             }
-            return $accounts;
+            return $clients;
         }
         // NOTE UNTESTED
         function getLessons()

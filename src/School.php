@@ -266,9 +266,9 @@
             $GLOBALS['DB']->exec("INSERT INTO schools_students (school_id, student_id) VALUES ({$this->getId()}, {$student_id});");
         }
 
-        function addAccount($account_id)
+        function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO accounts_schools (school_id, account_id) VALUES ({$this->getId()}, {$account_id});");
+            $GLOBALS['DB']->exec("INSERT INTO clients_schools (school_id, client_id) VALUES ({$this->getId()}, {$client_id});");
         }
 
         function addLesson($lesson_id)
@@ -327,30 +327,30 @@
             return $students;
         }
 
-        function getAccounts()
+        function getClients()
         {
-            $query = $GLOBALS['DB']->query("SELECT accounts.* FROM schools JOIN accounts_schools ON schools.id = accounts_schools.school_id JOIN accounts ON accounts_schools.account_id = accounts.id WHERE schools.id = {$this->getId()};");
-            $accounts = array();
-            foreach ($query as $account)
+            $query = $GLOBALS['DB']->query("SELECT clients.* FROM schools JOIN clients_schools ON schools.id = clients_schools.school_id JOIN clients ON clients_schools.client_id = clients.id WHERE schools.id = {$this->getId()};");
+            $clients = array();
+            foreach ($query as $client)
             {
-                $id = $account['id'];
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = intval($account['outstanding_balance']);
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                array_push($accounts, $new_account);
+                $id = $client['id'];
+                $family_name = $client['family_name'];
+                $parent_one_name = $client['parent_one_name'];
+                $parent_two_name = $client['parent_two_name'];
+                $street_address = $client['street_address'];
+                $phone_number = $client['phone_number'];
+                $email_address = $client['email_address'];
+                $notes = $client['notes'];
+                $billing_history = $client['billing_history'];
+                $outstanding_balance = intval($client['outstanding_balance']);
+                $new_client = new Client($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
+                $new_client->setParentTwoName($parent_two_name);
+                $new_client->setNotes($notes);
+                $new_client->setBillingHistory($billing_history);
+                $new_client->setOutstandingBalance($outstanding_balance);
+                array_push($clients, $new_client);
             }
-            return $accounts;
+            return $clients;
         }
 
         function getLessons()
@@ -413,7 +413,7 @@
             $year = $options['year'] ? $options['year'] : date('Y');
             $teacher_id = $options['teacher_id'] ? $options['teacher_id'] : null;
             $student_id = $options['student_id'] ? $options['student_id'] : null;
-            $account_id = $options['account_id'] ? $options['account_id'] : null;
+            $client_id = $options['client_id'] ? $options['client_id'] : null;
             $paid_for = isset($options['paid_for']) ? $options['paid_for'] : null;
             $attendance = $options['attendance'] ? $options['attendance'] : null;
 
@@ -423,8 +423,8 @@
                 JOIN services ON (schools_services.service_id = services.id)
                 JOIN services_teachers ON (services.id = services_teachers.service_id)
                 JOIN teachers ON (services_teachers.teacher_id = teachers.id)
-                JOIN accounts_services ON (services.id = accounts_services.service_id)
-                JOIN accounts ON (accounts_services.account_id = accounts.id)
+                JOIN clients_services ON (services.id = clients_services.service_id)
+                JOIN clients ON (clients_services.client_id = clients.id)
                 JOIN services_students ON (services.id = services_students.service_id)
                 JOIN students ON (services_students.student_id = students.id)
                 WHERE schools.id = :school_id
@@ -435,7 +435,7 @@
             // if options are passed, add sql
             if ($teacher_id) { $sql .= "AND teachers.id = :teacher_id "; }
             if ($student_id) { $sql .= "AND students.id = :student_id "; }
-            if ($account_id) { $sql .= "AND accounts.id = :account_id "; }
+            if ($client_id) { $sql .= "AND clients.id = :client_id "; }
             if (isset($paid_for)) { $sql .= "AND services.paid_for = :paid_for "; }
             if ($attendance) { $sql .= "AND services.attendance = :attendance "; }
             $sql .= "ORDER BY services.date_of_service ASC";
@@ -448,7 +448,7 @@
             //otpional bindParam
             if ($teacher_id) { $stmt->bindParam(':teacher_id', $teacher_id, PDO::PARAM_STR); }
             if ($student_id) { $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR); }
-            if ($account_id) { $stmt->bindParam(':account_id', $account_id, PDO::PARAM_STR); }
+            if ($client_id) { $stmt->bindParam(':client_id', $client_id, PDO::PARAM_STR); }
             if (isset($paid_for)) { $stmt->bindParam(':paid_for', $paid_for, PDO::PARAM_STR); }
             if ($attendance) { $stmt->bindParam(':attendance', $attendance, PDO::PARAM_STR); }
 
@@ -485,7 +485,7 @@
         {
 
             $GLOBALS['DB']->exec("DELETE FROM schools_teachers WHERE teacher_id = {$teacher_id};");
-            $GLOBALS['DB']->exec("DELETE FROM accounts_teachers WHERE teacher_id = {$teacher_id};");
+            $GLOBALS['DB']->exec("DELETE FROM clients_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE teacher_id = {$teacher_id};");
             $GLOBALS['DB']->exec("DELETE FROM courses_teachers WHERE teacher_id = {$teacher_id};");
 
@@ -496,7 +496,7 @@
         function removeStudent($student_id)
         {
             $GLOBALS['DB']->exec("DELETE FROM schools_students WHERE student_id = {$student_id};");
-            $GLOBALS['DB']->exec("DELETE FROM accounts_students WHERE student_id = {$student_id};");
+            $GLOBALS['DB']->exec("DELETE FROM clients_students WHERE student_id = {$student_id};");
             $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE student_id = {$student_id};");
             $GLOBALS['DB']->exec("DELETE FROM courses_students WHERE student_id = {$student_id};");
         }
@@ -509,7 +509,7 @@
             return $array_of_rows;
         }
 
-        function uploadAccounts()
+        function uploadClients()
         {
             $array_of_rows = array_map('str_getcsv', file('.csv'));
 
@@ -539,7 +539,7 @@
                 if ($row[9]!=0) {
                     $teacher_tow_id = $row[9];
                 }
-                $family = new Account($family_name, $parent_one_name, $parent_two_name, $street_address, $phone_number, $email_address);
+                $family = new Client($family_name, $parent_one_name, $parent_two_name, $street_address, $phone_number, $email_address);
                 $family->save();
                 $student_one = new Student($student_one_name);
                 $family->addStudent($student_one);
@@ -556,7 +556,7 @@
                     $student_two->addTeacher($teacher_tow_id);
                     $family->addTeacher($teacher_tow_id);
                 }
-                $school->addAccount($family->getId());
+                $school->addClient($family->getId());
                 }
             }
         }
