@@ -120,8 +120,10 @@
 
         function updateNotes($new_note)
         {
-            $GLOBALS['DB']->exec("UPDATE teachers SET notes = '{$new_note}' WHERE id = {$this->getId()};");
-            $this->setNotes($new_note);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE teachers SET notes = :new_note WHERE id = :id");
+            $stmt->bindParam(':new_note', $new_note, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
         function updateName($teacher_name)

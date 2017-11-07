@@ -351,10 +351,12 @@ class Client
         return $stmt->execute();
     }
 
-    function updateNotes($update)
+    function updateNotes($new_note)
     {
-        $GLOBALS['DB']->exec("UPDATE clients SET notes = '{$update}' WHERE id = {$this->getId()};");
-        $this->setNotes($update);
+        $stmt = $GLOBALS['DB']->prepare("UPDATE clients SET notes = :new_note WHERE id = :id");
+        $stmt->bindParam(':new_note', $new_note, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+        return $stmt->execute();
     }
 
     function updateBillingHistory($update)
