@@ -31,27 +31,34 @@ $app->post("/teachers", function() use ($app) {
 
             if ($teacher->save()) {
 
+                //TODO REFACTOR check both addTeacher and addUser successfull, then display Success message
                 if ($school->addTeacher($teacher->getId())) {
+                    $app['session']->getFlashBag()->add('success', 'Successfully added teacher');
 
                 } else {
-                  //error message
+                    //error message
+                    $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
                 }
 
                 if ( $teacher->addUser($_SESSION['new_account_id']) ) {
                     // success message
                 } else {
                     // error message
+                    $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
                 }
                 unset($_SESSION['new_account_id']);
 
             } else {
                 // error message
+                $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
             }
         } else {
             // unknown error
+            $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
         }
     } else {
         // error message
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
     }
 
     return $app->redirect("/teachers");

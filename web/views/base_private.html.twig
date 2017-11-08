@@ -41,6 +41,12 @@
         <h1>{{pageTitle}}</h1>
     </div>
 
+    <!-- Display Success -->
+    {% for success in app.session.flashbag.get('success') %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endfor %}
+
+
     <!-- Display Errors -->
     {% for error in app.session.flashbag.get('errors') %}
         <div class="alert alert-danger">{{ error }}</div>
@@ -51,7 +57,7 @@
         {% endblock %}
     </div>
 
-    
+
     <script src="/../js/updatePayment.js"></script>
     <script>
         $('.datepicker').datepicker(

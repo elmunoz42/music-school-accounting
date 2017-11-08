@@ -1,7 +1,6 @@
 <?php
 $app->get("/main", function() use ($app) {
 
-
     $owner = Owner::findOwnerById($_SESSION['user_id']);
     if ($owner) {
         //TODO FUTURE: if several school exists, show list and choose
@@ -39,6 +38,7 @@ $app->get("/main", function() use ($app) {
             return $app->redirect("/create_school");
         }
       } else {
+          $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
           return $app->redirect("/login");
       }
 })
@@ -122,8 +122,11 @@ $app->get("/all_sessions", function() use ($app) {
                 'datestamp' => $datestamp
               )
           );
+      } else {
+          $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
       }
-    } else {
-        return $app->redirect("/login");
-    }
+  } else {
+      $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+      return $app->redirect("/login");
+  }
 });

@@ -13,7 +13,7 @@ $app->get("/course/{course_id}", function($course_id) use ($app){
             'lessons' => $course->getLessons()
         ));
     } else {
-        // course is not found
+        $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
         return $app->redirect("/courses");
     }
 })
@@ -32,10 +32,21 @@ $app->post("/add_lesson_to_course", function() use($app) {
     $course = Course::find($_POST['course_id']);
 
     $lesson = new Lesson($title, $description, $content);
-    $lesson->save();
-    $lesson_id = $lesson->getId();
-    $school->addLesson($lesson_id);
-    $course->addLesson($lesson_id);
+
+    if ($lesson->save()) {
+
+      $lesson_id = $lesson->getId();
+
+      if ($school->addLesson($lesson_id) && $course->addLesson($lesson_id)) {
+          $app['session']->getFlashBag()->add('success', 'Successfully added lesson');
+
+      } else {
+          $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+      }
+
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+    }
     return $app->redirect("/course/". $course_id);
 
 })
@@ -54,14 +65,18 @@ $app->post("/course/{course_id}", function($course_id) use ($app){
         if (!$course) {
             if ($student->addCourse($course_id)) {
                 //add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully added');
             } else {
                 // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
             }
         } else {
-           // add errpr ,essage
+            // add errpr message
+            $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
         }
     } else {
         // add error
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
     }
 
     return $app->redirect("/course/" . $course_id);
@@ -74,17 +89,22 @@ $app->post("/course/{course_id}/update", function($course_id) use ($app) {
     $new_title = $_POST['title'] ? $_POST['title'] : '';
     if ($new_title) {
         $course = Course::find($course_id);
+
         if ($course) {
             if ($course->updateTitle($new_title)) {
                 //add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully updated');
             } else {
                 // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
             }
         } else {
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
         }
     } else {
         // add error message
+        $app['session']->getFlashBag()->add('errors', 'Input cannot be blank');
     }
     return $app->redirect("/courses");
 })
@@ -98,11 +118,12 @@ $app->delete("/course/{course_id}/delete", function($course_id) use ($app) {
 
     if ($course->deleteCourse()) {
         // add success message
-        return $app->redirect("/courses");
+        $app['session']->getFlashBag()->add('success', 'Successfully deleted');
     } else {
         // add error message
-        return $app->redirect("/courses");
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
     }
+    return $app->redirect("/courses");
 })
 ->before($is_logged_in)
 ->before($owner_only);

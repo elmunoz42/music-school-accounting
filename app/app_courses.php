@@ -12,10 +12,24 @@ $app->get("/courses", function() use ($app) {
 // CREATE new course
 $app->post("/courses", function() use ($app) {
     $school = School::find($_SESSION['school_id']);
-    $course_title = $_POST['course_title'];
-    $new_course = new Course($course_title);
-    $new_course->save();
-    $school->addCourse($new_course->getId());
+    $course_title = $_POST['course_title'] ? $_POST['course_title'] : '';
+
+    if ($course_title) {
+        $new_course = new Course($course_title);
+
+
+        if ($new_course->save() && $school->addCourse($new_course->getId())) {
+            //success
+            $app['session']->getFlashBag()->add('success', 'Successfully added course');
+
+        } else {
+            //error
+            $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+        }
+
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Input cannot be blank');
+    }
 
     return $app->redirect("/courses");
 })

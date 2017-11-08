@@ -36,6 +36,7 @@ $app->get('/client/{client_id}', function($client_id) use ($app) {
         ));
     } else {
         // client is not found
+        $app['session']->getFlashBag()->add('errors', "Unexpected Error Happened");
         return $app->redirect("/clients");
     }
 })
@@ -54,9 +55,11 @@ $app->patch("/client/{client_id}/add_note", function($client_id) use ($app) {
     if($new_notes) {
         $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" . $selected_client->getNotes();
         $selected_client->updateNotes($updated_notes);
-        // add success message
+        $app['session']->getFlashBag()->add('success', "New note added");
+
     } else {
       // add error
+      $app['session']->getFlashBag()->add('errors', "Note cannot be blank");
     }
     return $app->redirect("/client/" . $client_id);
 })
@@ -76,10 +79,12 @@ $app->post("/client/{client_id}/update", function($client_id) use ($app) {
     $email_address = $_POST['email_address'] ? $_POST['email_address'] : '';
 
     if ($client->updateFamilyName($family_name) && $client->updateParentOneName($parent_one_name) && $client->updateParentTwoName($parent_two_name) && $client->updateSteetAddress($street_address) && $client->updatePhoneNumber($phone_number) && $client->updateEmailAddress($email_address)) {
-        // add success message
+
+        $app['session']->getFlashBag()->add('success', "Successfully updated");
         return $app->redirect("/clients");
     } else {
-        // add error message
+        // error
+        $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
         return $app->redirect("/clients");
     }
 })
@@ -97,14 +102,16 @@ $app->delete("/client/{client_id}/delete", function($client_id) use ($app) {
     if ($client->deleteStudents($students)) {
 
         if ($client->delete()) {
-            // add success message
+            //Success
+            $app['session']->getFlashBag()->add('success', "Client deleted");
             return $app->redirect("/clients");
         } else {
-            // add error message
+            //Error
+            $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
             return $app->redirect("/clients");
         }
     } else {
-        // add error message
+        $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
         return $app->redirect("/clients");
     }
 })
@@ -130,13 +137,17 @@ $app->post('/add_student_to_client', function() use($app) {
 
             $selected_client->addStudent($student_id);
 
+            $app['session']->getFlashBag()->add('success', "Successfully added");
+
             return $app->redirect("/client/" . $client_id);
         } else {
-          // error message
+          // error
+          $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
           return $app->redirect("/client/" . $client_id);
         }
     } else {
-        // error message
+        // error
+        $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
         return $app->redirect("/client/" . $client_id);
     }
 })

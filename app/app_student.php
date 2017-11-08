@@ -10,6 +10,7 @@ $app->get("/student/{student_id}", function($student_id) use ($app) {
             if (!$teacher->findStudentById($student_id)){
                 // if student is not assigend to this teacher, redirect
                 // add error
+                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
                 return $app->redirect($_SESSION['location_uri']);
             }
         }
@@ -22,6 +23,7 @@ $app->get("/student/{student_id}", function($student_id) use ($app) {
             if (!$client->findStudentById($student_id)) {
                 // if student is not assigend to this client, redirect
                 // add error
+                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
                 return $app->redirect($_SESSION['location_uri']);
             }
         }
@@ -71,6 +73,7 @@ $app->get("/student/{student_id}", function($student_id) use ($app) {
       ));
     } else {
         // student is not found
+        $app['session']->getFlashBag()->add('errors', 'page not found');
         return $app->redirect("/students");
     }
 })
@@ -90,12 +93,16 @@ $app->post("/student/{student_id}/enroll", function($student_id) use ($app) {
         if (!$course) {
             if ($student->addCourse($course_id)) {
                 //add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully added');
+
             } else {
                 // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
             }
         } else {
             // already enrolled
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'This student already enrolled');
         }
     }
     return $app->redirect("/student/" . $student_id);
@@ -111,10 +118,17 @@ $app->patch("/student/{student_id}/add_notes", function($student_id) use ($app) 
 
     if ($new_notes) {
         $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" . $selected_student->getNotes();
-        $selected_student->updateNotes($updated_notes);
-        // add success message
+
+        if ($selected_student->updateNotes($updated_notes)) {
+            // add success message
+            $app['session']->getFlashBag()->add('success', 'Successfully updated');
+        } else {
+            // add error
+            $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+        }
     } else {
       // add error
+      $app['session']->getFlashBag()->add('errors', 'Note cannot be blank');
     }
     return $app->redirect("/student/" . $student_id);
 })
@@ -124,12 +138,12 @@ $app->patch("/student/{student_id}/add_notes", function($student_id) use ($app) 
 
 //DELETE student from school
 $app->delete("/student/student_termination/{id}", function($id) use ($app) {
-    $school=School::find($_SESSION['school_id']);
-    $school->removeStudent($id);
 
-    // NOTE CHECK IF WORKS
-    // $student = Student::find($id);
-    // $student->delete();
+    $school = School::find($_SESSION['school_id']);
+
+    // TODO update sql and add error/success message based on condition
+    $school->removeStudent($id);
+    $app['session']->getFlashBag()->add('success', 'Successfully removed');
 
     return $app->redirect("/students");
 })
@@ -145,14 +159,18 @@ $app->post("/student/{student_id}/update", function($student_id) use ($app) {
         if ($student) {
             if ($student->updateName($new_student_name)) {
                 //add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully updated');
             } else {
                 // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
             }
         } else {
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
         }
     } else {
         // add error message
+        $app['session']->getFlashBag()->add('errors', 'Student name cannot be blank');
     }
     return $app->redirect("/students");
 })

@@ -48,6 +48,7 @@ $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
         );
     } else {
       // teacher is not found
+      $app['session']->getFlashBag()->add('errors', 'page not found');
       return $app->redirect("/teachers");
     }
 })
@@ -66,16 +67,25 @@ $app->post("/teacher/{teacher_id}/assign", function($teacher_id) use ($app) {
 
         if (!$student) {
             if ($teacher->addStudent($student_id)) {
+
+              $app['session']->getFlashBag()->add('success', 'Successfully assigned');
               // add success message
             } else {
               // add error message
+              $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
             }
         } else {
             // already assigned
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'already assigned');
         }
+
         return $app->redirect("/teacher/" . $teacher_id);
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
     }
+
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);
@@ -87,8 +97,17 @@ $app->patch("/teacher/{teacher_id}/add_notes", function($teacher_id) use ($app) 
 
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
     $updated_notes =  date('l jS \of F Y ') . "---->"  . $new_notes  . "|" .$teacher->getNotes();
-    $teacher->updateNotes($updated_notes);
 
+    if ($new_notes) {
+        if ($teacher->updateNotes($updated_notes)) {
+            //success
+            $app['session']->getFlashBag()->add('success', 'Successfully added');
+        } else {
+            $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+        }
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Note cannot be blank');
+    }
     return $app->redirect("/teacher/" . $teacher_id);
 })
 ->before($is_logged_in)
@@ -100,13 +119,13 @@ $app->delete("/teacher/teacher_termination/{teacher_id}", function($teacher_id) 
     $school = School::find($_SESSION['school_id']);
     $teacher = Teacher::find($teacher_id);
 
-    // refactor to remove teacher from school not entire database
-    // $teacher->delete(); NOTE CHECK IF WORKS
     if ($school->removeTeacher($teacher_id)) {
         // add success message
+        $app['session']->getFlashBag()->add('success', 'Successfully removed');
         return $app->redirect("/teachers");
     } else {
         // add error message
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
         return $app->redirect("/teachers");
     }
 })
@@ -124,14 +143,18 @@ $app->post("/teacher/{teacher_id}/update", function($teacher_id) use ($app) {
         if ($teacher) {
             if ($teacher->updateName($new_teacher_name) && $teacher->updateInstrument($new_instrument)) {
                 //add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully updated');
             } else {
                 // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
             }
         } else {
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
         }
     } else {
         // add error message
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
     }
     return $app->redirect("/teachers");
 })
@@ -150,13 +173,18 @@ $app->post("/teacher/{teacher_id}/enroll", function($teacher_id) use ($app) {
         if (!$course) {
             if ($teacher->addCourse($course_id)) {
                 //add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully enrolled');
             } else {
                 // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
             }
         } else {
             // already enrolled
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'Already enrolled');
         }
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
     }
     return $app->redirect("/teacher/" . $teacher_id);
 })

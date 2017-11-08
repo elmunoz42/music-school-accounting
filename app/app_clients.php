@@ -38,18 +38,23 @@ $app->post("/clients", function() use ($app) {
     if ($new_client->save()) {
         //add relationship
         if ($school->addClient($new_client->getId())) {
-          // success message
+            // success message
+            $app['session']->getFlashBag()->add('success', "Successfully created Client");
         } else {
-          // error message
+            // error message
+            $app['session']->getFlashBag()->add('errors', "INGJSJDIO Unexpected errors happened");
         }
 
         if ($new_client->addUser($_SESSION['new_account_id'])) {
-          // success message
+            $app['session']->getFlashBag()->add('success', "Successfully added");
+
         } else {
-          // error message
+            // error message
+            $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
         }
     } else {
-      // error message
+        // error message
+        $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
     }
 
     unset($_SESSION['new_account_id']);
@@ -70,11 +75,12 @@ $app->post("/clients/search", function() use ($app) {
             return $app['twig']->render('clients_search.html.twig', array('role' => $_SESSION['role'], 'clients' => $clients));
         } else {
             // no results
-            // add error message
+            $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
         }
     } else {
       // input is empty
       // add error message
+      $app['session']->getFlashBag()->add('errors', "Input cannot be empty");
     }
     return  $app->redirect("/clients");
 })

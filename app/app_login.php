@@ -18,10 +18,10 @@ $app->get("/login", function() use ($app) {
                 break;
             default:
                 // unexpected case
-                return $app['twig']->render('login.html.twig', array('errors'=> $errors));
+                return $app['twig']->render('login.html.twig');
         }
     }
-    return $app['twig']->render('login.html.twig', array('errors'=> $errors));
+    return $app['twig']->render('login.html.twig');
 });
 
 $app->post("/login", function() use ($app) {
@@ -72,19 +72,18 @@ $app->post("/login", function() use ($app) {
                             return $app['twig']->render('login.html.twig',
                             array(
                                 'role' => $_SESSION['role'],
-                                'errors'=> $errors
                             )
                         );
                     }
                 } else {
-                    $errors[] = "Unexcepted error happened";
+                    $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
                 }
             } else {
-                $errors[] = "Email or Password didn't match with existing account";
+                $app['session']->getFlashBag()->add('errors', "Email or Password didn't match with existing account");
             }
         } else {
-            $errors[] = "Email or Password didn't match with existing account";
+            $app['session']->getFlashBag()->add('errors', "Email or Password didn't match with existing account");
         }
     }
-    return $app['twig']->render('login.html.twig', array('role' => $_SESSION['role'], 'errors'=> $errors));
+    return $app['twig']->render('login.html.twig', array('role' => $_SESSION['role']));
 });

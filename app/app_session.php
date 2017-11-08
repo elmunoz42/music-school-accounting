@@ -16,9 +16,9 @@ $app->get('/session/{service_id}', function($service_id) use($app) {
             )
         );
     } else {
-        // NOTE: which page the user should be redirected to??
         // session is not found
-        return $app->redirect("/main");
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+        return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)
@@ -52,6 +52,7 @@ $app->patch('/session/{service_id}/update', function($service_id) use($app) {
     }
 
     if ($service) {
+      // NOTE Need to refactor
       if (isset($date_of_service) && $date_of_service != $service->getDateOfService()) {
         $service->updateDateOfService($date_of_service);
       }
@@ -70,6 +71,12 @@ $app->patch('/session/{service_id}/update', function($service_id) use($app) {
         $updated_notes =  date('y-m-d') . ': '  . $new_notes;
         $service->updateNotes($updated_notes);
       }
+
+        // TODO need to check if all update is successful or not before display success message
+        $app['session']->getFlashBag()->add('success', 'Successfully updated');
+
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
     }
 
     if ($student_id) {
@@ -77,10 +84,10 @@ $app->patch('/session/{service_id}/update', function($service_id) use($app) {
     } else {
       return $app->redirect("/main");
     }
-
 })
 ->before($is_logged_in)
 ->before($teacher_only);
+
 
 
 // AJAX: Update paid_for status
@@ -137,6 +144,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
         $this_months_year = intval(date('Y',strtotime('this month')));
         $last_month = intval(date('m',strtotime('last month')));
         $last_months_year = intval(date('Y',strtotime('last month')));
+        
         if ($student->addPrivateSessionBatch(
             $repetitions,
             $description,
@@ -152,11 +160,14 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
             $client
         )) {
             // add success message
+            $app['session']->getFlashBag()->add('success', 'Successfully added');
         } else {
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
         }
     } else {
       // add error message
+      $app['session']->getFlashBag()->add('errors', 'All form must be filled');
     }
 
     return $app->redirect("/student/" . $student_id);
