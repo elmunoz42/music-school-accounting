@@ -30,9 +30,18 @@
         // CRUD
         function save()
         {
-            $GLOBALS['DB']->exec("INSERT INTO courses (title) VALUES ('{$this->getTitle()}');");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses (title)
+                VALUES (:title)
+            ");
+            $stmt->bindParam(':title', $this->getTitle(), PDO::PARAM_STR);
 
-            $this->id = $GLOBALS['DB']->LastInsertId();
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         static function getAll()
@@ -110,10 +119,21 @@
         {
             $GLOBALS['DB']->exec("INSERT INTO clients_courses (course_id, client_id) VALUES ({$this->getId()}, {$client_id});");
         }
-        // NOTE UNTESTED
+
         function addLesson($lesson_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO courses_lessons (course_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses_lessons (course_id, lesson_id)
+                VALUES ( :course_id, :lesson_id)
+            ");
+            $stmt->bindParam(':lesson_id', $lesson_id, PDO::PARAM_STR);
+            $stmt->bindParam(':course_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         }
         // NOTE UNTESTED
         function addService($service_id)

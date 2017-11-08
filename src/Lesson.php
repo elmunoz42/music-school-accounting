@@ -54,8 +54,20 @@
 
         function save()
         {
-        $GLOBALS['DB']->exec("INSERT INTO lessons (title, description, content) VALUES ('{$this->getTitle()}', '{$this->getDescription()}', '{$this->getContent()}');");
-        $this->id = (int) $GLOBALS['DB']->lastInsertId();
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO lessons (title, description, content)
+                VALUES (:title, :description, :content)
+            ");
+            $stmt->bindParam(':title', $this->getTitle(), PDO::PARAM_STR);
+            $stmt->bindParam(':description', $this->getDescription(), PDO::PARAM_STR);
+            $stmt->bindParam(':content', $this->getContent(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         static function getAll()

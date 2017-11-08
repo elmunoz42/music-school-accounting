@@ -258,22 +258,66 @@
 
         function addCourse($course_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO courses_schools (school_id, course_id) VALUES ({$this->getId()}, {$course_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses_schools (school_id, course_id)
+                VALUES ( :school_id, :course_id)
+            ");
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         function addStudent($student_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO schools_students (school_id, student_id) VALUES ({$this->getId()}, {$student_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO schools_students (school_id, student_id)
+                VALUES ( :school_id, :student_id)
+            ");
+            $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO clients_schools (school_id, client_id) VALUES ({$this->getId()}, {$client_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO clients_schools (school_id, client_id)
+                VALUES ( :school_id, :client_id)
+            ");
+            $stmt->bindParam(':client_id', $client_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         function addLesson($lesson_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO lessons_schools (school_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO lessons_schools (school_id, lesson_id)
+                VALUES ( :school_id, :lesson_id)
+            ");
+            $stmt->bindParam(':lesson_id', $lesson_id, PDO::PARAM_STR);
+            $stmt->bindParam(':school_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         function addService($service_id)
@@ -492,9 +536,9 @@
             return true;
         }
 
-        // NOTE UNTESTED
         function removeStudent($student_id)
         {
+            //TODO Need to Updated as PDO statement
             $GLOBALS['DB']->exec("DELETE FROM schools_students WHERE student_id = {$student_id};");
             $GLOBALS['DB']->exec("DELETE FROM clients_students WHERE student_id = {$student_id};");
             $GLOBALS['DB']->exec("DELETE FROM students_teachers WHERE student_id = {$student_id};");
