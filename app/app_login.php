@@ -25,16 +25,16 @@ $app->get("/login", function() use ($app) {
 });
 
 $app->post("/login", function() use ($app) {
-    $errors = [];
+    // $errors = [];
     $email_address = isset($_POST['email_address']) ? $_POST['email_address'] : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
 
     if (!$email_address) {
-        $errors[] = "Username cannot be blank.";
+        $app['session']->getFlashBag()->add('errors', 'Username cannot be blank');
     }
 
     if (!$password) {
-      $errors[] = "Password cannot be blank";
+        $app['session']->getFlashBag()->add('errors', 'Password cannot be blank');
     }
 
     if (empty($errors)) {

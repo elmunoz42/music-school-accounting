@@ -16,6 +16,7 @@
         __DIR__.'/../web/views/client',
         ]
       ));
+    $app->register(new Silex\Provider\SessionServiceProvider());
 
     // load Class
     require_once __DIR__."/../src/Student.php";

@@ -40,16 +40,18 @@
     <div class="jumbotron">
         <h1>{{pageTitle}}</h1>
     </div>
-    {% if errors is defined %}
-        {% for error in errors %}
-            <div class="alert alert-danger">{{ error  | e }}</div>
-        {% endfor %}
-    {% endif %}
-        <div class="container">
-            {% block content %}
-        </div>
-    {% endblock %}
 
+    <!-- Display Errors -->
+    {% for error in app.session.flashbag.get('errors') %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    
     <script src="/../js/updatePayment.js"></script>
     <script>
         $('.datepicker').datepicker(
