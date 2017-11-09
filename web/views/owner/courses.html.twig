@@ -4,17 +4,16 @@
 
 {% block content %}
     <div class="row">
-
-        <!-- NOTE Only Teacher or Owner can add new course -->
-        {% if (role == 'teacher' or role =='owner') %}
-            <div class="col-md-6">
-                {% include './components/add_course.html.twig' %}
+        {% if courses is not empty %}
+            <div class="col-xs-12" id="courses-table">
+                {% include './components/courses_list.html.twig' %}
             </div>
         {% endif %}
 
-        {% if courses is not empty %}
-            <div class="col-md-4" id="courses-table">
-                {% include './components/courses_list.html.twig' %}
+        <!-- NOTE Only Teacher or Owner can add new course -->
+        {% if (role == 'teacher' or role =='owner') %}
+            <div class="col-xs-6 col-xs-offset-3">
+                {% include './components/add_course.html.twig' %}
             </div>
         {% endif %}
     </div>

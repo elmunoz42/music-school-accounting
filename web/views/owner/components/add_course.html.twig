@@ -1,12 +1,9 @@
 <form action="/courses" method="post">
-    <div class="panel panel-info" id="add_course">
-        <h3 for="course_title" class="panel-heading">Add New Course</h3><br>
-        <div class="panel-body">
-            <div class="form-group">
-                <label for="new_course">Course Name</label>
-            <input class="form-control" type="text" name="course_title" required><br>
-            <button class="btn btn-info" type="submit">Submit</button><br>
-            </div>
-        </div>
+    <label for="new_course">Add New Course</label>
+    <div class="input-group">
+        <input id="new_course" class="form-control" type="text" name="course_title" placeholder="type course name" required><br>
+        <span class="input-group-btn">
+          <button class="btn btn-info" type="submit">Submit</button><br>
+        </span>
     </div>
 </form>
