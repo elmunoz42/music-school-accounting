@@ -149,31 +149,64 @@
             $GLOBALS['DB']->exec("DELETE FROM teachers WHERE id = {$this->getId()};");
         }
 
-        // JOIN methods
-        // NOTE UNTESTED
        function addStudent($student_id)
        {
-           $GLOBALS['DB']->exec("INSERT INTO students_teachers (student_id, teacher_id) VALUES ({$student_id}, {$this->getId()});");
+           $stmt = $GLOBALS['DB']->prepare("
+               INSERT INTO students_teachers (student_id, teacher_id)
+               VALUES (:student_id, :teacher_id)
+           ");
+           $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
+           $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+           return $stmt->execute();
        }
-       // NOTE UNTESTED
+
         function addCourse($course_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO courses_teachers (teacher_id, course_id) VALUES ({$this->getId()}, {$course_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses_teachers (teacher_id, course_id)
+                VALUES (:teacher_id, :course_id)
+            ");
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
-        // NOTE UNTESTED
+
         function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO clients_teachers (teacher_id, client_id) VALUES ({$this->getId()}, {$client_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO clients_teachers (teacher_id, client_id)
+                VALUES (:teacher_id, :client_id)
+            ");
+            $stmt->bindParam(':client_id', $client_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
-        // NOTE UNTESTED
+
         function addLesson($lesson_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO lessons_teachers (teacher_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO lessons_teachers (teacher_id, lesson_id)
+                VALUES (:teacher_id, :lesson_id)
+            ");
+            $stmt->bindParam(':lesson_id', $lesson_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
-        // NOTE UNTESTED
+
         function addService($service_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO services_teachers (teacher_id, service_id) VALUES ({$this->getId()}, {$service_id})");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO services_teachers (teacher_id, service_id)
+                VALUES (:teacher_id, :service_id)
+            ");
+            $stmt->bindParam(':service_id', $service_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
 
         function addUser($user_id)
