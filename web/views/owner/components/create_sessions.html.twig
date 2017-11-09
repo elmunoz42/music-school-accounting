@@ -1,92 +1,93 @@
 <!-- fix create -->
-
-<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#create_session_{{teacher.getId | e }}">New Session</button>
-    <!-- Update Modal -->
-    <div id="create_session_{{teacher.getId | e }}" class="modal modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-          <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Create Session:</h4>
-                </div>
-                <div class="modal-body">
-                    <form action="/teacher/{{ teacher.getId | e }}/add_session" method="post">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label for="student">Select Student:</label>
-                                  <select id="student" class="form-control" name="student_id">
-                                    {% for student in teacher.getStudents %}
-                                        <option value="{{ student.getId  | e }}">{{student.getName | e }}</option>
-                                    {% endfor %}
-                                  </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label for="description">Course</label>
-                                  <select id="description" class="form-control" name="description">
-                                      {% for course in teacher.getCourses %}
-                                          <option value="{{course.getTitle | e}}">{{course.getTitle | e}}</option>
+<div class="spacer">
+  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#create_session_{{teacher.getId | e }}">New Session</button>
+      <!-- Update Modal -->
+      <div id="create_session_{{teacher.getId | e }}" class="modal modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Create Session:</h4>
+                  </div>
+                  <div class="modal-body">
+                      <form action="/teacher/{{ teacher.getId | e }}/add_session" method="post">
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label for="student">Select Student:</label>
+                                    <select id="student" class="form-control" name="student_id">
+                                      {% for student in teacher.getStudents %}
+                                          <option value="{{ student.getId  | e }}">{{student.getName | e }}</option>
                                       {% endfor %}
-                                  </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label for="repetitions">Repetitions:</label>
-                                    <input id="repetitions" class="form-control" type="number" name="repetitions" value="1" min="1"><br>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                  <div class="form-group">
-                                      <label for="price">Price:</label>
-                                      <input id="price" class="form-control" type="number" name="price" value="40">
+                                    </select>
                                   </div>
-                            </div>
-                            <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-4">
                                   <div class="form-group">
-                                      <label for="discount">Discount:</label>
-                                      <input id="discount" class="form-control" type="number" name="discount" value="1" min="0"><br>
+                                    <label for="description">Course</label>
+                                    <select id="description" class="form-control" name="description">
+                                        {% for course in teacher.getCourses %}
+                                            <option value="{{course.getTitle | e}}">{{course.getTitle | e}}</option>
+                                        {% endfor %}
+                                    </select>
                                   </div>
-                            </div>
-                            <div class="col-sm-5">
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="start_date">Start Date/Time</label>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div id="start_date" class="input-group date" data-provide="datepicker">
-                                                <input type="text" name="start_date" class="form-control" value="{{'now'|date('m/d/Y')}}">
-                                                <div class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-th"></span>
-                                                </div>
-                                              </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" id="create_start_time" data-format="HH:mm" data-template="HH mm" name="start_time" value="{{'now'|date('G:i')}}">
-                                        </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="form-group">
+                                      <label for="repetitions">Repetitions:</label>
+                                      <input id="repetitions" class="form-control" type="number" name="repetitions" value="1" min="1"><br>
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="price">Price:</label>
+                                        <input id="price" class="form-control" type="number" name="price" value="40">
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="recurrence">Recurrence:</label>
-                                    <input id="recurrence" class="form-control" type="text" name="recurrence" value="Weekday|Time"><br>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="duration">Duration (min)</label>
-                                    <input id="duration" class="form-control" type="number" name="duration" value="40" min="1"><br>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-success btn-sm" type="submit" name="submit">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                              </div>
+                              <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="discount">Discount:</label>
+                                        <input id="discount" class="form-control" type="number" name="discount" value="1" min="0"><br>
+                                    </div>
+                              </div>
+                              <div class="col-sm-5">
+                              </div>
+                              <div class="col-sm-12">
+                                  <div class="form-group">
+                                      <label for="start_date">Start Date/Time</label>
+                                      <div class="row">
+                                          <div class="col-sm-6">
+                                              <div id="start_date" class="input-group date" data-provide="datepicker">
+                                                  <input type="text" name="start_date" class="form-control" value="{{'now'|date('m/d/Y')}}">
+                                                  <div class="input-group-addon">
+                                                      <span class="glyphicon glyphicon-th"></span>
+                                                  </div>
+                                                </div>
+                                          </div>
+                                          <div class="col-sm-6">
+                                              <input type="text" id="create_start_time" data-format="HH:mm" data-template="HH mm" name="start_time" value="{{'now'|date('G:i')}}">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="form-group">
+                                      <label for="recurrence">Recurrence:</label>
+                                      <input id="recurrence" class="form-control" type="text" name="recurrence" value="Weekday|Time"><br>
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="form-group">
+                                      <label for="duration">Duration (min)</label>
+                                      <input id="duration" class="form-control" type="number" name="duration" value="40" min="1"><br>
+                                  </div>
+                              </div>
+                          </div>
+                          <button class="btn btn-success btn-sm" type="submit" name="submit">Submit</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>

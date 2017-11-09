@@ -61,6 +61,12 @@
     font-size: 2em;
 }
 
+#sessions_list {
+    min-height: 300px;
+    border-bottom: 2px solid lightgray;
+    margin-bottom: 50px;
+}
+
 h3 {
     text-align: center;
 }
@@ -408,6 +414,18 @@ img.intro {
 .toGrayTheme {
   background-color: silver;
   color: white;
+}
+
+
+
+/*GENERAL*/
+.spacer {
+  margin-bottom: 10%;
+}
+
+/*sessions_list.html.twig*/
+#no_sessions {
+    font-size: 3rem;
 }
 
 

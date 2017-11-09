@@ -1,163 +1,168 @@
-<div class="row">
-    <h3>Sessions for {{datestamp|date("M-Y")}}</h3>
-    <hr>
+<div id="sessions_list">
+    <div class="row">
+        <h3>Sessions for {{datestamp|date("M-Y")}}</h3>
+        <hr>
 
-    <!-- NOTE if Client sees her/his students' sessions List, then show this link -->
-    {% if ((role == 'client' or role == 'owner') and (student is defined)) %}
-        <div class="col-xs-6">
-            <a href="/student/{{student.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
-        </div>
-        <div class="col-xs-6 text-right">
-            <a href="/student/{{student.getId}}?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
-        </div>
-    {% endif %}
+        <!-- NOTE if Client sees her/his students' sessions List, then show this link -->
+        {% if ((role == 'client' or role == 'owner') and (student is defined)) %}
+            <div class="col-xs-6">
+                <a href="/student/{{student.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
+            </div>
+            <div class="col-xs-6 text-right">
+                <a href="/student/{{student.getId}}?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
+            </div>
+        {% endif %}
 
-    <!-- NOTE if Teacher sees his/her Sessions List, then show this link -->
-    {% if ((role == 'teacher' or role == 'owner') and (teacher is defined)) %}
-        <div class="col-xs-6">
-            <a href="/teacher/{{teacher.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
-        </div>
-        <div class="col-xs-6 text-right">
-            <a href="/teacher/{{teacher.getId}}?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
-        </div>
-    {% endif %}
+        <!-- NOTE if Teacher sees his/her Sessions List, then show this link -->
+        {% if ((role == 'teacher' or role == 'owner') and (teacher is defined)) %}
+            <div class="col-xs-6">
+                <a href="/teacher/{{teacher.getId}}?month={{datestamp|date_modify("last day of previous month")|date("n")}}&amp;year={{datestamp|date_modify("last day of previous month")|date("Y")}}">Previous Month</a>
+            </div>
+            <div class="col-xs-6 text-right">
+                <a href="/teacher/{{teacher.getId}}?month={{datestamp|date_modify("last day of next month")|date("n")}}&amp;year={{datestamp|date_modify("last day of next month")|date("Y")}}">Next Month</a>
+            </div>
+        {% endif %}
 
 
-    {% if services is not empty %}
-        <table class="table table-hover">
-            <tr>
-                <th>Date of Service</th>
-                <th>Teacher</th>
-                <th>Student</th>
-                <th>Attendance</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Description</th>
-                <th>Duration</th>
-                <th>Recurrence</th>
-                <th>Notes</th>
-                <th>Payment Status</th>
-                <th></th>
-              </tr>
-            {% for service in services %}
+        {% if services is not empty %}
+            <table class="table table-hover">
                 <tr>
-                    <td>{{ service.getDateOfService | e }}</td>
-                    <td>{{ service.getTeacher.getName | e }}</td>
-                    <td>{{ service.getStudent.getName | e}}</td>
-                    <td>{{ service.getAttendance | e }}</td>
-                    <td>{{ service.getPrice | e }}</td>
-                    <td>{{ service.getDiscount | e }}</td>
-                    <td>{{ service.getDescription | e }}</td>
-                    <td>{{ service.getDuration | e }}</td>
-                    <td>{{ service.getRecurrence | e }}</td>
-                    <td>{{ service.getNotes | e }}</td>
+                    <th>Date of Service</th>
+                    <th>Teacher</th>
+                    <th>Student</th>
+                    <th>Attendance</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Description</th>
+                    <th>Duration</th>
+                    <th>Recurrence</th>
+                    <th>Notes</th>
+                    <th>Payment Status</th>
+                    <th></th>
+                  </tr>
+                {% for service in services %}
+                    <tr>
+                        <td>{{ service.getDateOfService | e }}</td>
+                        <td>{{ service.getTeacher.getName | e }}</td>
+                        <td>{{ service.getStudent.getName | e}}</td>
+                        <td>{{ service.getAttendance | e }}</td>
+                        <td>{{ service.getPrice | e }}</td>
+                        <td>{{ service.getDiscount | e }}</td>
+                        <td>{{ service.getDescription | e }}</td>
+                        <td>{{ service.getDuration | e }}</td>
+                        <td>{{ service.getRecurrence | e }}</td>
+                        <td>{{ service.getNotes | e }}</td>
 
-                    {% if service.getPaidFor %}
-                        <td>
-                            <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
-                        </td>
-                    {% else %}
-                        <td>
-                            <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
-                        </td>
-                    {% endif %}
+                        {% if service.getPaidFor %}
+                            <td>
+                                <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
+                            </td>
+                        {% else %}
+                            <td>
+                                <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
+                            </td>
+                        {% endif %}
 
-                    <!-- NOTE Only Teacher and Owner can update service -->
-                    {% if (role == 'teacher' or role == 'owner') %}
-                        <td>
-                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#update_session_{{service.getId | e }}">Update</button>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </table>
+                        <!-- NOTE Only Teacher and Owner can update service -->
+                        {% if (role == 'teacher' or role == 'owner') %}
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#update_session_{{service.getId | e }}">Update</button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
 
 
-        <!-- Update Modal -->
-        {% for service in services %}
-            <div id="update_session_{{service.getId | e }}" class="modal modal fade" role="dialog">
-                <div class="modal-dialog modal-lg">
-                  <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Update Service:</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="/session/{{service.getId | e }}/update" method="post">
-                                <input name="_method" type="hidden" value="patch" required>
-                                <input type="hidden" name="student_id" value="{{ service.getStudent.getId  | e }}">
-                                <input type="hidden" name="client_id" value="{{ service.getClients[0].getId  | e }}">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                          <div class="form-group">
-                                              <label for="price">Price:</label>
-                                              <input id="price" class="form-control" type="number" name="price" value="{{service.getPrice | e}}">
-                                          </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                          <div class="form-group">
-                                              <label for="discount">Discount:</label>
-                                              <input id="discount" class="form-control" type="number" name="discount" value="{{service.getDiscount | e}}"><br>
-                                          </div>
-                                    </div>
-                                    <div class="col-sm-5">
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="starting_date">Start Date/Time</label>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="input-group date" data-provide="datepicker">
-                                                        <input type="text" name="start_date" class="form-control datepicker" value="{{service.getDateOfService|date('m/d/Y') | e}}">
-                                                        <div class="input-group-addon">
-                                                            <span class="glyphicon glyphicon-th"></span>
-                                                        </div>
-                                                      </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="update_start_time" data-format="HH:mm" data-template="HH mm" name="start_time" value="{{service.getDateOfService|date('G:i') | e}}">
+            <!-- Update Modal -->
+            {% for service in services %}
+                <div id="update_session_{{service.getId | e }}" class="modal modal fade" role="dialog">
+                    <div class="modal-dialog modal-lg">
+                      <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Update Service:</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/session/{{service.getId | e }}/update" method="post">
+                                    <input name="_method" type="hidden" value="patch" required>
+                                    <input type="hidden" name="student_id" value="{{ service.getStudent.getId  | e }}">
+                                    <input type="hidden" name="client_id" value="{{ service.getClients[0].getId  | e }}">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                              <div class="form-group">
+                                                  <label for="price">Price:</label>
+                                                  <input id="price" class="form-control" type="number" name="price" value="{{service.getPrice | e}}">
+                                              </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                              <div class="form-group">
+                                                  <label for="discount">Discount:</label>
+                                                  <input id="discount" class="form-control" type="number" name="discount" value="{{service.getDiscount | e}}"><br>
+                                              </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="starting_date">Start Date/Time</label>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="input-group date" data-provide="datepicker">
+                                                            <input type="text" name="start_date" class="form-control datepicker" value="{{service.getDateOfService|date('m/d/Y') | e}}">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th"></span>
+                                                            </div>
+                                                          </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" class="update_start_time" data-format="HH:mm" data-template="HH mm" name="start_time" value="{{service.getDateOfService|date('G:i') | e}}">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="recurrence">Recurrence:</label>
-                                            <input id="recurrence" class="form-control" type="text" name="recurrence" value="{{service.getRecurrence | e}}"><br>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="recurrence">Recurrence:</label>
+                                                <input id="recurrence" class="form-control" type="text" name="recurrence" value="{{service.getRecurrence | e}}"><br>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="attendance">Attendance:</label>
-                                            <select id="attendance" class="form-control" name="attendance" type="text">
-                                                {% for attendance_value in attendance_values %}
-                                                    {% for key, value in attendance_value %}
-                                                        <option value="{{key | e}}">{{value | e}}</option>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="attendance">Attendance:</label>
+                                                <select id="attendance" class="form-control" name="attendance" type="text">
+                                                    {% for attendance_value in attendance_values %}
+                                                        {% for key, value in attendance_value %}
+                                                            <option value="{{key | e}}">{{value | e}}</option>
+                                                        {% endfor %}
                                                     {% endfor %}
-                                                {% endfor %}
-                                            </select>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="duration">Duration (min):</label>
+                                                <input id="duration" class="form-control" type="number" name="duration" value="{{service.getDuration | e}}" min="1"><br>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="note">Note:</label>
+                                                <textarea name="note" class="form-control" rows="2"></textarea>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="duration">Duration (min):</label>
-                                            <input id="duration" class="form-control" type="number" name="duration" value="{{service.getDuration | e}}" min="1"><br>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="note">Note:</label>
-                                            <textarea name="note" class="form-control" rows="2"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-success btn-sm" type="submit" name="submit">Submit</button>
-                            </form>
+                                    <button class="btn btn-success btn-sm" type="submit" name="submit">Submit</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    {% endif %}
+            {% endfor %}
+
+        {% else %}
+            <p id="no_sessions" class="text-center">NO SESSIONS</p>
+        {% endif %}
+    </div>
 </div>
