@@ -82,7 +82,7 @@ $app->get("/all_sessions", function() use ($app) {
       $options['attendance'] = $_GET['attendance'];
   }
 
-  if (!empty($_GET['paid_for'])) {
+  if (isset($_GET['paid_for'])) {
       $options['paid_for'] = $_GET['paid_for'];
   }
 
