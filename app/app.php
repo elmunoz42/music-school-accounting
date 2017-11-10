@@ -29,6 +29,8 @@
     require_once __DIR__."/../src/Service.php";
     require_once __DIR__."/../src/Owner.php";
     require_once __DIR__."/../src/function/authentication.php";
+    require_once __DIR__."/../src/function/form_validation.php";
+
 
     // load general setting
     require_once __DIR__.'/./db_setup.php';
