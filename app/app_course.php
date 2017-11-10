@@ -25,27 +25,35 @@ $app->get("/course/{course_id}", function($course_id) use ($app){
 $app->post("/add_lesson_to_course", function() use($app) {
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
     $title = $_POST['title'] ? $_POST['title'] : '';
-    $description = $_POST['description'] ? $_POST['description'] : '';
+    $media_url = is_url($_POST['media_url']) ? $_POST['media_url'] : '';
     $content = $_POST['content'] ? $_POST['content'] : '';
 
     $school = School::find($_SESSION['school_id']);
     $course = Course::find($_POST['course_id']);
 
-    $lesson = new Lesson($title, $description, $content);
+    $lesson = new Lesson($title, $media_url, $content);
 
-    if ($lesson->save()) {
 
-      $lesson_id = $lesson->getId();
+    $is_form_valid = ($course_id && $title && $media_url && $content && $school && $course && $lesson);
 
-      if ($school->addLesson($lesson_id) && $course->addLesson($lesson_id)) {
-          $app['session']->getFlashBag()->add('success', 'Successfully added lesson');
 
-      } else {
-          $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
-      }
+
+    if ($is_form_valid) {
+          if ($lesson->save()) {
+              $lesson_id = $lesson->getId();
+
+              if ($school->addLesson($lesson_id) && $course->addLesson($lesson_id)) {
+                  $app['session']->getFlashBag()->add('success', 'Successfully added lesson');
+
+              } else {
+                  $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+              }
+          } else {
+              $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+          }
 
     } else {
-        $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
+        $app['session']->getFlashBag()->add('errors', 'some inputs are empty or url is invalid');
     }
     return $app->redirect("/course/". $course_id);
 

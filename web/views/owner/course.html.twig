@@ -4,33 +4,22 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-4">
-            <!-- Display All Lessons related to this course -->
-            {% if lessons is not empty %}
+        <!-- Display All Lessons related to this course -->
+        {% if lessons is not empty %}
+            <div class="col-xs-6 col-xs-offset-3">
                 {% include './components/lessons_list.html.twig' %}
-            {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="col-xs-3">
         </div>
 
         <!-- Display Create New Lesson -->
         <!-- NOTE Only Teacher and Owner can create new lessons -->
         {% if (role == 'teacher' or role == 'owner') %}
-        <div class="col-sm-4">
-            <div class="col-sm-4">
+        <div class="col-xs-6 col-xs-offset-3">
                 {% include './components/create_lesson.html.twig' %}
-            </div>
         </div>
-        {% endif %}
-
-        <!-- Display Enroll Student Option -->
-        <!-- NOTE Only Teacher and Owner can enroll student to course -->
-        {% if (role == 'teacher' or role == 'owner') %}
-            <div class="col-sm-4">
-                <label>Enroll Students</label>
-                  {% include './components/enroll_student.html.twig' %}
-                {% if students is not empty %}
-                  {% include './components/students_list.html.twig' %}
-                {% endif %}
-            </div>
         {% endif %}
     </div>
 {% endblock %}

@@ -90,24 +90,30 @@ $app->post("/lesson/{lesson_id}/update", function($lesson_id) use ($app) {
 
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
     $title = $_POST['title'] ? $_POST['title'] : '';
-    $description = $_POST['description'] ? $_POST['description'] : '';
+    $media_url = is_url($_POST['media_url']) ? $_POST['media_url'] : '';
     $content = $_POST['content'] ? $_POST['content'] : '';
 
-    if ($lesson->updateTitle($title) && $lesson->updateDescription($description) && $lesson->updateContent($content)) {
+    $is_form_valid = ($title && $media_url && $content);
 
-        // add success message
-        $app['session']->getFlashBag()->add('success', 'Successfully updated');
+    if ($is_form_valid) {
+      if ($lesson->updateTitle($title) && $lesson->updateDescription($media_url) && $lesson->updateContent($content)) {
 
-        if ($course_id) {
-            return $app->redirect($_SESSION['location_uri']);
-        }
+          // add success message
+          $app['session']->getFlashBag()->add('success', 'Successfully updated');
+
+          if ($course_id) {
+              return $app->redirect($_SESSION['location_uri']);
+          }
+      } else {
+          // add error message
+          $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+      }
     } else {
-        // add error message
-        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+        $app['session']->getFlashBag()->add('errors', 'some inputs are empty or url is invalid');
     }
 
     // error case: back to previous page
-    $app->redirect($_SESSION['location_uri']);
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);
