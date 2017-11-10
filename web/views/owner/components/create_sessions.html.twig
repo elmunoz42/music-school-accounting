@@ -28,7 +28,7 @@
                                     <label for="description">Course</label>
                                     <select id="description" class="form-control" name="description">
                                         {% for course in teacher.getCourses %}
-                                            <option value="{{course.getTitle | e}}">{{course.getTitle | e}}</option>
+                                            <option value="{{course.getId | e}}">{{course.getTitle | e}}</option>
                                         {% endfor %}
                                     </select>
                                   </div>

@@ -323,18 +323,31 @@
         }
 
         // NOTE UNTESTED
-        function getCourses()
+        function getCourse()
         {
-            $query = $GLOBALS['DB']->query("SELECT courses.* FROM services JOIN courses_services ON (services.id = courses_services.service_id) JOIN courses ON (courses_services.course_id = courses.id) WHERE services.id = {$this->getId()};");
-            $courses = array();
-            foreach ($query as $course )
-            {
-                $title = $course['title'];
-                $id = $course['id'];
-                $returned_course = new Course($title, $id);
-                array_push($courses, $returned_course);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT courses.* FROM services
+                JOIN courses_services ON (services.id = courses_services.service_id)
+                JOIN courses ON (courses_services.course_id = courses.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Course(
+                        $result['title'],
+                        $result['id']
+                    );
+                } else {
+                    //result not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $courses;
         }
         // NOTE UNTESTED
         function getStudent()

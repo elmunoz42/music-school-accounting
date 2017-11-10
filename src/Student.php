@@ -276,7 +276,7 @@
         }
 
         // NOTE UNTESTED
-        function addPrivateSessionBatch($repetitions, $description, $duration, $price, $discount, $paid_for, $date_of_service, $recurrence, $attendance, $teacher, $school, $client)
+        function addPrivateSessionBatch($repetitions, $course, $duration, $price, $discount, $paid_for, $date_of_service, $recurrence, $attendance, $teacher, $school, $client)
         {
 
         //$date_of_service = "2017-03-12 03:30:00";
@@ -285,13 +285,14 @@
             for ($x = 1; $x <= intval($repetitions); $x++) {
 
                 $notes = "Scheduled on " . date('Y-m-d h:i:s', strtotime($date_of_service));
-                $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
+                $new_service = new Service($course->getTitle(), $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance);
                 if ($new_service->save()) {
                     $id = $new_service->getId();
                     $school->addService($id);
                     $client->addService($id);
                     $teacher->addService($id);
                     $this->addService($id);
+                    $course->addService($id);
                     $date_of_service = date('Y-m-d h:i:s', strtotime($date_of_service. ' +  7 days'));
                 } else {
                     // error

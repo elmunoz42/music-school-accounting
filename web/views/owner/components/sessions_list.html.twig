@@ -43,12 +43,12 @@
                 {% for service in services %}
                     <tr>
                         <td>{{ service.getDateOfService | e }}</td>
-                        <td>{{ service.getTeacher.getName | e }}</td>
-                        <td>{{ service.getStudent.getName | e}}</td>
+                        <td><a href="/teacher/{{service.getTeacher.getId}}">{{ service.getTeacher.getName | e }}</a></td>
+                        <td><a href="/student/{{service.getStudent.getId}}">{{ service.getStudent.getName | e}}</a></td>
                         <td>{{ service.getAttendance | e }}</td>
                         <td>{{ service.getPrice | e }}</td>
                         <td>{{ service.getDiscount | e }}</td>
-                        <td>{{ service.getDescription | e }}</td>
+                        <td><a href="/course/{{service.getCourse.getId}}">{{ service.getCourse.getTitle | e }}</a></td>
                         <td>{{ service.getDuration | e }}</td>
                         <td>{{ service.getRecurrence | e }}</td>
                         <td>{{ service.getNotes | e }}</td>

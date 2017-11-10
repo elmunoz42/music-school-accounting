@@ -12,11 +12,8 @@
             </div>
         {% endif %}
 
-
         <div class="col-md-6" id="teacher-info">
-            <h3>Sessions:</h3>
-            <hr>
-            <h4>Assigned Teachers</h4>
+            <h3>Assigned Teachers</h3>
             {% if teachers is not empty %}
                 {% include './components/teachers_list.html.twig' %}
             {% endif %}
@@ -40,15 +37,15 @@
         <!-- NOTE Only Client or Owner can add Notes -->
         {% if (role == 'client' or role == 'owner') %}
             <div class="col-md-6">
-                <h3>Add Notes:</h3>
+                <h3>Add Notes</h3>
                 <hr>
                 {% include './components/add_note_student.html.twig' %}
             </div>
         {% endif %}
 
 
-        <div id="currentclass" class="col-md-4">
-            <h3>Notes:</h3>
+        <div id="currentclass" class="col-xs-12">
+            <h3>Notes</h3>
             <hr>
             {% if notes_array is not empty %}
                 {% include './components/note_history.html.twig' %}

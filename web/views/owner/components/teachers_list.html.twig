@@ -6,17 +6,19 @@
     <tbody>
         {% for teacher in teachers %}
         <tr>
-            <td>
+            <td class="col-xs-5">
                 <a href="/teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
             </td>
-            <td>
+            <td class="col-xs-5">
                 {{teacher.getInstrument | e }}
             </td>
 
             <!-- NOTE ONLY Owner can Update and Delete -->
             {% if (role == 'owner') %}
-            <td>
+            <td class="col-xs-1">
               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_teacher_{{teacher.getId | e }}">Update</button>
+            </td>
+            <td class="col-xs-1">
               <form action="/teacher/teacher_termination/{{ teacher.getId  | e }}" method="post">
                   <input name="_method" type="hidden" value="delete">
                   <button type="submit" class="btn btn-danger btn-sm"  name="button">delete</button>

@@ -115,7 +115,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
     $student_id = $_POST['student_id'] ? $_POST['student_id'] : "";
 
     $repetitions = $_POST['repetitions'] ? $_POST['repetitions'] : "0";
-    $description = $_POST['description'] ? $_POST['description'] : "";
+    $course_id = $_POST['description'] ? $_POST['description'] : "";
     $duration = $_POST['duration'] ? $_POST['duration'] : "";
     $price = $_POST['price'] ? $_POST['price'] : "";
     $discount = $_POST['discount'] ? $_POST['discount'] : "";
@@ -132,22 +132,23 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
     }
 
 
-    $is_all_form_filled = $student_id && $teacher_id && isset($repetitions) && $description && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
+    $is_all_form_filled = $student_id && $teacher_id && isset($repetitions) && $course_id && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
 
     if ($is_all_form_filled) {
         $school = School::find($_SESSION['school_id']);
         $student = Student::find($student_id);
         $client = $student->getClients()[0];
         $teacher = Teacher::find($teacher_id);
+        $course = Course::find($course_id);
 
         $this_month = intval(date('m',strtotime('this month')));
         $this_months_year = intval(date('Y',strtotime('this month')));
         $last_month = intval(date('m',strtotime('last month')));
         $last_months_year = intval(date('Y',strtotime('last month')));
-        
+
         if ($student->addPrivateSessionBatch(
             $repetitions,
-            $description,
+            $course,
             $duration,
             $price,
             $discount,
