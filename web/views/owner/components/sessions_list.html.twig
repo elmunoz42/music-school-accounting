@@ -48,7 +48,11 @@
                         <td>{{ service.getAttendance | e }}</td>
                         <td>{{ service.getPrice | e }}</td>
                         <td>{{ service.getDiscount | e }}</td>
-                        <td><a href="/course/{{service.getCourse.getId}}">{{ service.getCourse.getTitle | e }}</a></td>
+                        {% if service.getCourse %}
+                            <td><a href="/course/{{service.getCourse.getId}}">{{ service.getCourse.getTitle | e }}</a></td>
+                        {% else %}
+                            <td>No Course</td>
+                        {% endif %}
                         <td>{{ service.getDuration | e }}</td>
                         <td>{{ service.getRecurrence | e }}</td>
                         <td>{{ service.getNotes | e }}</td>

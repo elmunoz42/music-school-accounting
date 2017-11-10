@@ -1,5 +1,6 @@
 <?php
 
+// add lesson
 $app->post("/lesson/{lesson_id}", function($lesson_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $course = Course::find($lesson_id);
@@ -27,7 +28,7 @@ $app->post("/lesson/{lesson_id}", function($lesson_id) use ($app) {
         $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
     }
 
-    $app->redirect("/course/" . $course->getId());
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);
@@ -47,7 +48,7 @@ $app->get("/lesson/{lesson_id}", function($lesson_id) use ($app){
     } else {
         // lesson is not found
         $app['session']->getFlashBag()->add('errors', 'page does not exist');
-        return $app->redirect("/courses");
+        return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)
@@ -98,7 +99,7 @@ $app->post("/lesson/{lesson_id}/update", function($lesson_id) use ($app) {
         $app['session']->getFlashBag()->add('success', 'Successfully updated');
 
         if ($course_id) {
-            return $app->redirect("/course/" . $course_id);
+            return $app->redirect($_SESSION['location_uri']);
         }
     } else {
         // add error message

@@ -7,7 +7,7 @@ $app->get("/clients", function() use ($app) {
     return $app['twig']->render('clients.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'clients' => $school->getClients()));
 })
 ->before($is_logged_in)
-->before($client_only)
+->before($owner_only)
 ->after($save_location_uri);
 
 // CREATE client
@@ -75,7 +75,7 @@ $app->post("/clients/search", function() use ($app) {
             return $app['twig']->render('clients_search.html.twig', array('role' => $_SESSION['role'], 'clients' => $clients));
         } else {
             // no results
-            $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
+            $app['session']->getFlashBag()->add('errors', "No Result");
         }
     } else {
       // input is empty

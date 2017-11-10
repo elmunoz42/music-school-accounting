@@ -106,7 +106,7 @@ $app->post("/course/{course_id}/update", function($course_id) use ($app) {
         // add error message
         $app['session']->getFlashBag()->add('errors', 'Input cannot be blank');
     }
-    return $app->redirect("/courses");
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);
@@ -123,7 +123,7 @@ $app->delete("/course/{course_id}/delete", function($course_id) use ($app) {
         // add error message
         $app['session']->getFlashBag()->add('errors', 'Unexpected error happened');
     }
-    return $app->redirect("/courses");
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($owner_only);

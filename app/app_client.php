@@ -37,7 +37,7 @@ $app->get('/client/{client_id}', function($client_id) use ($app) {
     } else {
         // client is not found
         $app['session']->getFlashBag()->add('errors', "Unexpected Error Happened");
-        return $app->redirect("/clients");
+        return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)
@@ -61,7 +61,7 @@ $app->patch("/client/{client_id}/add_note", function($client_id) use ($app) {
       // add error
       $app['session']->getFlashBag()->add('errors', "Note cannot be blank");
     }
-    return $app->redirect("/client/" . $client_id);
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($client_only);
@@ -81,11 +81,11 @@ $app->post("/client/{client_id}/update", function($client_id) use ($app) {
     if ($client->updateFamilyName($family_name) && $client->updateParentOneName($parent_one_name) && $client->updateParentTwoName($parent_two_name) && $client->updateSteetAddress($street_address) && $client->updatePhoneNumber($phone_number) && $client->updateEmailAddress($email_address)) {
 
         $app['session']->getFlashBag()->add('success', "Successfully updated");
-        return $app->redirect("/clients");
+        return $app->redirect($_SESSION['location_uri']);
     } else {
         // error
         $app['session']->getFlashBag()->add('errors', "Unexpected errors happened");
-        return $app->redirect("/clients");
+        return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)

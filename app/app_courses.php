@@ -6,6 +6,7 @@ $app->get("/courses", function() use ($app) {
     return $app['twig']->render('courses.html.twig', array('role' => $_SESSION['role'], 'school' => $school, 'courses' => $school->getCourses()));
 })
 ->before($is_logged_in)
+->before($teacher_only)
 ->after($save_location_uri);
 
 
@@ -31,7 +32,7 @@ $app->post("/courses", function() use ($app) {
         $app['session']->getFlashBag()->add('errors', 'Input cannot be blank');
     }
 
-    return $app->redirect("/courses");
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);

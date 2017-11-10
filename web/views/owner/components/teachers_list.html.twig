@@ -2,17 +2,32 @@
     <thead>
         <th>Name</th>
         <th>Instrument</th>
+        <th>Students</th>
+        <th>Teaching Courses</th>
     </thead>
     <tbody>
         {% for teacher in teachers %}
         <tr>
-            <td class="col-xs-5">
+            <td class="col-xs-3">
                 <a href="/teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
             </td>
-            <td class="col-xs-5">
+            <td class="col-xs-2">
                 {{teacher.getInstrument | e }}
             </td>
-
+            <td class="col-xs-2">
+                <ul>
+                    {% for student in teacher.getStudents %}
+                        <li><a href="/student/{{student.getId}}">{{student.getName}}</a></li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td class="col-xs-3">
+                <ul>
+                    {% for course in teacher.getCourses %}
+                        <li><a href="/course/{{course.getId}}">{{course.getTitle}}</a></li>
+                    {% endfor %}
+                </ul>
+            </td>
             <!-- NOTE ONLY Owner can Update and Delete -->
             {% if (role == 'owner') %}
             <td class="col-xs-1">
