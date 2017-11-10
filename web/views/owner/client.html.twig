@@ -4,27 +4,29 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-4">
-            {% include './components/client_info.html.twig' %}
-            {% include './components/add_student.html.twig' %}
+        <div class="col-xs-12">
+            {% include './components/clients_list.html.twig' %}
         </div>
-        <div class="col-md-4">
-            <h3>Students in this Client</h3>
-            <hr>
-            {% include './components/students_list.html.twig' %}
-            {% include './components/add_note_client.html.twig' %}
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h3>Students in this Client</h3>
+                    {% include './components/students_list.html.twig' %}
+                    {% include './components/add_student.html.twig' %}
+                </div>
+
+                <div class="col-sm-4">
+                    <h3>Services Last Month</h3>
+                    {% include './components/students_service_list.html.twig' %}
+                </div>
+
+                <div class="col-sm-4">
+                    {% include './components/add_note_client.html.twig' %}
+                </div>
+            </div>
         </div>
-
-
-        <div class="col-md-4">
-            <h3>Services Last Month</h3>
-            {% if students is not empty %}
-                {% include './components/students_service_list.html.twig' %}
-            {% endif %}
+        <div class="col-xs-12">
+            {% include './components/note_history.html.twig' %}
         </div>
-    </div>
-
-    <div class="col-md-6">
-        {% include './components/note_history.html.twig' %}
     </div>
 {% endblock %}

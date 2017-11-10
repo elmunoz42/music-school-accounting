@@ -16,7 +16,7 @@
     {% for client in clients %}
         <tr>
             <td>
-                <a href="client/{{client.getId | e }}">{{ client.getFamilyName | e }}</a>
+                <a href="/client/{{client.getId | e }}">{{ client.getFamilyName | e }}</a>
             </td>
             <td>
                 {{client.getParentOneName | e}}

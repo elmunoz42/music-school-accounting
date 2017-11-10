@@ -1,17 +1,22 @@
 <div>
     {% for student in students %}
-        <div class="panel panel-info">
-            <h4 class="panel-heading"><a href="/student/{{student.getId | e}}">{{student.getName | e}}</a></h4>
-
-            {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
-                {% for service in student.getServicesForMonth(last_month, last_months_year) %}
-                <div class="well">
-                  <a href="../session/{{ service.getId | e }}">- {{ service.getDateOfService | e }} - {{ service.getAttendance | e }} <br>
-                    payment status: {{ service.getPaidFor | e }} <br>
-                    {{ service.getDescription | e }} with {{service.getTeacher.getName | e }}</a>
-                </div>
-                {% endfor %}
-            {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <a href="/student/{{student.getId | e}}">{{student.getName | e}}</a>
+            </div>
+            <div class="panel-body">
+                {% if student.getServicesForMonth(last_month, last_months_year) is not empty %}
+                    {% for service in student.getServicesForMonth(last_month, last_months_year) %}
+                        <ul>
+                            <li>Date: {{ service.getDateOfService | e }}</li>
+                            <li>Attendance: {{ service.getAttendance | e }}</li>
+                            <li>Payment: {{service.getPaidFor| e ? "Paid" : "Not Paid"   }}</li>
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">No Services</p>
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
 </div>
