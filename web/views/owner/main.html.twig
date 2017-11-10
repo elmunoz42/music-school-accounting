@@ -4,22 +4,18 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-3">
-            {% include './components/teachers_summary.html.twig' %}
-        </div>
-
         {% if (role == "owner" or role == "teacher") %}
-        <div class="col-md-3">
-            {% include './components/students_summary.html.twig' %}
+        <div class="col-sm-4">
+            {% include './components/clients_summary.html.twig' %}
         </div>
         {% endif %}
 
 
-        <div class="col-md-3">
+        <div class="col-sm-4">
             {% include './components/services_summary.html.twig' %}
         </div>
 
-        <div class="col-md-3">
+        <div class="col-sm-4">
             {% include './components/courses_summary.html.twig' %}
         </div>
     </div>

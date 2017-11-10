@@ -1,11 +1,11 @@
 <div class="panel panel-info">
-    <h2 class="panel-heading"><a href="/all_sessions">Services</a></h2>
+    <h2 class="panel-heading">Services</h2>
     {% if services is not empty %}
         <div class="panel-body">
             <h4 class="stats-numbers">Total: {{services|length | e }} </h4>
             <ul>
                 {% for teacher in teachers %}
-                    <li>{{ teacher.getName | e}} : {{ teacher.getServicesForMonth|length | e }}</li>
+                    <li><a href="/teacher/{{teacher.getId}}">{{ teacher.getName | e}}</a> : {{ teacher.getServicesForMonth|length | e }} services</li>
                 {% endfor %}
             </ul>
         </div>
