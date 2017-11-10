@@ -205,18 +205,34 @@
         // NOTE UNTESTED
         function getStudents()
         {
-            $query = $GLOBALS['DB']->query("SELECT students.* FROM lessons JOIN lessons_students ON (lessons.id = lessons_students.lesson_id) JOIN students ON (lessons_students.student_id = students.id) WHERE lessons.id = {$this->getId()};");
-            $students = array();
-            if(!empty($query)){
-                foreach($query as $student) {
-                    $student_name = $student['student_name'];
-                    $id = intval($student['id']);
-                    $new_student = new Student($student_name, $id);
-                    $new_student->setNotes($student['notes']);
-                    array_push($students, $new_student);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT students.* FROM lessons
+                JOIN lessons_students ON (lessons.id = lessons_students.lesson_id)
+                JOIN students ON (lessons_students.student_id = students.id) WHERE lessons.id = :lesson_id
+            ");
+
+            $stmt->bindParam(':lesson_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $students = [];
+                    forEach($results as $result) {
+                        $student = new Student(
+                          $result['student_name'],
+                          $result['email_address'],
+                          (int) $result['id'],
+                          $result['notes']
+                        );
+                        array_push($students, $student);
+                    }
+                    return $students;
+                } else {
+                    return false;
                 }
+            } else {
+                return false;
             }
-            return $students;
         }
         // NOTE UNTESTED
         function getClients()

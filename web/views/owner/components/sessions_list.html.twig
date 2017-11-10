@@ -37,7 +37,12 @@
                     <th>Duration</th>
                     <th>Recurrence</th>
                     <th>Notes</th>
-                    <th>Payment Status</th>
+                    {% if (role == 'owner') %}
+                        <th>Payment Status</th>
+                    {% endif %}
+                    {% if (role == 'teacher') %}
+                        <th>Start Session</th>
+                    {% endif %}
                     <th></th>
                   </tr>
                 {% for service in services %}
@@ -57,15 +62,28 @@
                         <td>{{ service.getRecurrence | e }}</td>
                         <td>{{ service.getNotes | e }}</td>
 
-                        {% if service.getPaidFor %}
+                        {% if (role == 'owner') %}
+                            {% if service.getPaidFor %}
+                                <td>
+                                    <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
+                                </td>
+                            {% else %}
+                                <td>
+                                    <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
+                                </td>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if (role == 'teacher') %}
                             <td>
-                                <input id="{{service.getId}}" class="updatePaidFor btn btn-success btn-sm" value="Paid">
-                            </td>
-                        {% else %}
-                            <td>
-                                <input id="{{service.getId}}" class="updatePaidFor btn btn-warning btn-sm" value="Not Paid">
+                                <g:hangout
+                                    render="createhangout"
+                                    invites="[{ id : {{service.getStudent.getEmailAddress}}, invite_type : 'EMAIL' }]"
+                                    widget_size="72"
+                                ></g:hangout>
                             </td>
                         {% endif %}
+
 
                         <!-- NOTE Only Teacher and Owner can update service -->
                         {% if (role == 'teacher' or role == 'owner') %}

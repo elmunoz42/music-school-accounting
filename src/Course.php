@@ -169,21 +169,33 @@
         // NOTE UNTESTED
         function getStudents()
         {
-            $students = $GLOBALS['DB']->query("SELECT students.* FROM
-            courses  JOIN courses_students ON (courses.id = courses_students.course_id)
-                    JOIN students ON ( courses_students.student_id = students.id)
-            WHERE courses.id = {$this->getId()};");
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT students.* FROM courses
+                JOIN courses_students ON (courses.id = courses_students.course_id)
+                JOIN students ON (courses_students.student_id = students.id) WHERE courses.id = :course_id
+            ");
 
-            $return_students = array();
-            foreach($students as $student){
-                $id = $student['id'];
-                $student_name = $student['student_name'];
-                $notes = $student['notes'];
-                $new_student = new Student($student_name, $id);
-                $new_student->setNotes($notes);
-                array_push($return_students, $new_student);
+            $stmt->bindParam(':course_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $results = $stmt->fetchAll();
+                if ($results) {
+                    $students = [];
+                    forEach($results as $result) {
+                        $student = new Student(
+                          $result['student_name'],
+                          $result['email_address'],
+                          (int) $result['id']
+                        );
+                        array_push($students, $student);
+                    }
+                    return $students;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            return $return_students;
         }
 
         // NOTE UNTESTED

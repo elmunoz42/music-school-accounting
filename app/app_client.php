@@ -123,13 +123,14 @@ $app->delete("/client/{client_id}/delete", function($client_id) use ($app) {
 $app->post('/add_student_to_client', function() use($app) {
     $client_id = $_POST['client_id'] ? $_POST['client_id'] : '';
     $student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
+    $email_address = $_POST['email_address'] ? $_POST['email_address'] : '';
 
-    if ($client_id && $student_name) {
+    if ($client_id && $student_name && $email_address) {
         $selected_client = Client::find($client_id);
         $school = School::find($_SESSION['school_id']);
 
         if ($selected_client && $school) {
-            $student = new Student($student_name);
+            $student = new Student($student_name, $email_address);
             $student->save();
 
             $student_id = $student->getId();

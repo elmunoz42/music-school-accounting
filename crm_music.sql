@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Nov 03, 2017 at 08:11 PM
+-- Generation Time: Nov 11, 2017 at 12:50 AM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.8
 
@@ -410,8 +410,8 @@ CREATE TABLE `owners` (
 --
 
 INSERT INTO `owners` (`id`, `first_name`, `last_name`, `email_address`, `password`, `role`) VALUES
-(33, 'Carlos', 'Munoz Kampff', 'info@starpowermusic.net', '$2y$10$sxVg4I4P/S9v9wZRLsMDfehNtsrst3jtGG7/vI2JoynjQtUUBocSC', 'owner'),
-(34, 'Koji', 'Nakagawa', 'lightupthesky0627@gmail.com', '$2y$10$fpKtD4c8qt4cMiOhd1OORu8.mzCX4ml1FKG3vojBLrqUf60xAPteC', 'owner');
+(37, 'Carlos', 'Munoz Kampff', 'info@starpowermusic.net', '$2y$10$bNF0bH6qbLip9zCcaUi66en5l7vdk4RX.N6dbXH1HTLgpR4wBIlMC', 'owner'),
+(38, 'Koji', 'Nakagawa', 'lightupthesky0627@gmail.com', '$2y$10$6SaHB0W.GywT25eb6CNY1eBsv9i.pDnqozEEMrugeJ23lpKJKYjHy', 'owner');
 
 -- --------------------------------------------------------
 
@@ -431,8 +431,8 @@ CREATE TABLE `owners_schools` (
 --
 
 INSERT INTO `owners_schools` (`id`, `owner_id`, `school_id`) VALUES
-(22, 33, 12),
-(23, 34, 13);
+(26, 37, 14),
+(27, 38, 15);
 
 -- --------------------------------------------------------
 
@@ -460,8 +460,8 @@ CREATE TABLE `schools` (
 --
 
 INSERT INTO `schools` (`id`, `school_name`, `manager_name`, `phone_number`, `email`, `business_address`, `city`, `state`, `country`, `zip`, `type`) VALUES
-(12, 'SPMS', 'Carlos Munoz Kampff', '6177808362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'USA', '94706', 'Music'),
-(13, 'Koji School', 'Koji', '1234567890', 'lightupthesky0627@gmail.com', 'Some', 'Address', 'OR', 'USA', '97201', 'TEST');
+(14, 'SPMS', 'Carlos Munoz Kampff', '6177808362', 'info@starpowermusic.net', 'PO 6267', 'Alameda', 'CA', 'United States', '94706', 'Music'),
+(15, 'Test School', 'Koji Nakagawa', '1234567890', 'lightupthesky0627@gmail.com', '123 Ave', '456', 'OR', 'USA', '97200', 'Music');
 
 -- --------------------------------------------------------
 
@@ -563,6 +563,7 @@ DROP TABLE IF EXISTS `students`;
 CREATE TABLE `students` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `student_name` varchar(255) DEFAULT NULL,
+  `email_address` varchar(255) DEFAULT NULL,
   `notes` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -973,7 +974,7 @@ ALTER TABLE `users_teachers`
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `clients_courses`
 --
@@ -993,17 +994,17 @@ ALTER TABLE `clients_lessons`
 -- AUTO_INCREMENT for table `clients_schools`
 --
 ALTER TABLE `clients_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `clients_services`
 --
 ALTER TABLE `clients_services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `clients_students`
 --
 ALTER TABLE `clients_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `clients_teachers`
 --
@@ -1013,7 +1014,7 @@ ALTER TABLE `clients_teachers`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `courses_images`
 --
@@ -1023,27 +1024,27 @@ ALTER TABLE `courses_images`
 -- AUTO_INCREMENT for table `courses_lessons`
 --
 ALTER TABLE `courses_lessons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `courses_schools`
 --
 ALTER TABLE `courses_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `courses_services`
 --
 ALTER TABLE `courses_services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `courses_students`
 --
 ALTER TABLE `courses_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `courses_teachers`
 --
 ALTER TABLE `courses_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `images`
 --
@@ -1078,12 +1079,12 @@ ALTER TABLE `images_teachers`
 -- AUTO_INCREMENT for table `lessons`
 --
 ALTER TABLE `lessons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `lessons_schools`
 --
 ALTER TABLE `lessons_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `lessons_services`
 --
@@ -1103,72 +1104,72 @@ ALTER TABLE `lessons_teachers`
 -- AUTO_INCREMENT for table `owners`
 --
 ALTER TABLE `owners`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 --
 -- AUTO_INCREMENT for table `owners_schools`
 --
 ALTER TABLE `owners_schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT for table `schools`
 --
 ALTER TABLE `schools`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `schools_services`
 --
 ALTER TABLE `schools_services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `schools_students`
 --
 ALTER TABLE `schools_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `schools_teachers`
 --
 ALTER TABLE `schools_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `services_students`
 --
 ALTER TABLE `services_students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `services_teachers`
 --
 ALTER TABLE `services_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `students_teachers`
 --
 ALTER TABLE `students_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `users_clients`
 --
 ALTER TABLE `users_clients`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `users_teachers`
 --
 ALTER TABLE `users_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- Constraints for dumped tables
 --

@@ -93,5 +93,5 @@ $app->post("/login", function() use ($app) {
             $app['session']->getFlashBag()->add('errors', "Email or Password didn't match with existing account");
         }
     }
-    return $app['twig']->render('login.html.twig', array('role' => $_SESSION['role']));
+    return $app->redirect('/');
 });

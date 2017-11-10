@@ -153,11 +153,14 @@ $app->delete("/student/student_termination/{id}", function($id) use ($app) {
 
 // UPDATE student
 $app->post("/student/{student_id}/update", function($student_id) use ($app) {
-    $new_student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
-    if ($new_student_name) {
+    $student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
+    $email_address = $_POST['email_address'] ? $_POST['email_address'] : '';
+
+    if ($student_name && $email_address) {
         $student = Student::find($student_id);
+
         if ($student) {
-            if ($student->updateName($new_student_name)) {
+            if ($student->updateName($student_name) && $student->updateEmailAddress($email_address)) {
                 //add success message
                 $app['session']->getFlashBag()->add('success', 'Successfully updated');
             } else {
@@ -170,9 +173,9 @@ $app->post("/student/{student_id}/update", function($student_id) use ($app) {
         }
     } else {
         // add error message
-        $app['session']->getFlashBag()->add('errors', 'Student name cannot be blank');
+        $app['session']->getFlashBag()->add('errors', 'Input form cannot be blank');
     }
-    return $app->redirect("/students");
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($client_only);

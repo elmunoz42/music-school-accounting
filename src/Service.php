@@ -365,6 +365,7 @@
                 if ($result) {
                     return new Student(
                         $result['student_name'],
+                        $result['email_address'],
                         $result['id'],
                         $result['notes']
                     );

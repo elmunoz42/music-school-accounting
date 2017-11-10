@@ -28,7 +28,7 @@ $app->post("/create_owner", function() use ($app) {
     $last_name = $_POST['last_name'] ? $_POST['last_name'] : '';
     $email_address = $_POST['email_address'] ? $_POST['email_address'] : '';
     $password = $_POST['password'] ? $_POST['password'] : '';
-    $confirm_password = $_POST['cofirm_password'] ? $_POST['confirm_password'] : '';
+    $confirm_password = $_POST['confirm_password'] ? $_POST['confirm_password'] : '';
 
     if ($password == $confirm_password) {
         $role = 'owner';
@@ -38,8 +38,6 @@ $app->post("/create_owner", function() use ($app) {
         if (!$owner) {
             // if existing account does not exist, create new account
             $new_owner = new Owner($first_name, $last_name, $email_address, $role);
-            var_dump($new_owner);
-            exit;
             if( $new_owner->createAccount($password)) {
 
                 loginOwner($new_owner);

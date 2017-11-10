@@ -2,12 +2,14 @@
     class Student
     {
         private $student_name;
+        private $email_address;
         private $notes;
         private $id;
 
-        function __construct($student_name, $id = null, $notes = null)
+        function __construct($student_name, $email_address, $id = null, $notes = null)
         {
             $this->student_name = $student_name;
+            $this->email_address = $email_address;
             $this->id = (Int)$id;
             $this->notes = $notes;
         }
@@ -33,6 +35,16 @@
             return $this->notes;
         }
 
+        function getEmailAddress()
+        {
+            return $this->email_address;
+        }
+
+        function setEmailAddress($email_address)
+        {
+            $this->email_address = $email_address;
+        }
+
         function getId()
         {
             return $this->id;
@@ -41,10 +53,11 @@
         function save()
         {
             $stmt = $GLOBALS['DB']->prepare("
-                INSERT INTO students (student_name, notes)
-                VALUES (:student_name, :notes)
+                INSERT INTO students (student_name, email_address, notes)
+                VALUES (:student_name, :email_address, :notes)
             ");
             $stmt->bindParam(':student_name', $this->getName(), PDO::PARAM_STR);
+            $stmt->bindParam(':email_address', $this->getEmailAddress(), PDO::PARAM_STR);
             $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
 
             if ($stmt->execute()) {
@@ -67,22 +80,6 @@
             $GLOBALS['DB']->exec("DELETE FROM services_students;");
         }
 
-        static function getAll()
-        {
-            $returned_students = $GLOBALS['DB']->query("SELECT * FROM students;");
-            $students = array();
-            foreach($returned_students as $student){
-                $name = $student['student_name'];
-                $notes = $student['notes'];
-                $id = $student['id'];
-                $new_student = new Student($name, $id);
-                $new_student->setNotes($notes);
-                array_push($students, $new_student);
-
-          }
-          return $students;
-        }
-
         function updateNotes($new_note)
         {
             $stmt = $GLOBALS['DB']->prepare("UPDATE students SET notes = :new_note WHERE id = :id");
@@ -93,8 +90,22 @@
 
         function updateName($student_name)
         {
-            $stmt = $GLOBALS['DB']->prepare("UPDATE students SET student_name = :student_name WHERE id = :id");
+            $stmt = $GLOBALS['DB']->prepare("
+                UPDATE students SET student_name = :student_name
+                WHERE id = :id
+            ");
             $stmt->bindParam(':student_name', $student_name, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
+        }
+
+        function updateEmailAddress($email_address)
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                UPDATE students SET email_address = :email_address
+                WHERE id = :id
+            ");
+            $stmt->bindParam(':email_address', $email_address, PDO::PARAM_STR);
             $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
             return $stmt->execute();
         }
@@ -116,10 +127,11 @@
 
                 if ($result) {
                     $student_name =  $result['student_name'];
+                    $email_address = $result['email_address'];
                     $id = $result['id'];
                     $notes = $result['notes'];
 
-                    return new Student($student_name, $id, $notes);
+                    return new Student($student_name, $email_address, $id, $notes);
                 } else {
                     // student is not belong to the school
                     return false;

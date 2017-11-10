@@ -440,19 +440,37 @@ class Client
         }
         return $courses;
     }
-    // NOTE UNTESTED
+
     function getStudents()
     {
-        $query = $GLOBALS['DB']->query("SELECT students.* FROM clients JOIN clients_students ON (clients.id = clients_students.client_id) JOIN students ON (clients_students.student_id = students.id) WHERE clients.id = {$this->getId()};");
-        $students = array();
-        foreach($query as $student) {
-                $student_name = $student['student_name'];
-                $id = intval($student['id']);
-                $new_student = new Student($student_name, $id);
-                $new_student->setNotes($student['notes']);
-                array_push($students, $new_student);
+        $stmt = $GLOBALS['DB']->prepare("
+            SELECT students.* FROM clients
+            JOIN clients_students ON (clients.id = clients_students.client_id)
+            JOIN students ON (clients_students.student_id = students.id) WHERE clients.id = :client_id
+        ");
+
+        $stmt->bindParam(':client_id', $this->getId(), PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll();
+            if ($results) {
+                $students = [];
+                forEach($results as $result) {
+                    $student = new Student(
+                      $result['student_name'],
+                      $result['email_address'],
+                      (int) $result['id'],
+                      $result['notes']
+                    );
+                    array_push($students, $student);
+                }
+                return $students;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
-        return $students;
     }
 
     function findStudentById($student_id) {
@@ -467,9 +485,10 @@ class Client
             if ($result) {
                 $student_name =  $result['student_name'];
                 $id = $result['id'];
+                $email_address = $result['email_address'];
                 $notes = $result['notes'];
 
-                return new Student($student_name, $id, $notes);
+                return new Student($student_name, $email_address, $id, $notes);
             } else {
                 // student is not found
                 return false;
