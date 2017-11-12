@@ -32,6 +32,7 @@ $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
         $students_teachers = $teacher->getStudents();
         $datestamp = mktime(0, 0, 0, $month, 1, $year);
         $services = $teacher->getServicesForMonth($month, $year, $date);
+
         return $app['twig']->render('teacher.html.twig',
             array(
                 'role' => $_SESSION['role'],

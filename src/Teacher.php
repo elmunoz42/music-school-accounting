@@ -396,8 +396,10 @@
                 AND YEAR(date_of_service) = :year ";
 
             if ($date) {
-              $sql .= "AND DAY(date_of_service) = :date";
+              $sql .= "AND DAY(date_of_service) = :date ";
             }
+            $sql .= "ORDER BY services.date_of_service ASC";
+
             $stmt = $GLOBALS['DB']->prepare($sql);
 
             $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
