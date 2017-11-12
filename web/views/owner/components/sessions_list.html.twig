@@ -2,7 +2,10 @@
     <div class="row">
         <h3>
             Sessions for {{datestamp|date("M-Y")}}&nbsp;&nbsp;
-            <a href='/teacher/{{teacher.getId}}?month={{"now"|date("m")}}&amp;date={{"now"|date("d")}}&amp;year={{"now"|date("Y")}}'><button class="btn btn-primary">Show Today's Session</button></a>
+
+            {% if ((role == 'teacher' or role == 'owner') and (teacher is defined)) %}
+                <a href='/teacher/{{teacher.getId}}?month={{"now"|date("m")}}&amp;date={{"now"|date("d")}}&amp;year={{"now"|date("Y")}}'><button class="btn btn-primary">Show Today's Session</button></a>
+            {% endif %}
         </h3>
         <hr>
         <!-- NOTE if Client sees her/his students' sessions List, then show this link -->

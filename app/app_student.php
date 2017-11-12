@@ -10,7 +10,7 @@ $app->get("/student/{student_id}", function($student_id) use ($app) {
             if (!$teacher->findStudentById($student_id)){
                 // if student is not assigend to this teacher, redirect
                 // add error
-                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+                $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
                 return $app->redirect($_SESSION['location_uri']);
             }
         }
@@ -23,7 +23,7 @@ $app->get("/student/{student_id}", function($student_id) use ($app) {
             if (!$client->findStudentById($student_id)) {
                 // if student is not assigend to this client, redirect
                 // add error
-                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+                $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
                 return $app->redirect($_SESSION['location_uri']);
             }
         }

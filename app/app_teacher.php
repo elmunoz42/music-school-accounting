@@ -2,6 +2,15 @@
 
 //READ teacher
 $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
+
+    // if teacher try to access different teacher page, redirect
+    if ($_SESSION['role'] == 'teacher') {
+        if (!isSameTeacher($teacher_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $month = date("m");
     $year = date("Y");
 
@@ -50,7 +59,7 @@ $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
     } else {
       // teacher is not found
       $app['session']->getFlashBag()->add('errors', 'page not found');
-      return $app->redirect("/teachers");
+      return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)
@@ -59,6 +68,15 @@ $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
 
 //JOIN teacher with student
 $app->post("/teacher/{teacher_id}/assign", function($teacher_id) use ($app) {
+
+    // if teacher try to access different teacher page, redirect
+    if ($_SESSION['role'] == 'teacher') {
+        if (!isSameTeacher($teacher_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
 
     if ($student_id) {
@@ -94,6 +112,15 @@ $app->post("/teacher/{teacher_id}/assign", function($teacher_id) use ($app) {
 
 //UPDATE teacher notes
 $app->patch("/teacher/{teacher_id}/add_notes", function($teacher_id) use ($app) {
+
+    // if teacher try to access different teacher page, redirect
+    if ($_SESSION['role'] == 'teacher') {
+        if (!isSameTeacher($teacher_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $teacher = Teacher::find($teacher_id);
 
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
@@ -136,6 +163,15 @@ $app->delete("/teacher/teacher_termination/{teacher_id}", function($teacher_id) 
 
 // update teacher info
 $app->post("/teacher/{teacher_id}/update", function($teacher_id) use ($app) {
+
+    // if teacher try to access different teacher page, redirect
+    if ($_SESSION['role'] == 'teacher') {
+        if (!isSameTeacher($teacher_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $new_teacher_name = $_POST['teacher_name'] ? $_POST['teacher_name'] : '';
     $new_instrument = $_POST['instrument'] ? $_POST['instrument'] : '';
 
@@ -165,6 +201,15 @@ $app->post("/teacher/{teacher_id}/update", function($teacher_id) use ($app) {
 
 //JOIN teacher to course
 $app->post("/teacher/{teacher_id}/enroll", function($teacher_id) use ($app) {
+
+    // if teacher try to access different teacher page, redirect
+    if ($_SESSION['role'] == 'teacher') {
+        if (!isSameTeacher($teacher_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
 
     if ($course_id) {

@@ -515,26 +515,43 @@ class Client
         }
         return $lessons;
     }
+
     // NOTE unstested
     function getServices()
     {
-        $query = $GLOBALS['DB']->query("SELECT clients.* FROM services JOIN clients_services ON (services.id = clients_services.service_id) JOIN clients ON (clients_services.client_id = clients.id) WHERE services.id = {$this->getId()};");
-        $services = array();
-        foreach($query as $service){
-            $description = $service['description'];
-            $duration = $service['duration'];
-            $price = $service['price'];
-            $discount = $service['discount'];
-            $paid_for = (bool) $service['paid_for'];
-            $notes = $service['notes'];
-            $date_of_service = $service['date_of_service'];
-            $recurrence = $service['recurrence'];
-            $attendance = $service['attendance'];
-            $id = (int) $service['id'];
-            $new_service = new Service($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id);
-            array_push($services, $new_service);
-        }
-        return $services;
+      $stmt = $GLOBALS['DB']->prepare("
+        SELECT services.* FROM clients
+        JOIN clients_services ON (clients.id = clients_services.client_id)
+        JOIN services ON (clients_services.service_id = services.id)
+        WHERE clients.id = :client_id"
+      );
+      $stmt->bindParam(':client_id', $this->getId(), PDO::PARAM_STR);
+
+      if($stmt->execute()) {
+          $results = $stmt->fetchAll();
+          if ($results) {
+            $services = [];
+            forEach($results as $service) {
+                $service = new Service(
+                    $result['description'],
+                    $result['price'],
+                    $result['discount'],
+                    $result['paid_for'],
+                    $result['notes'],
+                    $result['date_of_service'],
+                    $result['recurrence'],
+                    $result['attendance'],
+                    $result['id']
+                );
+                array_push($services, $service);
+            }
+            return $services;
+          } else {
+            return false;
+          }
+      } else {
+        return false;
+      }
     }
 
 
@@ -592,4 +609,3 @@ class Client
         }
     }
 }
-?>

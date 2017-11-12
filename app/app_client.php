@@ -5,12 +5,13 @@ $app->get('/client/{client_id}', function($client_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
     $client = Client::find($client_id);
 
-
-    // if client try to access to different clients info, redirect
-    if ( ($_SESSION['role'] == 'client') && ($_SESSION['role_id'] != $client_id)) {
-        return $app->redirect("/client/" . $_SESSION['role_id']);
+    // if client try to access different client page, redirect
+    if ($_SESSION['role'] == 'client') {
+        if (!isSameClient($client_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
     }
-
 
     if ($client) {
         $students = $client->getStudents();
@@ -25,7 +26,7 @@ $app->get('/client/{client_id}', function($client_id) use ($app) {
             'role' => $_SESSION['role'],
             'school'=>$school,
             'client'=>$client,
-            'clients'=>$school->getClients(),
+            'clients'=>[$client],
             'students'=>$students, 'teachers'=>$teachers,
             'courses'=>$courses,
             'notes_array'=>$notes_array,
@@ -48,6 +49,16 @@ $app->get('/client/{client_id}', function($client_id) use ($app) {
 
 //UPDATE client notes
 $app->patch("/client/{client_id}/add_note", function($client_id) use ($app) {
+
+
+    // if client try to access different client page, redirect
+    if ($_SESSION['role'] == 'client') {
+        if (!isSameClient($client_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $selected_client = Client::find($client_id);
 
     $new_notes = $_POST['new_notes'] ? $_POST['new_notes'] : '';
@@ -69,6 +80,15 @@ $app->patch("/client/{client_id}/add_note", function($client_id) use ($app) {
 
 //UPDATE client
 $app->post("/client/{client_id}/update", function($client_id) use ($app) {
+
+    // if client try to access different client page, redirect
+    if ($_SESSION['role'] == 'client') {
+        if (!isSameClient($client_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $client = Client::find($client_id);
 
     $family_name = $_POST['family_name'] ? $_POST['family_name'] : '';
@@ -95,6 +115,15 @@ $app->post("/client/{client_id}/update", function($client_id) use ($app) {
 
 //DELETE client
 $app->delete("/client/{client_id}/delete", function($client_id) use ($app) {
+
+    // if client try to access different client page, redirect
+    if ($_SESSION['role'] == 'client') {
+        if (!isSameClient($client_id)) {
+            $app['session']->getFlashBag()->add('errors', 'You are not authorized to access to this page');
+            return $app->redirect($_SESSION['location_uri']);
+        }
+    }
+
     $school = School::find($_SESSION['school_id']);
     $client = Client::find($client_id);
     $students = $client->getStudents();
@@ -121,6 +150,7 @@ $app->delete("/client/{client_id}/delete", function($client_id) use ($app) {
 
 // JOIN add student to client
 $app->post('/add_student_to_client', function() use($app) {
+
     $client_id = $_POST['client_id'] ? $_POST['client_id'] : '';
     $student_name = $_POST['student_name'] ? $_POST['student_name'] : '';
     $email_address = $_POST['email_address'] ? $_POST['email_address'] : '';

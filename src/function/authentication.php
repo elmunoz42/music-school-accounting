@@ -30,3 +30,21 @@
     session_destroy();
     return true;
   }
+
+  function isSameTeacher($teacher_id) {
+      $userTeacherId = Teacher::findTeacherByUserId($_SESSION['user_id'])->getId();
+      if ($userTeacherId !== $teacher_id) {
+          return false;
+      } else {
+          return true;
+      }
+  };
+
+  function isSameClient($client_id) {
+      $userClientId = Client::findClientByUserId($_SESSION['user_id'])->getId();
+      if ($userClientId !== $client_id) {
+          return false;
+      } else {
+          return true;
+      }
+  };
