@@ -381,23 +381,34 @@
             return $lessons;
         }
 
-        function getServicesForMonth($month = null, $year = null) {
+        function getServicesForMonth($month = null, $year = null, $date = null) {
             //if arguments are empty, set today's month and year
             $month = $month ? $month : date('n');
             $year = $year ? $year : date('Y');
+            $date = $date ? $date : false;
 
-            $stmt = $GLOBALS['DB']->prepare("
+            $sql = "
                 SELECT services.* FROM teachers
                 JOIN services_teachers ON (teachers.id = services_teachers.teacher_id)
                 JOIN services ON (services_teachers.service_id = services.id)
                 WHERE teachers.id = :teacher_id
                 AND MONTH(date_of_service) = :month
-                AND YEAR(date_of_service) = :year
-            ");
+                AND YEAR(date_of_service) = :year ";
+
+            if ($date) {
+              $sql .= "AND DAY(date_of_service) = :date";
+            }
+            $stmt = $GLOBALS['DB']->prepare($sql);
 
             $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
             $stmt->bindParam(':month', $month, PDO::PARAM_STR);
             $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            // $date is optional. If user clicked Today's Session, get value and filter out
+            if ($date) {
+              $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+            }
 
             if($stmt->execute()) {
                 $results = $stmt->fetchAll();

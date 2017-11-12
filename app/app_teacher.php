@@ -2,7 +2,6 @@
 
 //READ teacher
 $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
-
     $month = date("m");
     $year = date("Y");
 
@@ -21,6 +20,8 @@ $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
         }
     }
 
+    $date = $_GET['date'] ? $_GET['date'] : null;
+
     $school = School::find($_SESSION['school_id']);
     $teacher = Teacher::find($teacher_id);
 
@@ -30,8 +31,7 @@ $app->get("/teacher/{teacher_id}", function($teacher_id) use ($app) {
         $notes_array = explode("|", $teacher->getNotes());
         $students_teachers = $teacher->getStudents();
         $datestamp = mktime(0, 0, 0, $month, 1, $year);
-        $services = $teacher->getServicesForMonth($month, $year);
-
+        $services = $teacher->getServicesForMonth($month, $year, $date);
         return $app['twig']->render('teacher.html.twig',
             array(
                 'role' => $_SESSION['role'],
