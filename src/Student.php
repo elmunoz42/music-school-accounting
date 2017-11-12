@@ -394,6 +394,7 @@
                 WHERE students.id = :student_id
                 AND MONTH(services.date_of_service) = :month
                 AND YEAR(services.date_of_service) = :year
+                ORDER BY services.date_of_service ASC
             ");
 
             $stmt->bindParam(':student_id', $this->getId(), PDO::PARAM_STR);
