@@ -289,7 +289,7 @@
         }
     });
 
-    //JOIN teacher with student NOTE Koji this seems to have an error which it looks like you are addressing since I see the vardump
+    //JOIN teacher with student NOTE Koji this seems to have an error which it looks like you are addressing since I see the vardump.
     $app->post("/owner_teachers/{teacher_id}", function($teacher_id) use ($app) {
         if(isLoggedIn()) {
             $school = School::find($_SESSION['school_id']);
