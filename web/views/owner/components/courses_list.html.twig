@@ -2,26 +2,43 @@
     <h3>Current Courses</h3>
     <table class="table table-hover">
         <thead>
-            <th>Course Name</th>
+            <tr>
+                <th>Course Name</th>
+                <th>Teachers</th>
+                <th>Lessons</th>
+            </tr>
         </thead>
         <tbody>
             {% for course in courses %}
             <tr>
-                <td>
-                    <a href="owner_course/{{course.getId | e}}">{{course.getTitle | e}}</a>
+                <td class="col-xs-4">
+                    <a href="course/{{course.getId | e}}">{{course.getTitle | e}}</a>
                 </td>
-
+                <td class="col-xs-4">
+                    <ul>
+                        {% if course.getTeachers %}
+                            {% for teacher in course.getTeachers %}
+                                <a href="/teacher/{{teacher.getId}}">{{teacher.getName}}</a>
+                            {% endfor %}
+                        {% else %}
+                            <span>No one assigned</span>
+                        {% endif %}
+                    </ul>
+                </td>
+                <td class="col-xs-2">
+                    <span>{{course.getLessons|length}} Lessons</span>
+                </td>
                 <!-- NOTE Only Teacher or Owner can update courses -->
                 {% if (role == 'teacher' or role == 'owner') %}
-                    <td>
+                    <td class="col-xs-1">
                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#update_course_{{course.getId | e}}">Update</button>
                     </td>
                 {% endif %}
 
                 <!-- NOTE Only Owner can update courses -->
                 {% if role == 'owner' %}
-                    <td>
-                        <form action="/owner_course/{{ course.getId  | e}}/delete" method="post">
+                    <td class="col-xs-1">
+                        <form action="/course/{{ course.getId  | e}}/delete" method="post">
                             <input name="_method" type="hidden" value="delete">
                             <button type="submit" class="btn btn-danger btn-sm" name="button">Delete</button>
                         </form>
@@ -37,7 +54,7 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">Update Course: {{course.getTitle | e}}</h4>
                             </div>
-                            <form action="/owner_course/{{course.getId | e}}/update" method="post">
+                            <form action="/course/{{course.getId | e}}/update" method="post">
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <div class="modal-body">

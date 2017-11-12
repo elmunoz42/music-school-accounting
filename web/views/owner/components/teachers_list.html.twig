@@ -2,22 +2,39 @@
     <thead>
         <th>Name</th>
         <th>Instrument</th>
+        <th>Students</th>
+        <th>Teaching Courses</th>
     </thead>
     <tbody>
         {% for teacher in teachers %}
         <tr>
-            <td>
-                <a href="/owner_teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
+            <td class="col-xs-3">
+                <a href="/teacher/{{teacher.getId | e }}">{{teacher.getName | e }}</a>
             </td>
-            <td>
+            <td class="col-xs-2">
                 {{teacher.getInstrument | e }}
             </td>
-
+            <td class="col-xs-2">
+                <ul>
+                    {% for student in teacher.getStudents %}
+                        <li><a href="/student/{{student.getId}}">{{student.getName}}</a></li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td class="col-xs-3">
+                <ul>
+                    {% for course in teacher.getCourses %}
+                        <li><a href="/course/{{course.getId}}">{{course.getTitle}}</a></li>
+                    {% endfor %}
+                </ul>
+            </td>
             <!-- NOTE ONLY Owner can Update and Delete -->
             {% if (role == 'owner') %}
-            <td>
+            <td class="col-xs-1">
               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#update_teacher_{{teacher.getId | e }}">Update</button>
-              <form action="/owner_teacher/teacher_termination/{{ teacher.getId  | e }}" method="post">
+            </td>
+            <td class="col-xs-1">
+              <form action="/teacher/teacher_termination/{{ teacher.getId  | e }}" method="post">
                   <input name="_method" type="hidden" value="delete">
                   <button type="submit" class="btn btn-danger btn-sm"  name="button">delete</button>
               </form>
@@ -36,7 +53,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Update Teacher: {{teacher.getName | e }}</h4>
                     </div>
-                    <form action="/owner_teacher/{{teacher.getId | e }}/update" method="post">
+                    <form action="/teacher/{{teacher.getId | e }}/update" method="post">
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="modal-body">

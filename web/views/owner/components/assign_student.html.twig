@@ -1,11 +1,13 @@
-<form action="/owner_teacher/{{ teacher.getId  | e }}/assign" method="post">
+<form action="/teacher/{{ teacher.getId  | e }}/assign" method="post">
     <label for="student_id">Assign a student</label>
-    {% if students is not empty %}
-    <select id="student_id" class="form-control" name="student_id">
-        {% for student in students %}
-        <option value="{{student.getId | e }}">{{student.getName | e }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" name="button">submit</button>
-    {% endif %}
+    <div class="input-group">
+        <select id="student_id" class="form-control" name="student_id">
+            {% for student in students %}
+                <option value="{{student.getId | e }}">{{student.getName | e }}</option>
+            {% endfor %}
+        </select>
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-info">Assign</button>
+        </span>
+    </div>
 </form>

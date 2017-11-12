@@ -1,25 +1,19 @@
 {% extends "base_private.html.twig" %}
-
+{% set pageTitle = "Courses" %}
 {% block title %}CRM Music School{% endblock %}
 
 {% block content %}
-    <div class="jumbotron">
-        <h1>Courses</h1>
-        <hr>
-    </div>
-
     <div class="row">
+        {% if courses is not empty %}
+            <div class="col-xs-12" id="courses-table">
+                {% include './components/courses_list.html.twig' %}
+            </div>
+        {% endif %}
 
         <!-- NOTE Only Teacher or Owner can add new course -->
         {% if (role == 'teacher' or role =='owner') %}
-            <div class="col-md-6">
+            <div class="col-xs-6 col-xs-offset-3">
                 {% include './components/add_course.html.twig' %}
-            </div>
-        {% endif %}
-        
-        {% if courses is not empty %}
-            <div class="col-md-4" id="courses-table">
-                {% include './components/courses_list.html.twig' %}
             </div>
         {% endif %}
     </div>

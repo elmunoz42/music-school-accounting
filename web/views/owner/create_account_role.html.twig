@@ -1,5 +1,6 @@
-{% extends "base_public.html.twig" %}
+{% extends "base_private.html.twig" %}
 {% block title %}Create Owner Account{% endblock %}
+{% set pageTitle = "Create School" %}
 
 {% block content %}
     {% if (account_role is defined and account_role == 'owner')  %}
@@ -17,7 +18,7 @@
     <!-- NOTE: CREATE Client -->
 
         <h2>Create Client</h2>
-        {% include './components/add_account.html.twig' %}
+        {% include './components/add_client.html.twig' %}
     {% endif %}
 
 {% endblock %}

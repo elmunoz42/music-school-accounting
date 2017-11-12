@@ -1,4 +1,4 @@
-<form action="/owner_course/{{ course.getId | e  }}" method="post">
+<form action="/course/{{ course.getId | e  }}" method="post">
     {% if all_students is not empty %}
     <select class="form-control" name="student_id">
         {% for student in all_students %}

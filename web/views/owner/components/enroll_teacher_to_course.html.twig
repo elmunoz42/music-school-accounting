@@ -1,13 +1,15 @@
-<div>
-    <form action="/owner_teacher/{{ teacher.getId  | e }}/enroll" method="post">
-        <label>Enroll in a Course</label>
-        {% if all_courses is not empty %}
-            <select class="form-control" name="course_id">
+<div class="spacer">
+    <form action="/teacher/{{ teacher.getId  | e }}/enroll" method="post">
+        <label id="enroll_courses">Enroll in a Course</label>
+        <div class="input-group">
+            <select class="form-control" name="course_id" id="enroll_courses">
                 {% for course in all_courses %}
                     <option value="{{course.getId | e }}">{{course.getTitle | e }}</option>
                 {% endfor %}
             </select>
-            <button type="submit" name="button">submit</button>
-        {% endif %}
+            <span class="input-group-btn">
+                <button class="btn btn-info" type="submit">Enroll</button>
+            </span>
+        </div>
     </form>
 </div>

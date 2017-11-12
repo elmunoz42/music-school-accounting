@@ -1,7 +1,6 @@
 <div>
     <h3>Add Notes:</h3>
-    <hr>
-    <form action="/owner_teacher/{{ teacher.getId  | e }}/add_notes" method="post">
+    <form action="/teacher/{{ teacher.getId  | e }}/add_notes" method="post">
         <input name="_method" type="hidden" value="patch">
         <div class="form-group">
             <label class ="control-label" for="new_notes">Notes</label><br>

@@ -1,42 +1,54 @@
 <?php
 
-//CREATE a Lesson NOTE GO BACK TO COURSES THOUGH
-$app->post("/owner_lesson/{id}", function($id) use ($app) {
+// add lesson
+$app->post("/lesson/{lesson_id}", function($lesson_id) use ($app) {
     $school = School::find($_SESSION['school_id']);
-    $course = Course::find($id);
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $content = $_POST['content'];
-    $lesson = new Lesson($title,$description,$content,$input_id);
-    $lesson->save();
-    $lesson_id = $lesson->getId();
-    $course->addLesson($lesson_id);
+    $course = Course::find($lesson_id);
 
-    return $app['twig']->render('owner_course.html.twig', array(
-      'role' => $_SESSION['role'],
-      'school'=>$school,
-      'course' => $course,
-      'enrolled_students'=>$course->getStudents(), 'students'=>$school->getStudents(),
-      'lessons' => $school->getLessons() ));
+
+    $title = $_POST['title'] ? $_POST['title'] : '';
+    $description = $_POST['description'] ? $_POST['description'] : '';
+    $content = $_POST['content'] ? $_POST['content'] : 'content';
+
+    $lesson = new Lesson($title, $description, $content, $input_id);
+
+
+    if ($lesson->save()) {
+        $lesson_id = $lesson->getId();
+
+        if ($course->addLesson($lesson_id)) {
+
+            $app['session']->getFlashBag()->add('success', 'Successfully added lesson');
+
+        } else {
+
+            $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+        }
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+    }
+
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);
 
 
 //READ lesson
-$app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
+$app->get("/lesson/{lesson_id}", function($lesson_id) use ($app){
     $school = School::find($_SESSION['school_id']);
     $lesson = Lesson::find($lesson_id);
 
     if ($lesson) {
-      return $app['twig']->render('owner_lesson.html.twig', array(
-          'role' => $_SESSION['role'],
-          'school'=>$school,
-          'lesson'=>$lesson
-      ));
+        return $app['twig']->render('lesson.html.twig', array(
+            'role' => $_SESSION['role'],
+            'school'=>$school,
+            'lesson'=>$lesson
+        ));
     } else {
         // lesson is not found
-        return $app->redirect("/owner_courses");
+        $app['session']->getFlashBag()->add('errors', 'page does not exist');
+        return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)
@@ -44,41 +56,64 @@ $app->get("/owner_lesson/{lesson_id}", function($lesson_id) use ($app){
 
 
 //DELETE Lesson
-$app->delete("/owner_lesson/{lesson_id}/delete", function($lesson_id) use ($app) {
+$app->delete("/lesson/{lesson_id}/delete", function($lesson_id) use ($app) {
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
+    $lesson = Lesson::find($lesson_id);
 
-    if ($course_id) {
-        $lesson = Lesson::find($lesson_id);
-
-        if ($lesson->delete()) {
-            // add success message
-            return $app->redirect("/owner_course/" . $course_id);
+    if ($lesson) {
+        if ($course_id) {
+            if ($lesson->delete()) {
+                // add success message
+                $app['session']->getFlashBag()->add('success', 'Successfully deleted');
+                return $app->redirect("/course/" . $course_id);
+            } else {
+                // add error message
+                $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+            }
         } else {
-            // add error message
-            return $app->redirect("/owner_course/" . $course_id);
+            $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
         }
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
     }
+
+    // error case: back to previous page
+    $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($owner_only);
 
 
 //UPDATE Lesson
-$app->post("/owner_lesson/{lesson_id}/update", function($lesson_id) use ($app) {
+$app->post("/lesson/{lesson_id}/update", function($lesson_id) use ($app) {
     $lesson = Lesson::find($lesson_id);
 
     $course_id = $_POST['course_id'] ? $_POST['course_id'] : '';
     $title = $_POST['title'] ? $_POST['title'] : '';
-    $description = $_POST['description'] ? $_POST['description'] : '';
+    $media_url = is_url($_POST['media_url']) ? $_POST['media_url'] : '';
     $content = $_POST['content'] ? $_POST['content'] : '';
 
-    if ($lesson->updateTitle($title) && $lesson->updateDescription($description) && $lesson->updateContent($content)) {
-        // add success message
-        return $app->redirect("/owner_course/" . $course_id);
+    $is_form_valid = ($title && $media_url && $content);
+
+    if ($is_form_valid) {
+      if ($lesson->updateTitle($title) && $lesson->updateDescription($media_url) && $lesson->updateContent($content)) {
+
+          // add success message
+          $app['session']->getFlashBag()->add('success', 'Successfully updated');
+
+          if ($course_id) {
+              return $app->redirect($_SESSION['location_uri']);
+          }
+      } else {
+          // add error message
+          $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+      }
     } else {
-        // add error message
-        return $app->redirect("/owner_course/" . $course_id);
+        $app['session']->getFlashBag()->add('errors', 'some inputs are empty or url is invalid');
     }
+
+    // error case: back to previous page
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);

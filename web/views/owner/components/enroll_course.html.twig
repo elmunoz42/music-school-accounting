@@ -1,5 +1,5 @@
 <div>
-    <form action="/owner_student/{{ student.getId  | e }}/enroll" method="post">
+    <form action="/student/{{ student.getId  | e }}/enroll" method="post">
         <label>Enroll in a Course</label>
         {% if courses is not empty %}
             <select class="form-control" name="course_id">

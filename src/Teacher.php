@@ -120,8 +120,10 @@
 
         function updateNotes($new_note)
         {
-            $GLOBALS['DB']->exec("UPDATE teachers SET notes = '{$new_note}' WHERE id = {$this->getId()};");
-            $this->setNotes($new_note);
+            $stmt = $GLOBALS['DB']->prepare("UPDATE teachers SET notes = :new_note WHERE id = :id");
+            $stmt->bindParam(':new_note', $new_note, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $this->getId(), PDO::PARAM_STR);
+            return $stmt->execute();
         }
 
         function updateName($teacher_name)
@@ -147,31 +149,64 @@
             $GLOBALS['DB']->exec("DELETE FROM teachers WHERE id = {$this->getId()};");
         }
 
-        // JOIN methods
-        // NOTE UNTESTED
        function addStudent($student_id)
        {
-           $GLOBALS['DB']->exec("INSERT INTO students_teachers (student_id, teacher_id) VALUES ({$student_id}, {$this->getId()});");
+           $stmt = $GLOBALS['DB']->prepare("
+               INSERT INTO students_teachers (student_id, teacher_id)
+               VALUES (:student_id, :teacher_id)
+           ");
+           $stmt->bindParam(':student_id', $student_id, PDO::PARAM_STR);
+           $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+           return $stmt->execute();
        }
-       // NOTE UNTESTED
+
         function addCourse($course_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO courses_teachers (teacher_id, course_id) VALUES ({$this->getId()}, {$course_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO courses_teachers (teacher_id, course_id)
+                VALUES (:teacher_id, :course_id)
+            ");
+            $stmt->bindParam(':course_id', $course_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
-        // NOTE UNTESTED
-        function addAccount($account_id)
+
+        function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO accounts_teachers (teacher_id, account_id) VALUES ({$this->getId()}, {$account_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO clients_teachers (teacher_id, client_id)
+                VALUES (:teacher_id, :client_id)
+            ");
+            $stmt->bindParam(':client_id', $client_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
-        // NOTE UNTESTED
+
         function addLesson($lesson_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO lessons_teachers (teacher_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO lessons_teachers (teacher_id, lesson_id)
+                VALUES (:teacher_id, :lesson_id)
+            ");
+            $stmt->bindParam(':lesson_id', $lesson_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
-        // NOTE UNTESTED
+
         function addService($service_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO services_teachers (teacher_id, service_id) VALUES ({$this->getId()}, {$service_id})");
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO services_teachers (teacher_id, service_id)
+                VALUES (:teacher_id, :service_id)
+            ");
+            $stmt->bindParam(':service_id', $service_id, PDO::PARAM_STR);
+            $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+            return $stmt->execute();
         }
 
         function addUser($user_id)
@@ -190,21 +225,43 @@
         // NOTE UNTESTED
         function getStudents()
         {
+          $stmt = $GLOBALS['DB']->prepare("
+              SELECT students.* FROM teachers
+              JOIN students_teachers ON (teachers.id = students_teachers.teacher_id)
+              JOIN students ON (students_teachers.student_id = students.id) WHERE teachers.id = :teacher_id
+          ");
+
+          $stmt->bindParam(':teacher_id', $this->getId(), PDO::PARAM_STR);
+
+          if ($stmt->execute()) {
+              $results = $stmt->fetchAll();
+              if ($results) {
+                  $students = [];
+                  forEach($results as $result) {
+                      $student = new Student(
+                        $result['student_name'],
+                        $result['email_address'],
+                        (int) $result['id'],
+                        $result['notes']
+                      );
+                      array_push($students, $student);
+                  }
+                  return $students;
+              } else {
+                  return false;
+              }
+          } else {
+              return false;
+          }
+
+
            $students = array();
            $query = $GLOBALS['DB']->query("SELECT students.* FROM
            teachers JOIN students_teachers ON teachers.id = students_teachers.teacher_id
                     JOIN students ON students_teachers.student_id = students.id
                     WHERE teachers.id = {$this->getId()};");
 
-          if(!empty($query)){
-              foreach($query as $student) {
-                  $student_name = $student['student_name'];
-                  $id = $student['id'];
-                  $new_student = new Student($student_name, $id);
-                  array_push($students, $new_student);
-              }
-          }
-          return $students;
+
         }
 
 
@@ -282,30 +339,30 @@
             return $courses;
         }
         // NOTE UNTESTED
-        function getAccounts()
+        function getClients()
         {
-            $query = $GLOBALS['DB']->query("SELECT accounts.* FROM teachers JOIN accounts_teachers ON (teachers.id = accounts_teachers.teacher_id) JOIN accounts ON (accounts_teachers.account_id = accounts.id) WHERE teachers.id = {$this->getId()};");
-            $accounts = array();
-            foreach ($query as $account)
+            $query = $GLOBALS['DB']->query("SELECT clients.* FROM teachers JOIN clients_teachers ON (teachers.id = clients_teachers.teacher_id) JOIN clients ON (clients_teachers.client_id = clients.id) WHERE teachers.id = {$this->getId()};");
+            $clients = array();
+            foreach ($query as $client)
             {
-                $id = $account['id'];
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = intval($account['outstanding_balance']);
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                array_push($accounts, $new_account);
+                $id = $client['id'];
+                $family_name = $client['family_name'];
+                $parent_one_name = $client['parent_one_name'];
+                $parent_two_name = $client['parent_two_name'];
+                $street_address = $client['street_address'];
+                $phone_number = $client['phone_number'];
+                $email_address = $client['email_address'];
+                $notes = $client['notes'];
+                $billing_history = $client['billing_history'];
+                $outstanding_balance = intval($client['outstanding_balance']);
+                $new_client = new Client($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
+                $new_client->setParentTwoName($parent_two_name);
+                $new_client->setNotes($notes);
+                $new_client->setBillingHistory($billing_history);
+                $new_client->setOutstandingBalance($outstanding_balance);
+                array_push($clients, $new_client);
             }
-            return $accounts;
+            return $clients;
         }
         // NOTE UNTESTED
         function getLessons()

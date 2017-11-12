@@ -1,27 +1,17 @@
 <div>
-    <h3>Teacher Info:</h3>
-    <hr>
-    <h4 class="panel-heading">
+    <h3>Teacher: {{teacher.getInstrument}}</h3>
     <table class="table table-hover">
         <thead>
-            <th>Courses</th>
+            <th>Teaching Courses</th>
         </thead>
         <tbody>
             {% if courses is not empty %}
                 {% for course in courses %}
                 <tr>
-                    <td><a href="../owner_course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
+                    <td><a href="../course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
                 </tr>
                 {% endfor %}
             {% endif %}
-        </tbody>
-        <thead>
-            <th>Instruments</th>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{teacher.getInstrument | e }}</td>
-            </tr>
         </tbody>
     </table>
 </div>

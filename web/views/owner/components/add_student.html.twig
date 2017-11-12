@@ -1,13 +1,11 @@
-<form action="/owner_add_student_to_account" method="post">
-    <div class="panel panel-info">
-        <h3 class="panel-heading">Add New Student to Account</h3>
-        <div class="panel-body">
-            <div class="form-group">
-                <label for="student_name">Name</label><br>
-                <input class="form-control" type="text" name="student_name" required><br>
-                <input type="hidden" name="account_id" value="{{account.getId | e}}">
-                <button class="btn btn-info btn-md"type="submit">Submit</button><br>
-            </div>
-        </div>
+<form action="/add_student_to_client" method="post">
+    <h3 class="text-center">Add New Student</h3>
+    <div class="form-group">
+        <label for="student_name">Name</label>
+        <input id="student_name" class="form-control" type="text" name="student_name" placeholder="Student Name" required><br>
+        <label for="email_address">Email</label>
+        <input id="email_address" class="form-control" type="email" name="email_address" placeholder="Email" required>
     </div>
+    <input type="hidden" name="client_id" value="{{client.getId | e}}">
+    <button class="btn btn-info" type="submit">Submit</button><br>
 </form>

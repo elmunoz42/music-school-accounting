@@ -1,14 +1,14 @@
 <?php
 
 // GET session
-$app->get('/owner_session/{service_id}', function($service_id) use($app) {
+$app->get('/session/{service_id}', function($service_id) use($app) {
     $school = School::find($_SESSION['school_id']);
     $service = Service::find($service_id);
 
     if ($service) {
         $notes_array = explode("|", $service->getNotes());
         return $app['twig']->render(
-            'owner_session.html.twig', array(
+            'session.html.twig', array(
                 'role' => $_SESSION['role'],
                 'school'=>$school,
                 'service'=>$service,
@@ -16,9 +16,9 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
             )
         );
     } else {
-        // NOTE: which page the user should be redirected to??
         // session is not found
-        return $app->redirect("/owner_main");
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
+        return $app->redirect($_SESSION['location_uri']);
     }
 })
 ->before($is_logged_in)
@@ -26,7 +26,7 @@ $app->get('/owner_session/{service_id}', function($service_id) use($app) {
 
 
 // Update session
-$app->patch('/owner_session/{service_id}/update', function($service_id) use($app) {
+$app->patch('/session/{service_id}/update', function($service_id) use($app) {
 
     $service = Service::find($service_id);
     $student_id = $_POST['student_id'] ? $_POST['student_id'] : '';
@@ -52,6 +52,7 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
     }
 
     if ($service) {
+      // NOTE Need to refactor
       if (isset($date_of_service) && $date_of_service != $service->getDateOfService()) {
         $service->updateDateOfService($date_of_service);
       }
@@ -70,21 +71,27 @@ $app->patch('/owner_session/{service_id}/update', function($service_id) use($app
         $updated_notes =  date('y-m-d') . ': '  . $new_notes;
         $service->updateNotes($updated_notes);
       }
+
+        // TODO need to check if all update is successful or not before display success message
+        $app['session']->getFlashBag()->add('success', 'Successfully updated');
+
+    } else {
+        $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
     }
 
     if ($student_id) {
-      return $app->redirect("/owner_student/" . $student_id);
+      return $app->redirect("/student/" . $student_id);
     } else {
-      return $app->redirect("/owner_main");
+      return $app->redirect("/main");
     }
-
 })
 ->before($is_logged_in)
 ->before($teacher_only);
 
 
+
 // AJAX: Update paid_for status
-$app->post('/owner_session_update_paid_for', function() use($app) {
+$app->post('/session_update_paid_for', function() use($app) {
     $paid_status = $_POST['paid_status'];
     $service_id = (int)$_POST['service_id'];
     $service = Service::find($service_id);
@@ -108,7 +115,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
     $student_id = $_POST['student_id'] ? $_POST['student_id'] : "";
 
     $repetitions = $_POST['repetitions'] ? $_POST['repetitions'] : "0";
-    $description = $_POST['description'] ? $_POST['description'] : "";
+    $course_id = $_POST['description'] ? $_POST['description'] : "";
     $duration = $_POST['duration'] ? $_POST['duration'] : "";
     $price = $_POST['price'] ? $_POST['price'] : "";
     $discount = $_POST['discount'] ? $_POST['discount'] : "";
@@ -119,19 +126,20 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
     $attendance = "Scheduled";
 
     $date_of_service = '';
-
     if ($start_date && $start_time) {
       // concatanate and create date format
       $date_of_service = date("Y-m-d", strtotime($start_date)) . 'T' . $start_time;
     }
 
-    $is_all_form_filled = $student_id && $account_id && $teacher_id && isset($repetitions) && $description && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
+
+    $is_all_form_filled = $student_id && $teacher_id && isset($repetitions) && $course_id && $price && $discount && isset($paid_for) && $date_of_service && $recurrence && $attendance;
 
     if ($is_all_form_filled) {
         $school = School::find($_SESSION['school_id']);
         $student = Student::find($student_id);
-        $account = $student->getAccounts()[0];
+        $client = $student->getClients()[0];
         $teacher = Teacher::find($teacher_id);
+        $course = Course::find($course_id);
 
         $this_month = intval(date('m',strtotime('this month')));
         $this_months_year = intval(date('Y',strtotime('this month')));
@@ -140,7 +148,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
 
         if ($student->addPrivateSessionBatch(
             $repetitions,
-            $description,
+            $course,
             $duration,
             $price,
             $discount,
@@ -150,17 +158,20 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
             $attendance,
             $teacher,
             $school,
-            $account
+            $client
         )) {
             // add success message
+            $app['session']->getFlashBag()->add('success', 'Successfully added');
         } else {
             // add error message
+            $app['session']->getFlashBag()->add('errors', 'Unexcepted error happened');
         }
     } else {
       // add error message
+      $app['session']->getFlashBag()->add('errors', 'All form must be filled');
     }
 
-    return $app->redirect("/owner_student/" . $student_id);
+    return $app->redirect("/student/" . $student_id);
 })
 ->before($is_logged_in)
 ->before($teacher_only);

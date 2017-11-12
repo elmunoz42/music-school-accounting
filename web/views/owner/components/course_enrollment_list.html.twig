@@ -6,7 +6,7 @@
     <tbody>
         {% for course in enrolled_courses %}
         <tr>
-            <td><a href="/owner_course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
+            <td><a href="/course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
             <td>{{ student.getDateOfEnrollment(course.getId)  | e }}</td>
         </tr>
         {% endfor %}

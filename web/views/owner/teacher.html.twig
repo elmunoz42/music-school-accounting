@@ -1,0 +1,51 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = teacher.getName  | e %}
+{% set attendance_values = [ {'Scheduled' : 'Scheduled'}, {'Attended' : 'Attended'}, {'SCWN' : 'Student Canceled W/ Notice'}, {'SCWON': 'Student Canceled W/O Notice'}, {'NS' : 'No Show' }, {'TC' : 'Teacher Canceled'}] %}
+{% block title %}Teacher{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <!-- NOTE Only Teacher or Owner can Assign student -->
+        {% if (role == 'teacher' or role == 'owner') %}
+            <div class="col-xs-12">
+                {% include './components/sessions_list.html.twig' %}
+            </div>
+        {% endif %}
+
+
+
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-sm-4">
+                    {% include './components/teacher_info.html.twig' %}
+
+                    <!-- NOTE Only Teacher or Owner can enroll course -->
+                    {% if (role == 'teacher' or role == 'owner') %}
+                        {% include './components/enroll_teacher_to_course.html.twig' %}
+                        <label>Schedule Sessions</label>
+                        {% include './components/create_sessions.html.twig' %}
+                    {% endif %}
+                </div>
+
+                <!-- NOTE Only Teacher or Owner can Assign student -->
+                {% if (role == 'teacher' or role == 'owner') %}
+                    <div class="col-sm-4">
+                      {% include './components/student_info.html.twig' %}
+                      {% include './components/assign_student.html.twig' %}
+                    </div>
+                {% endif %}
+
+                <!-- NOTE Only Teacher or Owner can add Notes -->
+                {% if (role == 'teacher' or role == 'owner') %}
+                    <div class="col-sm-4">
+                        {% include './components/add_note_teacher.html.twig' %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% if notes_array is not empty %}
+        {% include './components/note_history.html.twig' %}
+    {% endif %}
+{% endblock %}

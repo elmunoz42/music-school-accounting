@@ -1,0 +1,24 @@
+<div class="panel panel-info">
+    <h2 class="panel-heading" >Clients</h2>
+    {% if clients is not empty %}
+        <div class="panel-body">
+            <h4 class="stats-numbers">Total: {{ clients|length  | e }}</h4>
+            <ul>
+                {% for client in clients %}
+                    <li>
+                        <a href="/client/{{client.getId | e }}">{{client.getFamilyName | e }}</a>
+                    </li>
+
+                    <!-- list out students if exists -->
+                    {% if client.getStudents %}
+                        <ul>
+                            {% for student in client.getStudents %}
+                                <li><a href="/student/{{student.getId}}">{{student.getName}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
