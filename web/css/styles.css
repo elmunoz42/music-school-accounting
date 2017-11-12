@@ -61,6 +61,12 @@
     font-size: 2em;
 }
 
+#sessions_list {
+    min-height: 300px;
+    border-bottom: 2px solid lightgray;
+    margin-bottom: 50px;
+}
+
 h3 {
     text-align: center;
 }
@@ -124,11 +130,6 @@ h3 {
 .jumbotron {
     background-image: url("/img/bannermusic.jpg");
     color: #eceff5;
-}
-
-#courses-table {
-    margin-left: 150px;
-    margin-top: 20px;
 }
 
 #add_course {
@@ -413,4 +414,30 @@ img.intro {
 .toGrayTheme {
   background-color: silver;
   color: white;
+}
+
+
+
+/*GENERAL*/
+.spacer {
+  margin-bottom: 10%;
+}
+
+/*sessions_list.html.twig*/
+#no_sessions {
+    font-size: 3rem;
+}
+
+
+/* BOOTSTRAP */
+.navbar {
+    margin-bottom: 0px;
+}
+
+.panel-heading {
+    margin-top: 0px;
+}
+
+.jumbotron {
+    margin-bottom: 0px;
 }

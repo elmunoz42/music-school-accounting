@@ -19,19 +19,19 @@ Music School Administrator Specs:
 |Status|Spec|
 |------|-----|
 |DONE|1a)Can register a student to the school. |
-|TODO|1b)Can delete, update a student to the school. |
+|DONE|1b)Can delete, update a student to the school. |
 |DONE|2a)Can register a teacher to the school. |
-|TODO|2b)Can delete, update a teacher to the school. |
+|DONE|2b)Can delete, update a teacher to the school. |
 |DONE|3a)Can register a course to the school. |
-|TODO|3b)Can delete, update a course.|
+|DONE|3b)Can delete, update a course.|
 |DONE|4a)Can register a lesson to the school. |
-|TODO|4b)Can delete, update a lesson.|
+|DONE|4b)Can delete, update a lesson.|
 |DONE|5a)Can register a service(session) to the school. |
-|Needs More|5b)Can delete, update a service. |
+|DONE|5b)Can delete, update a service. |
 |DONE|5c) Assign multiple lessons to student|
 |DONE|6a)Can register a customer account to the school. |
-|TODO|6b)Can delete, update an account. |
-|Kind of Done|7)Students, Teachers, Courses, Lessons and Customers can be retrieved in relationship with each other.|
+|DONE|6b)Can delete, update an account. |
+|DONE|7)Students, Teachers, Courses, Lessons and Customers can be retrieved in relationship with each other.|
 |DONE|8)Review the sessions that where scheduled to a client last month.|
 
 
@@ -39,9 +39,9 @@ MVP Music School Administrator Specs:
 
 |Status|Behaviour|Input|Output|
 |------|---------|-----|------|
-|TO DO| Update multiple session/service payment status, duration and recurrence with a batch edit functionality. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
-|TO DO| As an admin-user I can go online and see information, about my sessions, lessons, teachers, students and accounts. And I have CRUD functionality  | no login yet just url | CRUD functionality ( hosted on Dreamhost) |
-|TO DO| Filter sessions(services) that where schedul ed to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
+|DONE| Update multiple session/service payment status, duration and recurrence with a batch edit functionality. | From student page list of scheduled sessions/services, Change status of lesson with checkmark and menu selection. | See it in a different color. |
+|DONE| As an admin-user I can go online and see information, about my sessions, lessons, teachers, students and accounts. And I have CRUD functionality  | no login yet just url | CRUD functionality ( hosted on Dreamhost) |
+|DONE| Filter sessions(services) that where schedul ed to a client per month, student, TEACHER, attendance, "paid_for".| From account page and teacher page| See table of results|
 
 Video Streaming SPECS:
 
@@ -54,21 +54,21 @@ Teacher user Stories:
 
 |Status|Behaviour|Input|Output|
 |------|---------|-----|------|
-|TODO | As a teacher-user I can see my students and their notes | | |
-|TODO | ... I can see all the courses and lessons| ||
-|TODO | ... I can create courses | | |
-|TODO | ... I can create lessons assigned to a course | | |
-|TODO | ... I can assign a student to a course | | |
-|TODO | ... I can see all the sessions/services related to me in a given month, week or day, I can also see the notes| | |
-|TODO | ... I can update attendance, notes, duration and recurrence for a given session/service (one at a time)| | |
+|DONE | As a teacher-user I can see my students and their notes | | |
+|DONE | ... I can see all the courses and lessons| ||
+|DONE | ... I can create courses | | |
+|DONE | ... I can create lessons assigned to a course | | |
+|DONE | ... I can assign a student to a course | | |
+|DONE | ... I can see all the sessions/services related to me in a given month, week or day, I can also see the notes| | |
+|DONE | ... I can update attendance, notes, duration and recurrence for a given session/service (one at a time)| | |
 
 Account (client) user Stories:
 
 |Status|Behaviour|Input|Output|
 |------|---------|-----|------|
-|TODO | As an account-user I can see the students in my account | | |
-|TODO | ... I can see the teachers, courses and lessons they are assigned to |||
-|TODO | ... I can see the services/sessions that are assigned to my students in this month, the previous month and all history. I will see attendance, duration, paid_for, recurrence, notes, teacher that was joined to service|||
+|DONE | As an account-user I can see the students in my account | | |
+|DONE | ... I can see the teachers, courses and lessons they are assigned to |||
+|DONE | ... I can see the services/sessions that are assigned to my students in this month, the previous month and all history. I will see attendance, duration, paid_for, recurrence, notes, teacher that was joined to service|||
 
 ## Setup/Installation Requirements
 

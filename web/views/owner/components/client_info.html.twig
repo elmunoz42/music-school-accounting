@@ -1,0 +1,19 @@
+<div class="">
+    <h3>Client Info</h3>
+    <hr>
+    <div class="panel panel-info">
+        <h3 class="panel-heading">{{client.getFamilyName | e}}</h3>
+        <ul>
+            <li>Parent Name:  {{client.getParentOneName | e}}</li>
+            <li>Other Parent Name:  {{client.getParentTwoName | e}}</li>
+            <li>Street Address: {{client.getStreetAddress | e}}</li>
+            <li>Phone Number:  {{client.getPhoneNumber | e}}</li>
+            <li>Email Address: {{client.getEmailAddress | e}}</li>
+            {% if client.getStudents is not empty %}
+                {% for student in client.getStudents %}
+                    <li>Student Name:<a href="/student/{{student.getId | e}}"></a> {{student.getName | e}}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</div>

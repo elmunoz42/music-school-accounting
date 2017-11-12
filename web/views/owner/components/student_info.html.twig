@@ -1,0 +1,17 @@
+{% if students_teachers is not empty %}
+<h3>Student Info:</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students_teachers %}
+        <tr>
+            <td><a href="/student/{{ student.getId  | e }}">{{ student.getName  | e }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

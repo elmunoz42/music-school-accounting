@@ -18,7 +18,7 @@
                 <h4 id="totals" class="stats-numbers">Total: {{ teachers|length }}</h4>
                 <ul>
                     {% for teacher in teachers %}
-                    <li><a href="teachers/{{teacher.getId}}">{{teacher.getName}}</a></li>
+                    <li><a href="teacher/{{teacher.getId}}">{{teacher.getName}}</a></li>
                     {% endfor %}
                 </ul>
                 {% endif %}

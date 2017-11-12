@@ -1,0 +1,10 @@
+<form action="/course/{{ course.getId | e  }}" method="post">
+    {% if all_students is not empty %}
+    <select class="form-control" name="student_id">
+        {% for student in all_students %}
+        <option value="{{student.getId | e }}">{{student.getName | e }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" name="button">submit</button>
+    {% endif %}
+</form>

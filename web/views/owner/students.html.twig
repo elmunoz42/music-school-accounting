@@ -1,0 +1,15 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = "Students" %}
+{% block title %}Students{% endblock %}
+
+{% block content %}
+    <div class="row" id="alignstudents">
+        <!-- show students list -->
+        {% if students is not empty %}
+            <div id="currentstudentsbox" class="col-md-4">
+                <h3 >Current Students</h3>
+                {% include './components/students_list.html.twig' %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -3,13 +3,14 @@
 
       // Renerating the ID protects the admin from session fixation.
       session_regenerate_id();
-      $_SESSION['owner_id'] = $owner->getId();
+      $_SESSION['role'] = $owner->getRole();
+      $_SESSION['user_id'] = $owner->getId();
       $_SESSION['last_login'] = time();
       return true;
   }
 
   function isOwnerLoggedIn() {
-    return isset($_SESSION['owner_id']);
+    return isset($_SESSION['user_id']);
   }
 
   // Call require_login() at the top of any page which needs to
@@ -23,8 +24,9 @@
   }
 
   function logout() {
-    unset($_SESSION['owner_id']);
+    unset($_SESSION['user_id']);
     unset($_SESSION['last_login']);
+    unset($_SESSION['role']);
     session_destroy();
     return true;
   }

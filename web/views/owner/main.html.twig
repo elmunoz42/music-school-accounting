@@ -1,0 +1,23 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = "Home" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        {% if (role == "owner" or role == "teacher") %}
+        <div class="col-sm-4">
+            {% include './components/clients_summary.html.twig' %}
+        </div>
+        {% endif %}
+
+
+        <div class="col-sm-4">
+            {% include './components/services_summary.html.twig' %}
+        </div>
+
+        <div class="col-sm-4">
+            {% include './components/courses_summary.html.twig' %}
+        </div>
+    </div>
+{% endblock %}

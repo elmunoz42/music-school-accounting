@@ -1,0 +1,17 @@
+<div>
+    <h3>Teacher: {{teacher.getInstrument}}</h3>
+    <table class="table table-hover">
+        <thead>
+            <th>Teaching Courses</th>
+        </thead>
+        <tbody>
+            {% if courses is not empty %}
+                {% for course in courses %}
+                <tr>
+                    <td><a href="../course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>

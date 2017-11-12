@@ -1,0 +1,14 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = lesson.getTitle | e %}
+
+{% block title %}Lessons{% endblock %}
+{% block content %}
+    {% for course in lesson.getCourses %}
+        <h1><a href="../course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></h1>
+    {% endfor %}
+    <h1>Lesson: {{lesson.getTitle | e }}</h1>
+    <div class="well">
+        <p>Teacher's notes for this lesson: {{lesson.getContent | e }}</p>
+        <iframe src="{{lesson.getDescription | e }}" height="500px" width="100%" frameBorder="0" allowfullscreen></iframe>
+    </div>
+{% endblock %}

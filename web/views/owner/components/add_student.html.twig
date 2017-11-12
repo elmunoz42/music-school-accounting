@@ -1,0 +1,11 @@
+<form action="/add_student_to_client" method="post">
+    <h3 class="text-center">Add New Student</h3>
+    <div class="form-group">
+        <label for="student_name">Name</label>
+        <input id="student_name" class="form-control" type="text" name="student_name" placeholder="Student Name" required><br>
+        <label for="email_address">Email</label>
+        <input id="email_address" class="form-control" type="email" name="email_address" placeholder="Email" required>
+    </div>
+    <input type="hidden" name="client_id" value="{{client.getId | e}}">
+    <button class="btn btn-info" type="submit">Submit</button><br>
+</form>

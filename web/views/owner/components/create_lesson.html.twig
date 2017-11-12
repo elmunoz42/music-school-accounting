@@ -1,0 +1,17 @@
+<form action="/add_lesson_to_course" method="post">
+    <h3>Create a lesson for this course</h3>
+    <div class="form-group">
+        <label for="title">Lesson Title</label><br>
+        <input id="title" class="form-control" type="text" name="title" value="" placeholder="Lesson title"><br>
+    </div>
+    <div class="form-group">
+        <label for="media_url">Media URL</label><br>
+        <input id="media_url" class="form-control" type="text" name="media_url" placeholder="http://..."><br>
+    </div>
+    <div class="form-group">
+        <label for="content">Written Content</label><br>
+        <textarea id="content" class="form-control" name="content" rows="8" cols="40" placeholder="Add content here"></textarea>
+    </div>
+    <input type="hidden" name="course_id" value="{{course.getId | e }}"><br>
+    <button type="submit" class="btn btn-info">Add Lesson</button>
+</form>

@@ -1,0 +1,13 @@
+<div class="panel panel-info">
+    <h2 class="panel-heading">Courses</h4>
+    {% if courses is not empty %}
+        <div class="panel-body">
+            <h4 class="stats-numbers">Total: {{courses|length | e }} </h4>
+            <ul>
+                {% for course in courses %}
+                    <li><a href="course/{{course.getId | e }}">{{course.getTitle | e }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,15 @@
+<div class="spacer">
+    <form action="/teacher/{{ teacher.getId  | e }}/enroll" method="post">
+        <label id="enroll_courses">Enroll in a Course</label>
+        <div class="input-group">
+            <select class="form-control" name="course_id" id="enroll_courses">
+                {% for course in all_courses %}
+                    <option value="{{course.getId | e }}">{{course.getTitle | e }}</option>
+                {% endfor %}
+            </select>
+            <span class="input-group-btn">
+                <button class="btn btn-info" type="submit">Enroll</button>
+            </span>
+        </div>
+    </form>
+</div>

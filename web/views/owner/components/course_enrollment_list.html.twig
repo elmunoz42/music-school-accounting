@@ -1,0 +1,14 @@
+<table class="table table-hover">
+    <thead>
+        <th>Course Enrollment</th>
+        <th>Date of Enrollment</th>
+    </thead>
+    <tbody>
+        {% for course in enrolled_courses %}
+        <tr>
+            <td><a href="/course/{{ course.getId  | e }}">{{ course.getTitle  | e }}</a></td>
+            <td>{{ student.getDateOfEnrollment(course.getId)  | e }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

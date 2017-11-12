@@ -1,0 +1,25 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = course.getTitle | e %}
+{% block title %}Course{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <!-- Display All Lessons related to this course -->
+        {% if lessons is not empty %}
+            <div class="col-xs-6 col-xs-offset-3">
+                {% include './components/lessons_list.html.twig' %}
+            </div>
+        {% endif %}
+
+        <div class="col-xs-3">
+        </div>
+
+        <!-- Display Create New Lesson -->
+        <!-- NOTE Only Teacher and Owner can create new lessons -->
+        {% if (role == 'teacher' or role == 'owner') %}
+        <div class="col-xs-6 col-xs-offset-3">
+                {% include './components/create_lesson.html.twig' %}
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

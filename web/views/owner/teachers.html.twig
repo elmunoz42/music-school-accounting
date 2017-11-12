@@ -1,0 +1,14 @@
+{% extends "base_private.html.twig" %}
+{% set pageTitle = "Teachers"  | e %}
+{% block title %}Teachers{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+          <!-- show teachers list -->
+            {% if teachers is not empty %}
+                {% include './components/teachers_list.html.twig' %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

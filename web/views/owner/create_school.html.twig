@@ -1,21 +1,25 @@
 {% extends "base_public.html.twig" %}
-{% block title %}Create Owner Account{% endblock %}
+{% block title %}Create School{% endblock %}
+{% set pageTitle = "Create School" %}
 
 {% block content %}
-<h2>Create School</h2>
-<form action="/create_school" method="post">
-  <div class="form-group">
-    <input class="form-control" type="text" name="school_name" placeholder="School Name">
-    <input class="form-control" type="text" name="manager_name" placeholder="Manager Name">
-    <input class="form-control" type="number" name="phone_number" placeholder="Phone Number">
-    <input class="form-control" type="email" name="email" placeholder="Email">
-    <input class="form-control" type="text" name="business_address" placeholder="Address">
-    <input class="form-control" type="text" name="city" placeholder="City">
-    <input class="form-control" type="text" name="state" placeholder="State">
-    <input class="form-control" type="text" name="country" placeholder="country">
-    <input class="form-control" type="number" name="zip" placeholder="Zip">
-    <input class="form-control" type="text" name="type" placeholder="Type">
-    <button type="submit" class="btn btn-success">Submit</button>
-  </div>
-</form>
+    {% if (role is defined and role == 'owner')  %}
+
+    <h2>Create School</h2>
+    <form action="/create_school" method="post">
+        <div class="form-group">
+            <input class="form-control" type="text" name="school_name" placeholder="School Name">
+            <input class="form-control" type="text" name="manager_name" placeholder="Manager Name">
+            <input class="form-control" type="number" name="phone_number" placeholder="Phone Number">
+            <input class="form-control" type="email" name="email" placeholder="Email">
+            <input class="form-control" type="text" name="business_address" placeholder="Address">
+            <input class="form-control" type="text" name="city" placeholder="City">
+            <input class="form-control" type="text" name="state" placeholder="State">
+            <input class="form-control" type="text" name="country" placeholder="country">
+            <input class="form-control" type="number" name="zip" placeholder="Zip">
+            <input class="form-control" type="text" name="type" placeholder="Type">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+    {% endif %}
 {% endblock %}

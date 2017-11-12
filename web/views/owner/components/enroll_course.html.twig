@@ -1,0 +1,13 @@
+<div>
+    <form action="/student/{{ student.getId  | e }}/enroll" method="post">
+        <label>Enroll in a Course</label>
+        {% if courses is not empty %}
+            <select class="form-control" name="course_id">
+                {% for course in courses %}
+                    <option value="{{course.getId | e }}">{{course.getTitle | e }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="button">submit</button>
+        {% endif %}
+    </form>
+</div>

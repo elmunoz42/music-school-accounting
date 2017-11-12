@@ -16,11 +16,11 @@
         // TODO CREATE TEMPLATE JOIN TABLE USED FOR REFERENCE.
         // 1) students_services_template
 
-        // 2) create student->setSessionTemplate($teacher_id, $school_id, $account_id, $service_id) NOTE HAS TO DELETE PREVIOUS TEMPLATE!
+        // 2) create student->setSessionTemplate($teacher_id, $school_id, $client_id, $service_id) NOTE HAS TO DELETE PREVIOUS TEMPLATE!
 
         // 3) create student->findSessionTemplate($teacher_id);
 
-        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function. 
+        // 4) TODO description can serve as a link to the tokbox appointment, since it doesn't serve much of a function.
 
         function __construct($description, $duration, $price, $discount, $paid_for, $notes, $date_of_service, $recurrence, $attendance, $id = null)
         {
@@ -120,18 +120,26 @@
         // Create
         function save()
         {
-            $description = $this->getDescription();
-            $duration = $this->getDuration();
-            $price = $this->getPrice();
-            $discount = $this->getDiscount();
-            $paid_for = $this->getPaidFor();
-            $notes = $this->getNotes();
-            $date_of_service = $this->GetDateOfService();
-            $recurrence = $this->getRecurrence();
-            $attendance = $this->getAttendance();
+            $stmt = $GLOBALS['DB']->prepare("
+                INSERT INTO services (description, duration, price, discount, paid_for, notes, date_of_service, recurrence, attendance)
+                VALUES (:description, :duration, :price, :discount, :paid_for, :notes, :date_of_service, :recurrence, :attendance)
+            ");
+            $stmt->bindParam(':description', $this->getDescription(), PDO::PARAM_STR);
+            $stmt->bindParam(':duration', $this->getDuration(), PDO::PARAM_STR);
+            $stmt->bindParam(':price', $this->getPrice(), PDO::PARAM_STR);
+            $stmt->bindParam(':discount', $this->getDiscount(), PDO::PARAM_STR);
+            $stmt->bindParam(':paid_for', $this->getPaidFor(), PDO::PARAM_STR);
+            $stmt->bindParam(':notes', $this->getNotes(), PDO::PARAM_STR);
+            $stmt->bindParam(':date_of_service', $this->getDateOfService(), PDO::PARAM_STR);
+            $stmt->bindParam(':recurrence', $this->getRecurrence(), PDO::PARAM_STR);
+            $stmt->bindParam(':attendance', $this->getAttendance(), PDO::PARAM_STR);
 
-            $GLOBALS['DB']->exec("INSERT INTO services (description, duration, price, discount, paid_for, notes, date_of_service, recurrence, attendance) VALUES ('{$description}', {$duration}, {$price}, {$discount}, {$paid_for}, '{$notes}', '{$date_of_service}', '{$recurrence}', '{$attendance}');");
-            $this->id = $GLOBALS['DB']->lastInsertId();
+            if ($stmt->execute()) {
+                $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         // Retrieve
@@ -275,86 +283,127 @@
             $GLOBALS['DB']->exec("INSERT INTO services_students (service_id, student_id) VALUES ({$this->getId()}, {$student_id});");
         }
         // NOTE UNTESTED
-        function addAccount($account_id)
+        function addClient($client_id)
         {
-            $GLOBALS['DB']->exec("INSERT INTO accounts_services (service_id, account_id) VALUES ({$this->getId()}, {$account_id});");
+            $GLOBALS['DB']->exec("INSERT INTO clients_services (service_id, client_id) VALUES ({$this->getId()}, {$client_id});");
         }
         // NOTE UNTESTED
         function addLesson($lesson_id)
         {
             $GLOBALS['DB']->exec("INSERT INTO lessons_services (service_id, lesson_id) VALUES ({$this->getId()}, {$lesson_id});");
         }
-        // NOTE UNTESTED
-        function getTeachers()
+
+        function getTeacher()
         {
-            $query = $GLOBALS['DB']->query("SELECT teachers.* FROM services JOIN services_teachers ON (services.id = services_teachers.service_id) JOIN teachers ON (services_teachers.teacher_id = teachers.id) WHERE services.id = {$this->getId()};");
-            $teachers = array();
-            foreach ($query as $teacher) {
-                $teacher_name = $teacher['teacher_name'];
-                $instrument = $teacher['instrument'];
-                $notes= $teacher['notes'];
-                $id = $teacher['id'];
-                $found_teacher = new Teacher($teacher_name, $instrument, $id);
-                $found_teacher->setNotes($notes);
-                array_push($teachers, $found_teacher);
-            }
-            return $teachers;
-        }
-        // NOTE UNTESTED
-        function getCourses()
-        {
-            $query = $GLOBALS['DB']->query("SELECT courses.* FROM services JOIN courses_services ON (services.id = courses_services.service_id) JOIN courses ON (courses_services.course_id = courses.id) WHERE services.id = {$this->getId()};");
-            $courses = array();
-            foreach ($query as $course )
-            {
-                $title = $course['title'];
-                $id = $course['id'];
-                $returned_course = new Course($title, $id);
-                array_push($courses, $returned_course);
-            }
-            return $courses;
-        }
-        // NOTE UNTESTED
-        function getStudents()
-        {
-            $query = $GLOBALS['DB']->query("SELECT students.* FROM services JOIN services_students ON (services.id = services_students.service_id) JOIN students ON (services_students.student_id = students.id) WHERE services.id = {$this->getId()};");
-            $students = array();
-            if(!empty($query)){
-                foreach($query as $student) {
-                    $student_name = $student['student_name'];
-                    $id = intval($student['id']);
-                    $new_student = new Student($student_name, $id);
-                    $new_student->setNotes($student['notes']);
-                    array_push($students, $new_student);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT teachers.* FROM services
+                JOIN services_teachers ON (services.id = services_teachers.service_id)
+                JOIN teachers ON (services_teachers.teacher_id = teachers.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Teacher(
+                        $result['teacher_name'],
+                        $result['instrument'],
+                        $result['id'],
+                        $result['notes']
+                    );
+                } else {
+                    //result not found
+                    return false;
                 }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $students;
+        }
+
+        // NOTE UNTESTED
+        function getCourse()
+        {
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT courses.* FROM services
+                JOIN courses_services ON (services.id = courses_services.service_id)
+                JOIN courses ON (courses_services.course_id = courses.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Course(
+                        $result['title'],
+                        $result['id']
+                    );
+                } else {
+                    //result not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
+            }
         }
         // NOTE UNTESTED
-        function getAccounts()
+        function getStudent()
         {
-            $query = $GLOBALS['DB']->query("SELECT accounts.* FROM services JOIN accounts_services ON (services.id = accounts_services.service_id) JOIN accounts ON (accounts_services.account_id = accounts.id) WHERE services.id = {$this->getId()};");
-            $accounts = array();
-            foreach ($query as $account)
-            {
-                $id = $account['id'];
-                $family_name = $account['family_name'];
-                $parent_one_name = $account['parent_one_name'];
-                $parent_two_name = $account['parent_two_name'];
-                $street_address = $account['street_address'];
-                $phone_number = $account['phone_number'];
-                $email_address = $account['email_address'];
-                $notes = $account['notes'];
-                $billing_history = $account['billing_history'];
-                $outstanding_balance = intval($account['outstanding_balance']);
-                $new_account = new Account($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
-                $new_account->setParentTwoName($parent_two_name);
-                $new_account->setNotes($notes);
-                $new_account->setBillingHistory($billing_history);
-                $new_account->setOutstandingBalance($outstanding_balance);
-                array_push($accounts, $new_account);
+            $stmt = $GLOBALS['DB']->prepare("
+                SELECT students.* FROM services
+                JOIN services_students ON (services.id = services_students.service_id)
+                JOIN students ON (services_students.student_id = students.id)
+                WHERE services.id = :service_id
+            ");
+            $stmt->bindParam(':service_id', $this->getId(), PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    return new Student(
+                        $result['student_name'],
+                        $result['email_address'],
+                        $result['id'],
+                        $result['notes']
+                    );
+                } else {
+                    //result not found
+                    return false;
+                }
+            } else {
+                // sql failed for some reason
+                return false;
             }
-            return $accounts;
+        }
+
+        // NOTE UNTESTED
+        function getClients()
+        {
+            $query = $GLOBALS['DB']->query("SELECT clients.* FROM services JOIN clients_services ON (services.id = clients_services.service_id) JOIN clients ON (clients_services.client_id = clients.id) WHERE services.id = {$this->getId()};");
+            $clients = array();
+            foreach ($query as $client)
+            {
+                $id = $client['id'];
+                $family_name = $client['family_name'];
+                $parent_one_name = $client['parent_one_name'];
+                $parent_two_name = $client['parent_two_name'];
+                $street_address = $client['street_address'];
+                $phone_number = $client['phone_number'];
+                $email_address = $client['email_address'];
+                $notes = $client['notes'];
+                $billing_history = $client['billing_history'];
+                $outstanding_balance = intval($client['outstanding_balance']);
+                $new_client = new Client($family_name, $parent_one_name,  $street_address, $phone_number, $email_address, $id);
+                $new_client->setParentTwoName($parent_two_name);
+                $new_client->setNotes($notes);
+                $new_client->setBillingHistory($billing_history);
+                $new_client->setOutstandingBalance($outstanding_balance);
+                array_push($clients, $new_client);
+            }
+            return $clients;
         }
         // NOTE UNTESTED
         function getLessons()
