@@ -170,8 +170,7 @@ $app->post('/teacher/{teacher_id}/add_session', function($teacher_id) use($app) 
       // add error message
       $app['session']->getFlashBag()->add('errors', 'All form must be filled');
     }
-
-    return $app->redirect("/student/" . $student_id);
+    return $app->redirect($_SESSION['location_uri']);
 })
 ->before($is_logged_in)
 ->before($teacher_only);
