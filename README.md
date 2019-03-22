@@ -2,7 +2,7 @@
 
 #### _Music School CRM and Accounting Tool._
 
-#### By _** Carlos Munoz Kampff, Jennifer Beem, Jay Freeman, and David Quisenberry**_
+#### By _** Carlos Munoz Kampff, Jennifer Beem, Jay Freeman, Koji Nakagawa and David Quisenberry**_
 
 ## Description
 
